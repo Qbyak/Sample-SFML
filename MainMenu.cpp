@@ -1,4 +1,5 @@
 #include "MainMenu.h"
+#include "Game.h"
 
 MainMenu::MainMenu(float width, float height)
 {
@@ -158,7 +159,7 @@ void MainMenu::Odpalaj()
 	sf::RenderWindow window(sf::VideoMode(800,1000), "Main Menu");
 
 	MainMenu menu(window.getSize().x, window.getSize().y);
-	
+	Game game;
 	while(window.isOpen())
 	{
 		sf::Event event;
@@ -183,7 +184,7 @@ void MainMenu::Odpalaj()
 							switch(menu.GetPressedItem())
 							{
 								case 0:
-									
+									game.play();
 									std::cout << "Play button has been pressed" << std::endl;
 									break;
 								case 1:

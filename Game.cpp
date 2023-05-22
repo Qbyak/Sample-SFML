@@ -6,7 +6,7 @@ Game::Game()
 	std::cout << "Witamy w cloud TOWER!" << std::endl; 
 	std::cout << "Wykonali :" << std::endl; 
 	std::cout << "Aby zaczac wcisnij dowolny przycisk :-)" << std::endl;
-	std::cin.get();
+	
 }
 
 void Game::play()
@@ -85,8 +85,8 @@ void Game::add_score(player& play)
 
 void Game::next_screen(player &play, const sf::Time& elapsed)
 {
-	move_all(sf::Vector2f(0 * elapsed.asMilliseconds(), 0.08 * elapsed.asMilliseconds()));
-	play.move(sf::Vector2f(0 * elapsed.asMilliseconds(), 0.08 * elapsed.asMilliseconds()));
+	move_all(sf::Vector2f(0 * elapsed.asMilliseconds(), 0.02 * elapsed.asMilliseconds()));
+	play.move(sf::Vector2f(0 * elapsed.asMilliseconds(), 0.02 * elapsed.asMilliseconds()));
 	while (play.getPosition().y < 300)
 	{
 		
@@ -140,7 +140,7 @@ void Game::ready_game()
 	
 }
 
-void Game::draw_tlo(sf::RenderWindow &window)
+void Game::draw_tlo(sf::RenderWindow& window)
 {
 	window.draw(tlo_s);
 	window.draw(tlo_s5); 
