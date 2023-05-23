@@ -153,12 +153,25 @@ void MainMenu::draw_tlo(sf::RenderWindow& window)
 	window.draw(tlo_s4);
 	window.draw(tlo_s2);
 }
+
+enum MainMenu::buttons
+{
+	_GRAJ,
+	_OPCJE,
+	_WYJSCIE
+
+};
+
+
+
 void MainMenu::Odpalaj()
 {
 	ready_game();
 	sf::RenderWindow window(sf::VideoMode(800,1000), "Main Menu");
 
+	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
 	MainMenu menu(window.getSize().x, window.getSize().y);
+
 	Game game;
 	while(window.isOpen())
 	{
@@ -173,38 +186,42 @@ void MainMenu::Odpalaj()
 					switch(event.key.code)
 					{
 						case sf::Keyboard::Up:
+							if(button==_OPCJE)
+								button=_GRAJ;
+							else if(button==_WYJSCIE)
+								button=_OPCJE;
 							menu.MoveUp();
 							break;
 
 						case sf::Keyboard::Down:
+							if(button == _OPCJE)
+								button=_WYJSCIE;
+							else if(button == _GRAJ)
+								button = _OPCJE;
 							menu.MoveDown();
 							break;
 
 						case sf::Keyboard::Return:
-							switch(menu.GetPressedItem())
+							switch(button)
 							{
-								case 0:
+								case _GRAJ:
 									game.play();
 									std::cout << "Play button has been pressed" << std::endl;
 									break;
-								case 1:
+								case _OPCJE:
 									std::cout << "Option button has been pressed" << std::endl;
 									break;
-								case 2:
+								case _WYJSCIE:
 									window.close();
 									break;
 							}
 
 							break;
 					}
-
-					break;
-				case sf::Event::Closed:
-					window.close();
-
-					break;
-
 			}
+			
+		
+			
 		}
 
 		

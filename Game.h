@@ -6,7 +6,8 @@
 #include "platform.h"
 #include "moving_platform.h"
 #include "MainMenu.h"
-class Game
+#include "Background.h"
+class Game:public Background
 { public:
 	Game();
 	void play();
@@ -21,17 +22,7 @@ private:
 	float generate_rand_dist(); 
 private:
 	std::vector<platform*> platformy;
-	sf::Texture tlo1; 
-	sf::Texture tlo2;
-	sf::Texture tlo3;
-	sf::Texture tlo4;
-	sf::Texture tlo5;
-	sf::Event event;
-	sf::Sprite tlo_s;
-	sf::Sprite tlo_s2;
-	sf::Sprite tlo_s3;
-	sf::Sprite tlo_s4;
-	sf::Sprite tlo_s5;
+	
 
 	sf::Vector2f move_cos;
 	sf::RenderWindow window; // (sf::VideoMode(800, 1000), "Cloud tower");
