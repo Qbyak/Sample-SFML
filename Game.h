@@ -6,10 +6,10 @@
 #include "platform.h"
 #include "moving_platform.h"
 #include "disappearing_platform.h"
-#include "Background.h"
+
 #include "MainMenu.h"
 #include "PauseMenu.h"
-class Game:public Background
+class Game
 { public:
 	Game();
 	void play();

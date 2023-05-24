@@ -15,17 +15,17 @@ MainMenu::MainMenu(float width, float height)
 	std::vector<sf::FloatRect> buttonbounds;
 
 //TEKST PRZYCISKU GRAJ
-	_mainmenu[0].setString("GRAJ");
-	_mainmenu[1].setString("OPCJE");
-	_mainmenu[2].setString("WYJSCIE");
+	buttontext[0].setString("GRAJ");
+	buttontext[1].setString("OPCJE");
+	buttontext[2].setString("WYJSCIE");
 	for(int i=0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
-		_mainmenu[i].setFont(font);
-		_mainmenu[i].setFillColor(sf::Color::Black);
-		_mainmenu[i].setCharacterSize(70);
-		_mainmenu[i].setPosition(sf::Vector2f(400, (250 * (i+1))+20));
-		textbounds.emplace_back(_mainmenu[i].getLocalBounds());
-		_mainmenu[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
+		buttontext[i].setFont(font);
+		buttontext[i].setFillColor(sf::Color::Black);
+		buttontext[i].setCharacterSize(70);
+		buttontext[i].setPosition(sf::Vector2f(400, (250 * (i+1))+20));
+		textbounds.emplace_back(buttontext[i].getLocalBounds());
+		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
 
 		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
 		buttonbounds.emplace_back(button[i].getLocalBounds());
@@ -49,7 +49,7 @@ void MainMenu::draw(sf::RenderWindow& window)
 	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
 		window.draw(button[i]);
-		window.draw(_mainmenu[i]);
+		window.draw(buttontext[i]);
 	}
 	window.display();
 }
@@ -58,10 +58,10 @@ void MainMenu::MoveUp()
 {
 	if(selectedItemIndex - 1 >= 0)
 	{
-		_mainmenu[selectedItemIndex].setFillColor(sf::Color::Black);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
 		selectedItemIndex--;
-		_mainmenu[selectedItemIndex].setFillColor(sf::Color::Red);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Red);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
@@ -70,10 +70,10 @@ void MainMenu::MoveDown()
 {
 	if(selectedItemIndex + 1 < MAX_NUMBER_OF_BUTTONS)
 	{
-		_mainmenu[selectedItemIndex].setFillColor(sf::Color::Black);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
 		selectedItemIndex++;
-		_mainmenu[selectedItemIndex].setFillColor(sf::Color::Red);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Red);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }

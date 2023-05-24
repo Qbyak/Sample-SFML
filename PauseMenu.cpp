@@ -10,45 +10,32 @@ PauseMenu::PauseMenu(float width, float height)
 	title.setString("PAUZA");
 	title.setPosition(sf::Vector2f(250, 50));
 
-	pausemenu[0].setFont(font);
-	pausemenu[0].setFillColor(sf::Color::Black);
+	std::vector<sf::FloatRect> textbounds;
+	std::vector<sf::FloatRect> buttonbounds;
 
-	pausemenu[0].setCharacterSize(70);
-	pausemenu[0].setString("WZNOW");
-	sf::FloatRect t1 = pausemenu[0].getLocalBounds();
+	//TEKST PRZYCISKU GRAJ
+	buttontext[0].setString("WZNOW");
+	buttontext[1].setString("WYJSCIE");
+	for(int i = 0; i < MAX_NUMBER_OF_PAUSE_BUTTONS; i++)
+	{
+		buttontext[i].setFont(font);
+		buttontext[i].setFillColor(sf::Color::Black);
+		buttontext[i].setCharacterSize(70);
+		buttontext[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
+		textbounds.emplace_back(buttontext[i].getLocalBounds());
+		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
 
-	pausemenu[0].setOrigin(sf::Vector2f(t1.left + t1.width / 2, t1.top + t1.height / 2));
-	pausemenu[0].setPosition(sf::Vector2f(400, 1000 / (MAX_NUMBER_OF_PAUSE_BUTTONS + 1) * 1));
+		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
+		buttonbounds.emplace_back(button[i].getLocalBounds());
 
-	button[0].setSize(sf::Vector2f(t1.width+5.0, 80));
-	sf::FloatRect b1 = button[0].getLocalBounds();
+		button[i].setFillColor(sf::Color(255, 247, 226));
+		button[i].setOutlineColor(sf::Color::Black);
+		button[i].setOutlineThickness(5);
+		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
+		button[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
+	}
 
-	button[0].setOrigin(sf::Vector2f(b1.left + b1.width / 2, b1.top + b1.height / 2));
-	button[0].setPosition(sf::Vector2f(400, 1000 / (MAX_NUMBER_OF_PAUSE_BUTTONS + 1) * 1));
-	button[0].setFillColor(sf::Color(255, 247, 226));
-	button[0].setOutlineColor(sf::Color::Black);
-	button[0].setOutlineThickness(5);
-
-	pausemenu[1].setFont(font);
-	pausemenu[1].setFillColor(sf::Color::Black);
-
-	pausemenu[1].setCharacterSize(70);
-	pausemenu[1].setString("WYJSCIE");
-	sf::FloatRect t2 = pausemenu[1].getLocalBounds();
-	pausemenu[1].setOrigin(sf::Vector2f(t2.left + t2.width / 2, t2.top + t2.height / 2));
-	pausemenu[1].setPosition(sf::Vector2f(400, 1000 / (MAX_NUMBER_OF_PAUSE_BUTTONS + 1) * 2));
-
-
-	button[1].setSize(sf::Vector2f(t2.width + 5.0, 80));
-	sf::FloatRect b2 = button[1].getLocalBounds();
-
-	button[1].setOrigin(sf::Vector2f(b2.left + b2.width / 2, b2.top + b2.height / 2));
-	button[1].setPosition(sf::Vector2f(400, 1000/ (MAX_NUMBER_OF_PAUSE_BUTTONS + 1) * 2));
-	button[1].setFillColor(sf::Color(255, 247, 226));
-	button[1].setOutlineColor(sf::Color::Black);
-	button[1].setOutlineThickness(5);
-
-	selectedItemIndex = 0;
+	selectedItemIndex = 2;
 
 }
 void PauseMenu::draw(sf::RenderWindow& window)
@@ -57,17 +44,17 @@ void PauseMenu::draw(sf::RenderWindow& window)
 	for(int i = 0; i < MAX_NUMBER_OF_PAUSE_BUTTONS; i++)
 	{
 		window.draw(button[i]);
-		window.draw(pausemenu[i]);
+		window.draw(buttontext[i]);
 	}
 }
 void PauseMenu::MoveUp()
 {
 	if(selectedItemIndex - 1 >= 0)
 	{
-		pausemenu[selectedItemIndex].setFillColor(sf::Color::Black);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
 		selectedItemIndex--;
-		pausemenu[selectedItemIndex].setFillColor(sf::Color::Red);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Red);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
@@ -75,10 +62,10 @@ void PauseMenu::MoveDown()
 {
 	if(selectedItemIndex + 1 < MAX_NUMBER_OF_PAUSE_BUTTONS)
 	{
-		pausemenu[selectedItemIndex].setFillColor(sf::Color::Black);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
 		selectedItemIndex++;
-		pausemenu[selectedItemIndex].setFillColor(sf::Color::Red);
+		buttontext[selectedItemIndex].setFillColor(sf::Color::Red);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }

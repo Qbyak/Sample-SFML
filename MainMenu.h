@@ -3,11 +3,11 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "Game.h"
-#include "Background.h"
+
 #include <vector>
 #define MAX_NUMBER_OF_BUTTONS 3
 
-class MainMenu:public Background
+class MainMenu
 {
 public:
 	void Play(sf::RenderWindow& window);
@@ -20,7 +20,7 @@ private:
 	int GetPressedItem() { return selectedItemIndex; }
 	enum buttons;
 	int selectedItemIndex;
-	sf::Text _mainmenu[MAX_NUMBER_OF_BUTTONS];
+	sf::Text buttontext[MAX_NUMBER_OF_BUTTONS];
 	sf::Text title;
 	sf::Font font;
 	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS];

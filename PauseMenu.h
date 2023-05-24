@@ -5,7 +5,7 @@
 #include "Game.h"
 #include "Background.h"
 #define MAX_NUMBER_OF_PAUSE_BUTTONS 2
-class PauseMenu : public Background
+class PauseMenu
 {
 public:
 	PauseMenu(float width,float height);
@@ -17,7 +17,7 @@ public:
 private:
 	int selectedItemIndex;
 	sf::Font font;
-	sf::Text pausemenu[MAX_NUMBER_OF_PAUSE_BUTTONS];
+	sf::Text buttontext[MAX_NUMBER_OF_PAUSE_BUTTONS];
 	sf::Text title;
 	sf::RectangleShape button[MAX_NUMBER_OF_PAUSE_BUTTONS], pauseBackground;
 
