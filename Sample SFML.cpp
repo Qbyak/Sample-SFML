@@ -1,7 +1,8 @@
 ﻿#include "Game.h"
+#include "MainMenu.h"
+#include "PauseMenu.h"
 int main()
 {    
-    MainMenu menu(800,1000);
-    menu.Odpalaj();
-    
+    Game gra;
+    gra.play();
 }

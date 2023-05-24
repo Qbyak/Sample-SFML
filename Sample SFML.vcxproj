@@ -140,6 +140,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="bomb.cpp" />
+    <ClCompile Include="disappearing_platform.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="moving_platform.cpp" />
@@ -150,6 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="bomb.h" />
+    <ClInclude Include="disappearing_platform.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="moving_platform.h" />

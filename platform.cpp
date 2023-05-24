@@ -10,7 +10,7 @@
             std::cout << "nie mozna zaladowac platformy" << std::endl; 
         }
         else
-            std::cout << "tworze obiekt" << std::endl;
+            std::cout << "Tworze Platforme" << std::endl;
         sprite.setTexture(tekstura);
         sprite.setTextureRect(sf::IntRect(200, 200, 300, 200));
         setTextureRect(sf::IntRect(0, 0, tekstura.getSize().x / 5, tekstura.getSize().y / 10));
@@ -19,11 +19,6 @@
        // setFillColor(sf::Color::Red);
 
 }
-
- sf::FloatRect platform::return_global_bounds()
- {
-     return getGlobalBounds();
- }
 
  void platform::update()
  {

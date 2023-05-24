@@ -4,6 +4,9 @@
 #include <SFML/Graphics.hpp>
 class Background
 {
+public:
+	void ready_game();
+	void draw_tlo(sf::RenderWindow& window);
 protected:
 	sf::Texture tlo1;
 	sf::Texture tlo2;

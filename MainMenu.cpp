@@ -7,68 +7,37 @@ MainMenu::MainMenu(float width, float height)
 	
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);
-	title.setFillColor(sf::Color::White);
+	//title.setFillColor(sf::Color::White);
 	title.setCharacterSize(120);
 	title.setString("Cloudy Tower");
 	title.setPosition(sf::Vector2f(5,50));
+	std::vector<sf::FloatRect> textbounds;
+	std::vector<sf::FloatRect> buttonbounds;
 
-	_mainmenu[0].setFont(font);
-	_mainmenu[0].setFillColor(sf::Color::Black);
-	
-	_mainmenu[0].setCharacterSize(70);
+//TEKST PRZYCISKU GRAJ
 	_mainmenu[0].setString("GRAJ");
-	sf::FloatRect t1=_mainmenu[0].getLocalBounds();
-
-	_mainmenu[0].setOrigin(sf::Vector2f(t1.left + t1.width/2,t1.top+t1.height/2));
-	_mainmenu[0].setPosition(sf::Vector2f(400, height / (MAX_NUMBER_OF_ITEMS + 1) * 1));
-
-	button[0].setSize(sf::Vector2f(160,80));
-	sf::FloatRect b1 = button[0].getLocalBounds();
-
-	button[0].setOrigin(sf::Vector2f(b1.left + b1.width / 2, b1.top + b1.height / 2));
-	button[0].setPosition(sf::Vector2f(400, height / (MAX_NUMBER_OF_ITEMS + 1) * 1));
-	button[0].setFillColor(sf::Color(255,247,226));
-	button[0].setOutlineColor(sf::Color::Black);
-	button[0].setOutlineThickness(5);
-
-	_mainmenu[1].setFont(font);
-	_mainmenu[1].setFillColor(sf::Color::Black);
-	
-	_mainmenu[1].setCharacterSize(70);
 	_mainmenu[1].setString("OPCJE");
-	sf::FloatRect t2 = _mainmenu[1].getLocalBounds();
-	_mainmenu[1].setOrigin(sf::Vector2f(t2.left+t2.width / 2,t2.top+ t2.height / 2));
-	_mainmenu[1].setPosition(sf::Vector2f(400, height / (MAX_NUMBER_OF_ITEMS + 1) * 2));
-
-
-	button[1].setSize(sf::Vector2f(190, 80));
-	sf::FloatRect b2 = button[1].getLocalBounds();
-
-	button[1].setOrigin(sf::Vector2f(b2.left + b2.width / 2, b2.top + b2.height / 2));
-	button[1].setPosition(sf::Vector2f(400, height / (MAX_NUMBER_OF_ITEMS + 1) * 2));
-	button[1].setFillColor(sf::Color(255, 247, 226));
-	button[1].setOutlineColor(sf::Color::Black);
-	button[1].setOutlineThickness(5);
-
-	_mainmenu[2].setFont(font);
-	_mainmenu[2].setFillColor(sf::Color::Black);
-	//_mainmenu[2].setFillColor(sf::Color::White);
-	_mainmenu[2].setCharacterSize(70);
 	_mainmenu[2].setString("WYJSCIE");
-	sf::FloatRect t3 = _mainmenu[2].getLocalBounds();
-	_mainmenu[2].setOrigin(sf::Vector2f(t3.left + t3.width / 2,t3.top+ t3.height / 2));
-	_mainmenu[2].setPosition(sf::Vector2f(400, height / (MAX_NUMBER_OF_ITEMS + 1) * 3));
+	for(int i=0; i < MAX_NUMBER_OF_BUTTONS; i++)
+	{
+		_mainmenu[i].setFont(font);
+		_mainmenu[i].setFillColor(sf::Color::Black);
+		_mainmenu[i].setCharacterSize(70);
+		_mainmenu[i].setPosition(sf::Vector2f(400, (250 * (i+1))+20));
+		textbounds.emplace_back(_mainmenu[i].getLocalBounds());
+		_mainmenu[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
 
-	button[2].setSize(sf::Vector2f(260, 80));
-	sf::FloatRect b3 = button[2].getLocalBounds();
-
-	button[2].setOrigin(sf::Vector2f(b3.left + b3.width / 2, b3.top + b3.height / 2));
-	button[2].setPosition(sf::Vector2f(400, height / (MAX_NUMBER_OF_ITEMS + 1) * 3));
-	button[2].setFillColor(sf::Color(255, 247, 226));
-	button[2].setOutlineColor(sf::Color::Black);
-	button[2].setOutlineThickness(5);
-
-	selectedItemIndex = 0;
+		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
+		buttonbounds.emplace_back(button[i].getLocalBounds());
+		
+		button[i].setFillColor(sf::Color(255, 247, 226));
+		button[i].setOutlineColor(sf::Color::Black);
+		button[i].setOutlineThickness(5);
+		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
+		button[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
+	}
+	
+	selectedItemIndex = 2;
 	
 }
 MainMenu::~MainMenu()
@@ -77,11 +46,12 @@ MainMenu::~MainMenu()
 void MainMenu::draw(sf::RenderWindow& window)
 {
 	window.draw(title);
-	for(int i = 0; i < MAX_NUMBER_OF_ITEMS; i++)
+	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
 		window.draw(button[i]);
 		window.draw(_mainmenu[i]);
 	}
+	window.display();
 }
 
 void MainMenu::MoveUp()
@@ -98,7 +68,7 @@ void MainMenu::MoveUp()
 
 void MainMenu::MoveDown()
 {
-	if(selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS)
+	if(selectedItemIndex + 1 < MAX_NUMBER_OF_BUTTONS)
 	{
 		_mainmenu[selectedItemIndex].setFillColor(sf::Color::Black);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
@@ -107,52 +77,7 @@ void MainMenu::MoveDown()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
-void MainMenu::ready_game()
-{
-	if(!tlo1.loadFromFile("assets/parallax-mountain-bg.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s.setTexture(tlo1);
-	tlo_s.setScale(3, 5);
-	tlo_s.setPosition(0, 0);
-	if(!tlo2.loadFromFile("assets/parallax-mountain-foreground-trees.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s2.setTexture(tlo2);
-	tlo_s2.setPosition(sf::Vector2f(0, 350));
-	tlo_s2.setScale(sf::Vector2f(4, 4));
-	if(!tlo3.loadFromFile("assets/parallax-mountain-montain-far.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s3.setTexture(tlo3);
-	tlo_s3.setPosition(sf::Vector2f(0, -100));
-	tlo_s3.setScale(sf::Vector2f(4, 7));
-	if(!tlo4.loadFromFile("assets/parallax-mountain-trees.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s4.setTexture(tlo4);
-	tlo_s4.setPosition(sf::Vector2f(0, 400));
-	tlo_s4.setScale(sf::Vector2f(2, 4));
-	if(!tlo5.loadFromFile("assets/parallax-mountain-mountains.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s5.setTexture(tlo5);
-	tlo_s5.setPosition(sf::Vector2f(0, 0));
-	tlo_s5.setScale(sf::Vector2f(6, 6));
-}
-void MainMenu::draw_tlo(sf::RenderWindow& window)
-{
-	window.draw(tlo_s);
-	window.draw(tlo_s5);
-	window.draw(tlo_s3);
-	window.draw(tlo_s4);
-	window.draw(tlo_s2);
-}
+
 
 enum MainMenu::buttons
 {
@@ -164,48 +89,52 @@ enum MainMenu::buttons
 
 
 
-void MainMenu::Odpalaj()
+void MainMenu::Play(sf::RenderWindow &window)
 {
-	ready_game();
-	sf::RenderWindow window(sf::VideoMode(800,1000), "Main Menu");
+	//Background::ready_game();
 
 	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
 	MainMenu menu(window.getSize().x, window.getSize().y);
 
-	Game game;
-	while(window.isOpen())
-	{
+	bool petla=true;
+
+  while(petla)
+  {
+	
+		 
 		sf::Event event;
 		
-		draw_tlo(window);
 		while(window.pollEvent(event))
 		{
+			
 			switch(event.type)
 			{
 				case sf::Event::KeyReleased:
 					switch(event.key.code)
 					{
 						case sf::Keyboard::Up:
+							{
 							if(button==_OPCJE)
 								button=_GRAJ;
 							else if(button==_WYJSCIE)
 								button=_OPCJE;
 							menu.MoveUp();
 							break;
-
+							}
 						case sf::Keyboard::Down:
+							{
 							if(button == _OPCJE)
 								button=_WYJSCIE;
 							else if(button == _GRAJ)
 								button = _OPCJE;
 							menu.MoveDown();
 							break;
-
+							}
 						case sf::Keyboard::Return:
 							switch(button)
 							{
 								case _GRAJ:
-									game.play();
+									petla=false;
 									std::cout << "Play button has been pressed" << std::endl;
 									break;
 								case _OPCJE:
@@ -220,13 +149,10 @@ void MainMenu::Odpalaj()
 					}
 			}
 			
-		
-			
 		}
-
 		
 		menu.draw(window);
-
 		window.display();
-	}
+	
+  }
 }

@@ -6,13 +6,14 @@ class platform  : public sf::RectangleShape
 {
 public:
 	platform(sf::Vector2f size, sf::Vector2f position);
-	sf::FloatRect return_global_bounds(); 
+	~platform();
+
+	//funkcje
 	virtual void update();
 	virtual sf::Vector2f return_speed(); 
 	void rusz(sf::Vector2f speed);
-	~platform(); 
 private:
-	
+	//teksutry
 	sf::Texture tekstura;
 	sf::Sprite sprite;
 };

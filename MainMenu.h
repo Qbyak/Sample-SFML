@@ -4,25 +4,25 @@
 #include <iostream>
 #include "Game.h"
 #include "Background.h"
-#define MAX_NUMBER_OF_ITEMS 3
+#include <vector>
+#define MAX_NUMBER_OF_BUTTONS 3
+
 class MainMenu:public Background
 {
 public:
+	void Play(sf::RenderWindow& window);
 	MainMenu(float width, float height);
+	~MainMenu();
+private:
 	void draw(sf::RenderWindow &window);
 	void MoveUp();
 	void MoveDown();
-	void ready_game();
-	void draw_tlo(sf::RenderWindow& window);
-	void Odpalaj();
 	int GetPressedItem() { return selectedItemIndex; }
 	enum buttons;
-	~MainMenu();
-private:
 	int selectedItemIndex;
-	sf::Font font;
-	sf::Text _mainmenu[MAX_NUMBER_OF_ITEMS];
+	sf::Text _mainmenu[MAX_NUMBER_OF_BUTTONS];
 	sf::Text title;
-	sf::RectangleShape button[MAX_NUMBER_OF_ITEMS];
+	sf::Font font;
+	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS];
 	
 };

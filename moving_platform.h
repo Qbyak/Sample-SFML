@@ -6,6 +6,7 @@
 class moving_platform :public platform 
 { public:
 	moving_platform(sf::Vector2f speed, sf::Vector2f size, sf::Vector2f position);
+	~moving_platform();
 	virtual void update();
 	virtual sf::Vector2f return_speed();
 private:
