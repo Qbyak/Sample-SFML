@@ -3,7 +3,7 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "Game.h"
-#include "Background.h"
+
 #define MAX_NUMBER_OF_PAUSE_BUTTONS 2
 class PauseMenu
 {

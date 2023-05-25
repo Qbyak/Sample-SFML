@@ -7,6 +7,7 @@ Game::Game()
 	std::cout << "Wykonali :" << std::endl; 
 	std::cout << "Aby zaczac wcisnij dowolny przycisk :-)" << std::endl;
 	pauza_bool = true; 
+	menu_loop=true;
 	
 }
 
@@ -14,16 +15,17 @@ void Game::play()
 {
 	ready_game(); 
     player gracz(1, sf::Vector2f(650, 800)); //tworzenie gracza 
-    sf::RenderWindow window(sf::VideoMode(800, 1000), "Cloud tower"); // tworzenie okna 
-	window.setFramerateLimit(60);	
+    sf::RenderWindow window(sf::VideoMode(800, 1000), "Cloud tower", sf::Style::None); // tworzenie okna 
+	window.setFramerateLimit(60);
+	
 	ready_background_texture(); 
-	
+	//main menu do poprawki
+	window.clear();
+	draw_tlo(window);
 	main_menu(window);
-	
-	 // tutaj zaimplementuj menu pobierz ten window ;  
+
 	while (window.isOpen())
 	{
-		
 		sf::Time elapsed = clock.restart();
 		generate_platform(); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
 		generate_bombs(); // to samo tylko z bombami 
@@ -32,6 +34,7 @@ void Game::play()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		
 		pauza(window , gracz); // pauzuje gre 
 		window.clear(sf::Color::Red); // czyszczenie ekranu 
 		draw_tlo(window); // rysowanie tla , tlo sklada sie z 6 grafik nalozonych na siebie 
@@ -43,6 +46,9 @@ void Game::play()
 		{
 			death(gracz , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		}
+		
+		window.clear();
+		draw_tlo(window);
 	}
 }
 void Game::generate_platform() 
@@ -249,9 +255,10 @@ void Game::pauza(sf::RenderWindow &window , player &gracz)
 }
 void Game::main_menu(sf::RenderWindow& window)
 {
-	draw_tlo(window);
-	MainMenu menu(800, 1000);
-	menu.Play(window);
+		MainMenu menu(800, 1000);
+		
+		std::cout << "Main Menu!" << std::endl;
+		menu.Play(window);
 }
 void Game::ready_background_texture()
 {

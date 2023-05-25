@@ -13,6 +13,7 @@ class Game
 { public:
 	Game();
 	void play();
+		
 private:
 	// funkcje generujace 
 	void generate_platform(); 
@@ -30,9 +31,10 @@ private:
 	void next_screen(player &gracz, const sf::Time& elapsed); // przygotowanie nastepnej klatki 
 	void pauza(sf::RenderWindow &window, player& gracz); // ekran pauzy 
 	void main_menu(sf::RenderWindow& window);
+
 	// funkcje rysujace	
-	void draw_tlo(sf::RenderWindow &window); 	
-	void draw_all(sf::RenderWindow& window);	
+	void draw_all(sf::RenderWindow& window);
+	void draw_tlo(sf::RenderWindow &window); 
 
 private:
 	// vectory obiektow na planszy 
@@ -61,7 +63,7 @@ private:
 	// zmienne dodatkowe
 	sf::Clock clock;
 	bool pauza_bool;
+	bool menu_loop;
 	float game_speed;
 	float player_score; 
 };
-

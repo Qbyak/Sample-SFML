@@ -3,23 +3,27 @@
 
 MainMenu::MainMenu(float width, float height)
 {
+	//wczytanie czcionki
 	font.loadFromFile("./assets/BigSmoke.ttf");
-	
+
+	//ustawienie tytu³u
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);
-	//title.setFillColor(sf::Color::White);
 	title.setCharacterSize(120);
 	title.setString("Cloudy Tower");
 	title.setPosition(sf::Vector2f(5,50));
+	//wektory zawieraj¹ce granice tektu i t³a przycisku
 	std::vector<sf::FloatRect> textbounds;
 	std::vector<sf::FloatRect> buttonbounds;
 
-//TEKST PRZYCISKU GRAJ
+	//wprowadzenie tekstu na przycisków
 	buttontext[0].setString("GRAJ");
 	buttontext[1].setString("OPCJE");
 	buttontext[2].setString("WYJSCIE");
+	//pêtla tworz¹ca przyciski
 	for(int i=0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
+		//ustawienie charakterystyk tekstu na przyciskach
 		buttontext[i].setFont(font);
 		buttontext[i].setFillColor(sf::Color::Black);
 		buttontext[i].setCharacterSize(70);
@@ -29,7 +33,8 @@ MainMenu::MainMenu(float width, float height)
 
 		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
 		buttonbounds.emplace_back(button[i].getLocalBounds());
-		
+
+		//ustawienie charakterystyk reszty przycisku
 		button[i].setFillColor(sf::Color(255, 247, 226));
 		button[i].setOutlineColor(sf::Color::Black);
 		button[i].setOutlineThickness(5);
@@ -42,18 +47,33 @@ MainMenu::MainMenu(float width, float height)
 }
 MainMenu::~MainMenu()
 {
+	std::cout << "kasuje menu" << std::endl;
 }
-void MainMenu::draw(sf::RenderWindow& window)
+
+int MainMenu::GetPressedItem()
 {
+	return selectedItemIndex;
+}
+
+void MainMenu::draw(sf::RenderWindow& window)
+{  
 	window.draw(title);
 	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
 		window.draw(button[i]);
 		window.draw(buttontext[i]);
 	}
-	window.display();
 }
-
+/*
+void MainMenu::draw_tlo(sf::RenderWindow& window) // rysowanie tla 
+{
+	window.draw(tlo_s);
+	window.draw(tlo_s5);
+	window.draw(tlo_s3);
+	window.draw(tlo_s4);
+	window.draw(tlo_s2);
+}*/
+//przesuwanie opcji menu w górê
 void MainMenu::MoveUp()
 {
 	if(selectedItemIndex - 1 >= 0)
@@ -65,7 +85,7 @@ void MainMenu::MoveUp()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
-
+//przesuwanie opcji menu w dó³
 void MainMenu::MoveDown()
 {
 	if(selectedItemIndex + 1 < MAX_NUMBER_OF_BUTTONS)
@@ -91,8 +111,6 @@ enum MainMenu::buttons
 
 void MainMenu::Play(sf::RenderWindow &window)
 {
-	//Background::ready_game();
-
 	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
 	MainMenu menu(window.getSize().x, window.getSize().y);
 
@@ -101,7 +119,6 @@ void MainMenu::Play(sf::RenderWindow &window)
   while(petla)
   {
 	
-		 
 		sf::Event event;
 		
 		while(window.pollEvent(event))
@@ -150,9 +167,8 @@ void MainMenu::Play(sf::RenderWindow &window)
 			}
 			
 		}
-		
+		//window.clear();
 		menu.draw(window);
 		window.display();
-	
   }
 }

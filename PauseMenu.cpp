@@ -34,12 +34,15 @@ PauseMenu::PauseMenu(float width, float height)
 		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
 		button[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
 	}
-
+	pauseBackground.setFillColor(sf::Color(0,0,0,1));
+	pauseBackground.setSize(sf::Vector2f(width,height));
+	pauseBackground.setPosition(sf::Vector2f(0,0));
 	selectedItemIndex = 2;
 
 }
 void PauseMenu::draw(sf::RenderWindow& window)
 {
+	
 	window.draw(title);
 	for(int i = 0; i < MAX_NUMBER_OF_PAUSE_BUTTONS; i++)
 	{
@@ -118,7 +121,8 @@ void PauseMenu::Play(sf::RenderWindow& window)
 
 
 		pause.draw(window);
-
+		window.draw(pauseBackground);
 		window.display();
 	}
+
 }
