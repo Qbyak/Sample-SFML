@@ -14,6 +14,14 @@ void Background::draw_menu_background(sf::RenderWindow* window)
 	tlo_s.setPosition(1, 1);
 	window->draw(tlo_s);
 }
+void Background::draw_pause_background(sf::RenderWindow* window,player& play)
+{
+	tlo_s.setScale(sf::Vector2f(1, 1));
+	tlo_s.setPosition(play.getPosition().x-2050, play.getPosition().y-500);
+	sf::View view(sf::FloatRect(play.getPosition().x, play.getPosition().y, 800.0f, 1000.0f));
+	window->setView(view);
+	window->draw(tlo_s);
+}
 void Background::ready_background_texture()
 {
 		if(!tlo1.loadFromFile("assets/winter 8/hd.png"))

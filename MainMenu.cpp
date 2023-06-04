@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 #include "Game.h"
 
-MainMenu::MainMenu(float width, float height)
+MainMenu::MainMenu()
 {
 	
 }
@@ -93,8 +93,11 @@ void MainMenu::MoveDown()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
-void MainMenu::PauseButtons(float width, float height)
+void MainMenu::PauseButtons(sf::RenderWindow* window)
 {
+	
+	sf::View view(window->getView());
+	
 	std::cout << "obiekt pauzy" << std::endl;
 	font.loadFromFile("./assets/BigSmoke.ttf");
 
@@ -103,7 +106,7 @@ void MainMenu::PauseButtons(float width, float height)
 	//title.setFillColor(sf::Color::White);
 	title.setCharacterSize(100);
 	title.setString("PAUZA");
-	title.setPosition(sf::Vector2f(250, 50));
+	title.setPosition(sf::Vector2f(view.getCenter().x+250, view.getCenter().y+50));
 
 	std::vector<sf::FloatRect> textbounds;
 	std::vector<sf::FloatRect> buttonbounds;
@@ -116,7 +119,7 @@ void MainMenu::PauseButtons(float width, float height)
 		buttontext[i].setFont(font);
 		buttontext[i].setFillColor(sf::Color::Black);
 		buttontext[i].setCharacterSize(70);
-		buttontext[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
+		buttontext[i].setPosition(sf::Vector2f(view.getCenter().x+400, view.getCenter().y+(320 * (i + 1)) + 50));
 		textbounds.emplace_back(buttontext[i].getLocalBounds());
 		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
 
@@ -127,13 +130,29 @@ void MainMenu::PauseButtons(float width, float height)
 		button[i].setOutlineColor(sf::Color::Black);
 		button[i].setOutlineThickness(5);
 		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
-		button[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
+		button[i].setPosition(sf::Vector2f(view.getCenter().x+400, view.getCenter().y+(320 * (i + 1)) + 50));
 	}
 	pauseBackground.setFillColor(sf::Color(0, 0, 0, 1));
-	pauseBackground.setSize(sf::Vector2f(width, height));
-	pauseBackground.setPosition(sf::Vector2f(0, 0));
+	pauseBackground.setSize(sf::Vector2f(800,1000));
+	pauseBackground.setPosition(sf::Vector2f(view.getCenter().x, view.getCenter().y));
 	selectedItemIndex = 0;
 
+}
+
+void MainMenu::PlayOptions(sf::RenderWindow *window)
+{
+	font.loadFromFile("./assets/BigSmoke.ttf");
+
+	
+	window->clear();
+	title.setFont(font);
+	title.setFillColor(sf::Color::Black);
+	//title.setFillColor(sf::Color::White);
+	title.setCharacterSize(100);
+	title.setString("OPCJE");
+	
+	background.draw_menu_background(window);
+	window->draw(title);
 }
 
 enum MainMenu::buttons
@@ -149,9 +168,9 @@ enum MainMenu::buttons
 void MainMenu::PlayMainMenu(sf::RenderWindow *window)
 {
 	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
-	Background background;
+
 	background.ready_background_texture();
-	MenuButtons(800,1000);
+	MenuButtons(800.0,1000.0);
 
 	bool petla=true;
 	while(petla)
@@ -191,6 +210,7 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window)
 									std::cout << "wybrano opcjê GRAJ" << std::endl;
 									break;
 								case _OPCJE:
+									PlayOptions(window);
 									std::cout << "wybrano opcjê OPCJE" << std::endl;
 									break;
 								case _WYJSCIE:
@@ -207,4 +227,61 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window)
 		}
   }
   
+}
+void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
+{
+	background.ready_background_texture();
+	bool pauza = true;
+	PauseButtons(window);
+	//window->setView(view_pause);
+	//PauseMenu pause(window->getSize().x, window->getSize().y);
+	while(pauza)
+	{
+		sf::Event event;
+		while(window->pollEvent(event))
+		{
+			switch(event.type)
+			{
+				case sf::Event::KeyReleased:
+					switch(event.key.code)
+					{
+						case sf::Keyboard::Up:
+							std::cout << "opcja wyzej" << std::endl;
+							MoveUp();
+							break;
+
+						case sf::Keyboard::Down:
+							std::cout << "opcja nizej" << std::endl;
+							MoveDown();
+							break;
+
+						case sf::Keyboard::Return:
+							switch(GetPressedItem())
+							{
+								case 0:
+									pauza = !pauza;
+									std::cout << "Wznowiono gre!" << std::endl;
+									break;
+								case 1:
+								case 2:
+									window->close();
+									break;
+							}
+							break;
+					}
+
+					break;
+				case sf::Event::Closed:
+					window->close();
+
+					break;
+
+			}
+		}
+
+		background.draw_pause_background(window,play);
+		draw(window);
+		
+		window->display();
+	}
 }

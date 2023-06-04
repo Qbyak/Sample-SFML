@@ -11,9 +11,9 @@ class MainMenu
 {
 public:
 	void PlayMainMenu(sf::RenderWindow* window);//pêtla menu g³ównego
-	void MenuButtons(float width, float height);
-	void PauseButtons(float width, float height);
-	MainMenu(float width, float height);//konstruktor menu, tworzenie przycisków
+
+	void PlayPauseMenu(sf::RenderWindow* window,player &play);
+	MainMenu();//konstruktor menu, tworzenie przycisków
 	~MainMenu();
 private:
 	void draw(sf::RenderWindow *window);//rysowanie przycisków i tytu³u
@@ -21,8 +21,9 @@ private:
 	void MoveDown();//przesuwanie w dó³
 	int GetPressedItem();//getter selectedItemIndex
 	//void draw_tlo(sf::RenderWindow*window);
-	
-
+	void MenuButtons(float width, float height);
+	void PauseButtons(sf::RenderWindow* window);
+	void PlayOptions(sf::RenderWindow*window);
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
 	enum buttons;
 	int selectedItemIndex;
@@ -31,5 +32,7 @@ private:
 	sf::Font font;
 	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS], pauseBackground;
 	Background background;
+	MainMenu menu(float width, float height);
+	sf::View view_pause;
 	
 };

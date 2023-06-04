@@ -3,30 +3,26 @@
 #include "coin.h"
 #include <algorithm>
 #include <vector>
-#include "MainMenu.h"
-#include "PauseMenu.h"
+#include"MainMenu.h"
 Game::Game()
 {
 	std::cout << "Witamy w cloud TOWER!" << std::endl; 
 	std::cout << "Wykonali :" << std::endl; 
 	std::cout << "Aby zaczac wcisnij dowolny przycisk :-)" << std::endl;
-	std::cin.get();
 }
 
 void Game::play()
 {
 	background.ready_background_texture();
 	ready_game();
-	MainMenu menu(800, 1000);
+	MainMenu menu;
 	player play(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
 	menu.PlayMainMenu(window);
-	menu.~MainMenu();
-	
-	//platformy.emplace_back(new platform(sf::Vector2f(200, 50) , sf::Vector2f(650 , 700))); 
+
 	while (window->isOpen())
 	{ 
 		sf::Vector2f play_pos = play.getPosition(); 
-		//sf::Time elapsed = clock.restart();
+
 		generate_platform(play); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
 		generate_bombs(play); // to samo tylko z bombami 
 		while (window->pollEvent(event)) // zamkniecie okna 
@@ -35,7 +31,7 @@ void Game::play()
 				window->close();
 		}
 		pauza(window,play); // pauzuje gre 
-		window->clear(sf::Color::Red); // czyszcenie ekranu 
+		window->clear(sf::Color::Black); // czyszcenie ekranu 
 		background.draw_tlo(window); // rysowanie tla , tlo sklada sie z 6 grafik nalozonych na siebie 
 		update_all(play); // updatowanie pozycji platform oraz bomb nastepnie rysowanie ich		
         draw_all(window); // rysowanie wszystkich obiektow poza graczem 
@@ -288,20 +284,20 @@ void Game::death(player& play, sf::RenderWindow*window) // ekran smierci
 
 void Game::pauza(sf::RenderWindow*window, player& gracz)
 {
+	MainMenu menu;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
 	{
 		// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
-		PauseMenu pause(800, 1000);
 		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
 		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
-		background.draw_tlo(window);
+		//background.draw_tlo(window);
 		for (auto x : platformy)
 		{
 			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
 		}
-		pause.Play(window); 
-		//draw_all(window);
-		//window->draw(gracz);
+		menu.PlayPauseMenu(window,gracz); 
+		draw_all(window);
+		window->draw(gracz);
 		window->display();
 		std::cout << "Zapauzowano!" << std::endl;
 		//pause.Play(window);
@@ -350,14 +346,14 @@ void Game::ready_background_texture()
 	}
 	tlo_s4.setTexture(tlo4);
 	tlo_s4.setPosition(sf::Vector2f(0-1000, 4000-9000));
-	tlo_s4.setScale(sf::Vector2f(20, 40));
+	tlo_s4.setScale(sf::Vector2f(3, 3));
 	if (!tlo5.loadFromFile("assets/parallax-mountain-mountains.png"))
 	{
 		std::cout << "nie zaladowano tla";
 	}
 	tlo_s5.setTexture(tlo5);
 	tlo_s5.setPosition(sf::Vector2f(0-1000, 0-9000));
-	tlo_s5.setScale(sf::Vector2f(60, 60));
+	tlo_s5.setScale(sf::Vector2f(3, 3));
 }
 
 void Game::update_minimap(player play )
