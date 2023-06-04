@@ -494,9 +494,10 @@ void Game::GameOver(player& gracz)
 					window->close();
 					minimap->close();
 					gracz.alive;
-					Game gra;
+					//*********************************************
+					Game gra;			// wiem ¿e tak nie mo¿e byæ ale to tymczosowe
 					gra.play();
-
+					//************************************************
 				}
 			}
 		}
