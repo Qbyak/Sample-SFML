@@ -10,7 +10,9 @@
 class MainMenu
 {
 public:
-	void Play(sf::RenderWindow* window);//pêtla menu g³ównego
+	void PlayMainMenu(sf::RenderWindow* window);//pêtla menu g³ównego
+	void MenuButtons(float width, float height);
+	void PauseButtons(float width, float height);
 	MainMenu(float width, float height);//konstruktor menu, tworzenie przycisków
 	~MainMenu();
 private:
@@ -27,7 +29,7 @@ private:
 	sf::Text buttontext[MAX_NUMBER_OF_BUTTONS];
 	sf::Text title;
 	sf::Font font;
-	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS];
+	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS], pauseBackground;
 	Background background;
 	
 };

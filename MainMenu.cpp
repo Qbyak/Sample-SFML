@@ -3,6 +3,10 @@
 
 MainMenu::MainMenu(float width, float height)
 {
+	
+}
+void MainMenu::MenuButtons(float width, float height)
+{
 	//wczytanie czcionki
 	font.loadFromFile("./assets/BigSmoke.ttf");
 
@@ -11,7 +15,7 @@ MainMenu::MainMenu(float width, float height)
 	title.setFillColor(sf::Color::Black);
 	title.setCharacterSize(120);
 	title.setString("Cloudy Tower");
-	title.setPosition(sf::Vector2f(5,50));
+	title.setPosition(sf::Vector2f(5, 50));
 	//wektory zawieraj¹ce granice tektu i t³a przycisku
 	std::vector<sf::FloatRect> textbounds;
 	std::vector<sf::FloatRect> buttonbounds;
@@ -21,29 +25,29 @@ MainMenu::MainMenu(float width, float height)
 	buttontext[1].setString("OPCJE");
 	buttontext[2].setString("WYJSCIE");
 	//pêtla tworz¹ca przyciski
-	for(int i=0; i < MAX_NUMBER_OF_BUTTONS; i++)
+	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
-		//ustawienie charakterystyk tekstu na przyciskach
+		//ustawienie tekstu na przyciskach
 		buttontext[i].setFont(font);
 		buttontext[i].setFillColor(sf::Color::Black);
 		buttontext[i].setCharacterSize(70);
-		buttontext[i].setPosition(sf::Vector2f(400, (250 * (i+1))+20));
+		buttontext[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
 		textbounds.emplace_back(buttontext[i].getLocalBounds());
 		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
 
 		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
 		buttonbounds.emplace_back(button[i].getLocalBounds());
 
-		//ustawienie charakterystyk reszty przycisku
+		//ustawienie reszty przycisku
 		button[i].setFillColor(sf::Color(255, 247, 226));
 		button[i].setOutlineColor(sf::Color::Black);
 		button[i].setOutlineThickness(5);
 		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
 		button[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
 	}
-	
+
 	selectedItemIndex = 1;
-	
+
 }
 MainMenu::~MainMenu()
 {
@@ -89,7 +93,48 @@ void MainMenu::MoveDown()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
+void MainMenu::PauseButtons(float width, float height)
+{
+	std::cout << "obiekt pauzy" << std::endl;
+	font.loadFromFile("./assets/BigSmoke.ttf");
 
+	title.setFont(font);
+	title.setFillColor(sf::Color::Black);
+	//title.setFillColor(sf::Color::White);
+	title.setCharacterSize(100);
+	title.setString("PAUZA");
+	title.setPosition(sf::Vector2f(250, 50));
+
+	std::vector<sf::FloatRect> textbounds;
+	std::vector<sf::FloatRect> buttonbounds;
+
+	//TEKST PRZYCISKU GRAJ
+	buttontext[0].setString("WZNOW");
+	buttontext[1].setString("WYJSCIE");
+	for(int i = 0; i < 2; i++)
+	{
+		buttontext[i].setFont(font);
+		buttontext[i].setFillColor(sf::Color::Black);
+		buttontext[i].setCharacterSize(70);
+		buttontext[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
+		textbounds.emplace_back(buttontext[i].getLocalBounds());
+		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
+
+		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
+		buttonbounds.emplace_back(button[i].getLocalBounds());
+
+		button[i].setFillColor(sf::Color(255, 247, 226));
+		button[i].setOutlineColor(sf::Color::Black);
+		button[i].setOutlineThickness(5);
+		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
+		button[i].setPosition(sf::Vector2f(400, (320 * (i + 1)) + 50));
+	}
+	pauseBackground.setFillColor(sf::Color(0, 0, 0, 1));
+	pauseBackground.setSize(sf::Vector2f(width, height));
+	pauseBackground.setPosition(sf::Vector2f(0, 0));
+	selectedItemIndex = 0;
+
+}
 
 enum MainMenu::buttons
 {
@@ -101,12 +146,12 @@ enum MainMenu::buttons
 
 
 
-void MainMenu::Play(sf::RenderWindow *window)
+void MainMenu::PlayMainMenu(sf::RenderWindow *window)
 {
 	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
 	Background background;
 	background.ready_background_texture();
-	
+	MenuButtons(800,1000);
 
 	bool petla=true;
 	while(petla)

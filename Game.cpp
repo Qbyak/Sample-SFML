@@ -19,10 +19,8 @@ void Game::play()
 	ready_game();
 	MainMenu menu(800, 1000);
 	player play(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
-	menu.Play(window);
+	menu.PlayMainMenu(window);
 	menu.~MainMenu();
-	
-    ready_background_texture();
 	
 	//platformy.emplace_back(new platform(sf::Vector2f(200, 50) , sf::Vector2f(650 , 700))); 
 	while (window->isOpen())
