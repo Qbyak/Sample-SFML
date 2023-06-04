@@ -9,10 +9,10 @@ class PauseMenu
 {
 public:
 	PauseMenu(float width,float height);
-	void draw(sf::RenderWindow& window);
+	void draw(sf::RenderWindow*window);
 	void MoveUp();
 	void MoveDown();
-	void Play(sf::RenderWindow& window);
+	void Play(sf::RenderWindow*window);
 	int GetPressedItem() { return selectedItemIndex; }
 private:
 	int selectedItemIndex;

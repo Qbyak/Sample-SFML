@@ -3,21 +3,22 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "Game.h"
+#include "Background.h"
 #include <vector>
 #define MAX_NUMBER_OF_BUTTONS 3
 
 class MainMenu
 {
 public:
-	void Play(sf::RenderWindow& window);//pêtla menu g³ównego
+	void Play(sf::RenderWindow* window);//pêtla menu g³ównego
 	MainMenu(float width, float height);//konstruktor menu, tworzenie przycisków
 	~MainMenu();
 private:
-	void draw(sf::RenderWindow &window);//rysowanie przycisków i tytu³u
+	void draw(sf::RenderWindow *window);//rysowanie przycisków i tytu³u
 	void MoveUp();//przesuwanie w górê
 	void MoveDown();//przesuwanie w dó³
 	int GetPressedItem();//getter selectedItemIndex
-	//void draw_tlo(sf::RenderWindow& window);
+	//void draw_tlo(sf::RenderWindow*window);
 	
 
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
@@ -27,5 +28,6 @@ private:
 	sf::Text title;
 	sf::Font font;
 	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS];
+	Background background;
 	
 };

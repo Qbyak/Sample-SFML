@@ -5,19 +5,17 @@
 #include "player.h"
 #include "platform.h"
 #include "moving_platform.h"
+#include "Background.h"
 #include "disappearing_platform.h"
-
-#include "MainMenu.h"
-#include "PauseMenu.h"
 class Game
 { public:
 	Game();
 	void play();
-		
+	void draw_tlo(sf::RenderWindow* window);
 private:
 	// funkcje generujace 
-	void generate_platform(); 
-	void generate_bombs();
+	void generate_platform(player play); // generuje platformy z szansa na wygenerowanie monety na jednej z nich
+	void generate_bombs(player play);
 	float generate_rand_dist(); // generuje dystans w okreslonym przedziale , aby gracz doskoczyl do kazdej platformy 
 
 	// funkcje przygotowywujace
@@ -25,21 +23,27 @@ private:
 	void ready_background_texture();
 
 	// funkcje updatujace
-	void update_all(player& gracz, const sf::Time& elapsed); // updatuje kazda platforme 
-    void death(player& gracz ,  sf::RenderWindow& window); // ekran smierci 
+	void update_all(player& play); // updatuje kazda platforme 
+    void death(player& play ,  sf::RenderWindow* window); // ekran smierci 
     void move_all(sf::Vector2f ruch); // rusza wszystkie platformy 
-	void next_screen(player &gracz, const sf::Time& elapsed); // przygotowanie nastepnej klatki 
-	void pauza(sf::RenderWindow &window, player& gracz); // ekran pauzy 
-	void main_menu(sf::RenderWindow& window);
+	void next_screen(player &play); // przygotowanie nastepnej klatki 
+	void pauza(sf::RenderWindow *window,player& gracz); // ekran pauzy 
 
+	//
+	void move_bombs(); 
 	// funkcje rysujace	
-	void draw_all(sf::RenderWindow& window);
-	void draw_tlo(sf::RenderWindow &window); 
+	//void draw_tlo(sf::RenderWindow *window); 	
+	void draw_all(sf::RenderWindow* window);	
+	// funkcja obslugujaca minimape
+	void update_minimap(player play); 
 
 private:
+	sf::RenderWindow *window;
+	sf::RenderWindow* minimap; 
 	// vectory obiektow na planszy 
 	std::vector<platform*> platformy;
 	std::vector<bomb*> bomby; 
+	std::vector<coin*> *monety; 
 
 	// zmienne czasowe do animacji bomby
 	sf::Clock bomb_clock; 
@@ -63,7 +67,12 @@ private:
 	// zmienne dodatkowe
 	sf::Clock clock;
 	bool pauza_bool;
-	bool menu_loop;
-	float game_speed;
-	float player_score; 
+	float game_speed; 
+	//
+	sf::View view_game;
+	sf::View viev_minimap;
+	// 
+	int map_number; 
+	Background background;
 };
+

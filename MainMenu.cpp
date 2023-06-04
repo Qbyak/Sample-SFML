@@ -42,7 +42,7 @@ MainMenu::MainMenu(float width, float height)
 		button[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
 	}
 	
-	selectedItemIndex = 2;
+	selectedItemIndex = 1;
 	
 }
 MainMenu::~MainMenu()
@@ -55,24 +55,16 @@ int MainMenu::GetPressedItem()
 	return selectedItemIndex;
 }
 
-void MainMenu::draw(sf::RenderWindow& window)
+void MainMenu::draw(sf::RenderWindow* window)
 {  
-	window.draw(title);
+	window->draw(title);
 	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
 	{
-		window.draw(button[i]);
-		window.draw(buttontext[i]);
+		window->draw(button[i]);
+		window->draw(buttontext[i]);
 	}
 }
-/*
-void MainMenu::draw_tlo(sf::RenderWindow& window) // rysowanie tla 
-{
-	window.draw(tlo_s);
-	window.draw(tlo_s5);
-	window.draw(tlo_s3);
-	window.draw(tlo_s4);
-	window.draw(tlo_s2);
-}*/
+
 //przesuwanie opcji menu w górê
 void MainMenu::MoveUp()
 {
@@ -109,21 +101,20 @@ enum MainMenu::buttons
 
 
 
-void MainMenu::Play(sf::RenderWindow &window)
+void MainMenu::Play(sf::RenderWindow *window)
 {
 	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
-	MainMenu menu(window.getSize().x, window.getSize().y);
+	Background background;
+	background.ready_background_texture();
+	
 
 	bool petla=true;
-
-  while(petla)
-  {
-	
+	while(petla)
+	{
 		sf::Event event;
 		
-		while(window.pollEvent(event))
+		while(window->pollEvent(event))
 		{
-			
 			switch(event.type)
 			{
 				case sf::Event::KeyReleased:
@@ -135,7 +126,7 @@ void MainMenu::Play(sf::RenderWindow &window)
 								button=_GRAJ;
 							else if(button==_WYJSCIE)
 								button=_OPCJE;
-							menu.MoveUp();
+							MoveUp();
 							break;
 							}
 						case sf::Keyboard::Down:
@@ -144,7 +135,7 @@ void MainMenu::Play(sf::RenderWindow &window)
 								button=_WYJSCIE;
 							else if(button == _GRAJ)
 								button = _OPCJE;
-							menu.MoveDown();
+							MoveDown();
 							break;
 							}
 						case sf::Keyboard::Return:
@@ -152,23 +143,23 @@ void MainMenu::Play(sf::RenderWindow &window)
 							{
 								case _GRAJ:
 									petla=false;
-									std::cout << "Play button has been pressed" << std::endl;
+									std::cout << "wybrano opcjê GRAJ" << std::endl;
 									break;
 								case _OPCJE:
-									std::cout << "Option button has been pressed" << std::endl;
+									std::cout << "wybrano opcjê OPCJE" << std::endl;
 									break;
 								case _WYJSCIE:
-									window.close();
+									window->close();
 									break;
 							}
 
 							break;
 					}
 			}
-			
+			background.draw_menu_background(window);
+			draw(window);
+			window->display();
 		}
-		//window.clear();
-		menu.draw(window);
-		window.display();
   }
+  
 }

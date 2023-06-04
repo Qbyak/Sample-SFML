@@ -1,13 +1,16 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 class Background
 {
 public:
-	void ready_game();
-	void draw_tlo(sf::RenderWindow& window);
-protected:
+	void ready_background_texture();
+	void draw_tlo(sf::RenderWindow *window);
+	void draw_menu_background(sf::RenderWindow* window);
+private:
+	std::vector<sf::Texture> tlo;
 	sf::Texture tlo1;
 	sf::Texture tlo2;
 	sf::Texture tlo3;
@@ -20,4 +23,3 @@ protected:
 	sf::Sprite tlo_s4;
 	sf::Sprite tlo_s5;
 };
-

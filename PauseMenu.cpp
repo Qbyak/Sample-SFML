@@ -1,6 +1,7 @@
 #include "PauseMenu.h"
 PauseMenu::PauseMenu(float width, float height)
 {
+	std::cout << "obiekt pauzy" << std::endl;
 	font.loadFromFile("./assets/BigSmoke.ttf");
 
 	title.setFont(font);
@@ -37,17 +38,17 @@ PauseMenu::PauseMenu(float width, float height)
 	pauseBackground.setFillColor(sf::Color(0,0,0,1));
 	pauseBackground.setSize(sf::Vector2f(width,height));
 	pauseBackground.setPosition(sf::Vector2f(0,0));
-	selectedItemIndex = 2;
+	selectedItemIndex = 0;
 
 }
-void PauseMenu::draw(sf::RenderWindow& window)
+void PauseMenu::draw(sf::RenderWindow*window)
 {
 	
-	window.draw(title);
+	window->draw(title);
 	for(int i = 0; i < MAX_NUMBER_OF_PAUSE_BUTTONS; i++)
 	{
-		window.draw(button[i]);
-		window.draw(buttontext[i]);
+		window->draw(button[i]);
+		window->draw(buttontext[i]);
 	}
 }
 void PauseMenu::MoveUp()
@@ -72,15 +73,14 @@ void PauseMenu::MoveDown()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
-void PauseMenu::Play(sf::RenderWindow& window)
+void PauseMenu::Play(sf::RenderWindow*window)
 {
 	bool pauza=true;
-	PauseMenu pause(window.getSize().x, window.getSize().y);
+	//PauseMenu pause(window->getSize().x, window->getSize().y);
 	while(pauza)
 	{
 		sf::Event event;
-
-		while(window.pollEvent(event))
+		while(window->pollEvent(event))
 		{
 			switch(event.type)
 			{
@@ -88,31 +88,32 @@ void PauseMenu::Play(sf::RenderWindow& window)
 					switch(event.key.code)
 					{
 						case sf::Keyboard::Up:
-							pause.MoveUp();
+							std::cout << "opcja wyzej" << std::endl;
+							this->MoveUp();
 							break;
 
 						case sf::Keyboard::Down:
-							pause.MoveDown();
+							std::cout << "opcja nizej" << std::endl;
+							this->MoveDown();
 							break;
 
 						case sf::Keyboard::Return:
-							switch(pause.GetPressedItem())
+							switch(this->GetPressedItem())
 							{
 								case 0:
 									pauza=!pauza;
-									std::cout << "Play button has been pressed" << std::endl;
+									std::cout << "Wznowiono gre!" << std::endl;
 									break;
 								case 1:
-									window.close();
+									window->close();
 									break;
 							}
-
 							break;
 					}
 
 					break;
 				case sf::Event::Closed:
-					window.close();
+					window->close();
 
 					break;
 
@@ -120,9 +121,8 @@ void PauseMenu::Play(sf::RenderWindow& window)
 		}
 
 
-		pause.draw(window);
-		window.draw(pauseBackground);
-		window.display();
+		this->draw(window);
+		window->display();
 	}
 
 }
