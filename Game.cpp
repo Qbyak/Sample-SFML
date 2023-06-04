@@ -494,7 +494,8 @@ void Game::GameOver(player& gracz)
 					window->close();
 					minimap->close();
 					gracz.alive;
-					play();
+					Game gra;
+					gra.play();
 
 				}
 			}
