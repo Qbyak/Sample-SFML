@@ -1,8 +1,6 @@
 #include "Game.h"
 #include "player.h"
 #include "coin.h"
-#include <algorithm>
-#include <vector>
 #include"MainMenu.h"
 Game::Game()
 {
@@ -40,11 +38,12 @@ void Game::play()
 		view_game.setCenter(play.getPosition()); 
 		window->setView(view_game); 
 		window->display(); // wyswietlanie klatki gry
+		update_minimap(play);
 		if (play.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update
 		{
 			death(play , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		}
-		update_minimap(play); 	
+		 	
 	}
 }
 
@@ -276,9 +275,10 @@ void Game::death(player& play, sf::RenderWindow*window) // ekran smierci
 	system("CLS");
 	std::cout << "Przegrales!" << std::endl;
 	std::cout << "Wcisnij cokolwiek aby kontynuowac" << std::endl;
-	std::cout << "Wynik gracza to: " <<play.return_score()<< std::endl; 
-	std::cin.get();
-	window->close();
+	std::cout << "Wynik gracza to: " <<play.return_score()<< std::endl;
+	GameOver(play);
+	//std::cin.get();
+	//window->close();
 }
 
 
@@ -307,6 +307,8 @@ void Game::pauza(sf::RenderWindow*window, player& gracz)
 
 	}
 }
+
+
 
 void Game::move_bombs()
 {
@@ -363,4 +365,167 @@ void Game::update_minimap(player play )
 	draw_all(minimap);
 	minimap->draw(play); 
 	minimap->display(); 
+}
+
+void Game::zapis(player& play,std::string nick)
+{
+	//std::string nazwa = "Gracz2";
+	std::fstream zapis;
+	zapis.open("Wyniki.csv", std::ios::app);
+	zapis << play.return_score() << ',' << nick << std::endl;
+	zapis.close();
+}
+
+void Game::odczyt()
+{
+	
+	std::fstream file("Wyniki.csv", std::fstream::in);
+	
+	if (file.is_open())
+	{
+		std::string line;
+
+		while (getline(file, line))
+		{
+			std::stringstream str(line);
+			do_zapisu er;
+			std::string scor_in;
+			getline(str, scor_in, ',');
+			er.score = stoi(scor_in);
+			getline(str, er.name, ',');
+			posortowany.emplace_back(er);
+
+		}
+	}
+
+	std::sort(posortowany.begin(), posortowany.end(), [](const do_zapisu& A, const do_zapisu& B) {return A.score < B.score; });
+	std::reverse(posortowany.begin(), posortowany.end());
+
+	for (int i = 0; i < posortowany.size(); i++)
+	{
+		std::cout << posortowany[i].name << " " << posortowany[i].score << std::endl;
+	}
+}
+
+void Game::GameOver(player& gracz)
+{
+	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
+	sf::Font font1;
+	std::string wynik = std::to_string(gracz.return_score());
+	font1.loadFromFile("./assets/BigSmoke.ttf");
+	sf::Texture background;
+	background.loadFromFile("./assets/winter 1/1.png");
+	sf::Sprite sprite;
+	sprite.setTexture(background);
+	sprite.setScale(3, 3);
+
+	sf::Text t[5];
+	t[0].setString("Game over");
+	t[0].setCharacterSize(50);
+	t[0].setFillColor(sf::Color::Black);
+	t[0].setPosition(170, 30);
+	t[0].setFont(font1);
+
+	t[1].setString("Twoj wynik");
+	t[1].setCharacterSize(30);
+	t[1].setFillColor(sf::Color::Black);
+	t[1].setPosition(150, 125);
+	t[1].setFont(font1);
+
+	t[2].setString(wynik);
+	t[2].setCharacterSize(30);
+	t[2].setFillColor(sf::Color::Black);
+	t[2].setPosition(450, 125);
+	t[2].setFont(font1);
+
+	t[3].setString("Podaj swoj nick i nacisnij enter aby wrocic do menu");
+	t[3].setCharacterSize(20);
+	t[3].setFillColor(sf::Color::Black);
+	t[3].setPosition(50, 200);
+	t[3].setFont(font1);
+
+	t[4].setString("nick");
+	t[4].setCharacterSize(30);
+	t[4].setFillColor(sf::Color::Black);
+	t[4].setPosition(150, 300);
+	t[4].setFont(font1);
+
+
+
+	std::string input_text;
+	sf::Text text("", font1);
+	sf::Clock clock;
+
+	sf::Text y;
+
+	/*for (int i = 0; i < 10; i++)
+	{
+		std::string w = std::to_string(sorto[i].score) + "          " + sorto[i].name;
+		y.setString(w);
+		y.setCharacterSize(30);
+		y.setFillColor(sf::Color::Black);
+		y.setPosition(150, 10+(30*i));
+		y.setFont(font1);
+		tab.emplace_back(y);
+		w.clear();
+
+	}*/
+	while (window2.isOpen())
+	{
+		sf::Event event2;
+		while (window2.pollEvent(event2))
+		{
+			if (event2.type == sf::Event::Closed)
+				window2.close();
+			else if (event2.type == sf::Event::TextEntered)
+			{
+				if (std::isprint(event2.text.unicode) && input_text.size() < 10)
+					input_text += event2.text.unicode;
+			}
+			else if (event2.type == sf::Event::KeyReleased) {
+				if (event2.key.code == sf::Keyboard::BackSpace) {
+					if (!input_text.empty())
+						input_text.pop_back();
+				}
+				if (event2.key.code == sf::Keyboard::Enter) {
+					window2.close();
+					zapis(gracz,input_text);
+					odczyt();
+					window->close();
+					minimap->close();
+					gracz.alive;
+					play();
+
+				}
+			}
+		}
+		static sf::Time text_effect_time;
+		static bool show_cursor;
+
+		text_effect_time += clock.restart();
+
+		if (text_effect_time >= sf::seconds(0.5f))
+		{
+			show_cursor = !show_cursor;
+			text_effect_time = sf::Time::Zero;
+		}
+
+		text.setString(input_text + (show_cursor ? '_' : ' '));
+		text.setPosition(350, 300);
+		text.setFillColor(sf::Color::Black);
+
+
+		window2.clear();
+		window2.draw(sprite);
+		/*for (int i = 0; i < tab.size(); i++)
+		{
+			window2.draw(tab[i]);
+		}*/
+		for (int i = 0; i < 5; i++)
+		{
+			window2.draw(t[i]);
+		}
+		window2.draw(text);
+		window2.display();
+	}
 }

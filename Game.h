@@ -1,5 +1,10 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <algorithm>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "player.h"
@@ -28,6 +33,7 @@ private:
     void move_all(sf::Vector2f ruch); // rusza wszystkie platformy 
 	void next_screen(player &play); // przygotowanie nastepnej klatki 
 	void pauza(sf::RenderWindow *window,player& gracz); // ekran pauzy 
+	void GameOver(player& play);// ekran game over
 
 	//
 	void move_bombs(); 
@@ -35,7 +41,10 @@ private:
 	//void draw_tlo(sf::RenderWindow *window); 	
 	void draw_all(sf::RenderWindow* window);	
 	// funkcja obslugujaca minimape
-	void update_minimap(player play); 
+	void update_minimap(player play);
+	//funkcje zapis/odczyt
+	void zapis(player& play,std::string nick);
+	void odczyt();
 
 private:
 	sf::RenderWindow *window;
@@ -74,5 +83,12 @@ private:
 	// 
 	int map_number; 
 	Background background;
+	//
+	struct do_zapisu
+	{
+		int score;
+		std::string name;
+	};
+	std::vector<do_zapisu> posortowany;
 };
 
