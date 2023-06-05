@@ -369,7 +369,6 @@ void Game::update_minimap(player play )
 
 void Game::zapis(player& play,std::string nick)
 {
-	//std::string nazwa = "Gracz2";
 	std::fstream zapis;
 	zapis.open("Wyniki.csv", std::ios::app);
 	zapis << play.return_score() << ',' << nick << std::endl;

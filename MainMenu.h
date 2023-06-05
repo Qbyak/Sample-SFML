@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
-#include "Game.h"
+
 #include "Background.h"
 #include <vector>
 #define MAX_NUMBER_OF_BUTTONS 3
@@ -23,16 +23,19 @@ private:
 	//void draw_tlo(sf::RenderWindow*window);
 	void MenuButtons(float width, float height);
 	void PauseButtons(sf::RenderWindow* window);
-	void PlayOptions(sf::RenderWindow*window);
+	void OptionButtons(float width, float height);
+	void PlayOptions();
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
 	enum buttons;
 	int selectedItemIndex;
-	sf::Text buttontext[MAX_NUMBER_OF_BUTTONS];
+	std::vector<sf::Text> buttontext;
 	sf::Text title;
 	sf::Font font;
-	sf::RectangleShape button[MAX_NUMBER_OF_BUTTONS], pauseBackground;
+	std::vector<sf::FloatRect> textbounds;
+	std::vector<sf::FloatRect> buttonbounds;
+	std::vector<sf::RectangleShape> button;
+	sf::RectangleShape pauseBackground;
 	Background background;
-	MainMenu menu(float width, float height);
 	sf::View view_pause;
 	
 };

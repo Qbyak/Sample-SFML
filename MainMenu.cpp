@@ -1,10 +1,15 @@
 #include "MainMenu.h"
-#include "Game.h"
+
 
 MainMenu::MainMenu()
 {
 	
 }
+MainMenu::~MainMenu()
+{
+	std::cout << "kasuje menu" << std::endl;
+}
+
 void MainMenu::MenuButtons(float width, float height)
 {
 	//wczytanie czcionki
@@ -16,11 +21,11 @@ void MainMenu::MenuButtons(float width, float height)
 	title.setCharacterSize(120);
 	title.setString("Cloudy Tower");
 	title.setPosition(sf::Vector2f(5, 50));
-	//wektory zawieraj¹ce granice tektu i t³a przycisku
+	//wprowadzenie tekstu na przycisków
 	std::vector<sf::FloatRect> textbounds;
 	std::vector<sf::FloatRect> buttonbounds;
-
-	//wprowadzenie tekstu na przycisków
+	button.resize(3);
+	buttontext.resize(3);
 	buttontext[0].setString("GRAJ");
 	buttontext[1].setString("OPCJE");
 	buttontext[2].setString("WYJSCIE");
@@ -49,11 +54,87 @@ void MainMenu::MenuButtons(float width, float height)
 	selectedItemIndex = 1;
 
 }
-MainMenu::~MainMenu()
+void MainMenu::PauseButtons(sf::RenderWindow* window)
 {
-	std::cout << "kasuje menu" << std::endl;
-}
 
+	sf::View view(window->getView());
+
+	std::cout << "obiekt pauzy" << std::endl;
+	font.loadFromFile("./assets/BigSmoke.ttf");
+
+	title.setFont(font);
+	title.setFillColor(sf::Color::Black);
+
+	title.setCharacterSize(100);
+	title.setString("PAUZA");
+	title.setPosition(sf::Vector2f(view.getCenter().x + 250, view.getCenter().y + 50));
+
+	
+
+	//TEKST PRZYCISKU GRAJ
+	button.resize(2);
+	buttontext.resize(2);
+	buttontext[0].setString("WZNOW");
+	buttontext[1].setString("WYJSCIE");
+	for(int i = 0; i < 2; i++)
+	{
+		buttontext[i].setFont(font);
+		buttontext[i].setFillColor(sf::Color::Black);
+		buttontext[i].setCharacterSize(70);
+		buttontext[i].setPosition(sf::Vector2f(view.getCenter().x + 400, view.getCenter().y + (320 * (i + 1)) + 50));
+		textbounds.emplace_back(buttontext[i].getLocalBounds());
+		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
+
+		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
+		buttonbounds.emplace_back(button[i].getLocalBounds());
+
+		button[i].setFillColor(sf::Color(255, 247, 226));
+		button[i].setOutlineColor(sf::Color::Black);
+		button[i].setOutlineThickness(5);
+		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
+		button[i].setPosition(sf::Vector2f(view.getCenter().x + 400, view.getCenter().y + (320 * (i + 1)) + 50));
+	}
+	pauseBackground.setFillColor(sf::Color(0, 0, 0, 1));
+	pauseBackground.setSize(sf::Vector2f(800, 1000));
+	pauseBackground.setPosition(sf::Vector2f(view.getCenter().x, view.getCenter().y));
+	selectedItemIndex = 0;
+
+}
+void MainMenu::OptionButtons(float width, float height)
+{
+	title.setFont(font);
+	title.setFillColor(sf::Color::Black);
+	title.setCharacterSize(100);
+	title.setString("OPCJE");
+	title.setPosition(250, 50);
+	button.clear();
+	buttontext.clear();
+	button.resize(3);
+	buttontext.resize(3);
+	buttontext[0].setString("TABLICA WYNIKOW");
+	buttontext[1].setString("AUTORZY");
+	buttontext[2].setString("POWROT");
+	for(int i = 0; i < 3; i++)
+	{
+		//ustawienie tekstu na przyciskach
+		buttontext[i].setFont(font);
+		buttontext[i].setFillColor(sf::Color::Black);
+		buttontext[i].setCharacterSize(40);
+		buttontext[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
+		textbounds.emplace_back(buttontext[i].getLocalBounds());
+		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
+
+		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
+		buttonbounds.emplace_back(button[i].getLocalBounds());
+
+		//ustawienie reszty przycisku
+		button[i].setFillColor(sf::Color(255, 247, 226));
+		button[i].setOutlineColor(sf::Color::Black);
+		button[i].setOutlineThickness(5);
+		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
+		button[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
+	}
+}
 int MainMenu::GetPressedItem()
 {
 	return selectedItemIndex;
@@ -62,7 +143,7 @@ int MainMenu::GetPressedItem()
 void MainMenu::draw(sf::RenderWindow* window)
 {  
 	window->draw(title);
-	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
+	for(int i = 0; i < std::size(button); i++)
 	{
 		window->draw(button[i]);
 		window->draw(buttontext[i]);
@@ -81,10 +162,11 @@ void MainMenu::MoveUp()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
+
 //przesuwanie opcji menu w dó³
 void MainMenu::MoveDown()
 {
-	if(selectedItemIndex + 1 < MAX_NUMBER_OF_BUTTONS)
+	if(selectedItemIndex + 1 < std::size(button))
 	{
 		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
 		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
@@ -93,66 +175,72 @@ void MainMenu::MoveDown()
 		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
 	}
 }
-void MainMenu::PauseButtons(sf::RenderWindow* window)
+
+void MainMenu::PlayOptions()
 {
-	
-	sf::View view(window->getView());
-	
-	std::cout << "obiekt pauzy" << std::endl;
+	sf::RenderWindow* optionwindow;
+	optionwindow= new sf::RenderWindow(sf::VideoMode(800,1000),"Opcje",sf::Style::None);
 	font.loadFromFile("./assets/BigSmoke.ttf");
 
-	title.setFont(font);
-	title.setFillColor(sf::Color::Black);
-	//title.setFillColor(sf::Color::White);
-	title.setCharacterSize(100);
-	title.setString("PAUZA");
-	title.setPosition(sf::Vector2f(view.getCenter().x+250, view.getCenter().y+50));
+	OptionButtons(static_cast<float>(optionwindow->getSize().x), (static_cast<float>( optionwindow->getSize().y)));
 
-	std::vector<sf::FloatRect> textbounds;
-	std::vector<sf::FloatRect> buttonbounds;
-
-	//TEKST PRZYCISKU GRAJ
-	buttontext[0].setString("WZNOW");
-	buttontext[1].setString("WYJSCIE");
-	for(int i = 0; i < 2; i++)
+	bool option_window=true;
+	while(option_window)
 	{
-		buttontext[i].setFont(font);
-		buttontext[i].setFillColor(sf::Color::Black);
-		buttontext[i].setCharacterSize(70);
-		buttontext[i].setPosition(sf::Vector2f(view.getCenter().x+400, view.getCenter().y+(320 * (i + 1)) + 50));
-		textbounds.emplace_back(buttontext[i].getLocalBounds());
-		buttontext[i].setOrigin(sf::Vector2f(textbounds[i].left + textbounds[i].width / 2, textbounds[i].top + textbounds[i].height / 2));
+		background.draw_menu_background(optionwindow);
+		draw(optionwindow);
+		optionwindow->draw(title);
+		optionwindow->display();
 
-		button[i].setSize(sf::Vector2f(textbounds[i].width + 5.0, 80));
-		buttonbounds.emplace_back(button[i].getLocalBounds());
+		sf::Event event;
+		while(optionwindow->pollEvent(event))
+		{
+			switch(event.type)
+			{
+				case sf::Event::KeyReleased:
+					switch(event.key.code)
+					{
+						case sf::Keyboard::Up:
+							std::cout << "opcja wyzej" << std::endl;
+							MoveUp();
+							break;
 
-		button[i].setFillColor(sf::Color(255, 247, 226));
-		button[i].setOutlineColor(sf::Color::Black);
-		button[i].setOutlineThickness(5);
-		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
-		button[i].setPosition(sf::Vector2f(view.getCenter().x+400, view.getCenter().y+(320 * (i + 1)) + 50));
+						case sf::Keyboard::Down:
+							std::cout << "opcja nizej" << std::endl;
+							MoveDown();
+							break;
+
+						case sf::Keyboard::Return:
+							switch(GetPressedItem())
+							{
+								case 0:
+									std::cout << "Tablica Wynikow!" << std::endl;
+									break;
+								case 1:
+									std::cout<<"autorzy" <<std::endl;
+									break;
+								case 2:
+									std::cout << "powrot do menu!" <<std::endl;
+									option_window=!option_window;
+									optionwindow->close();
+									delete optionwindow;
+									break;
+							}
+							break;
+					}
+
+					break;
+				case sf::Event::Closed:
+					optionwindow->close();
+
+					break;
+
+			}
+		}
+
+	
 	}
-	pauseBackground.setFillColor(sf::Color(0, 0, 0, 1));
-	pauseBackground.setSize(sf::Vector2f(800,1000));
-	pauseBackground.setPosition(sf::Vector2f(view.getCenter().x, view.getCenter().y));
-	selectedItemIndex = 0;
 
-}
-
-void MainMenu::PlayOptions(sf::RenderWindow *window)
-{
-	font.loadFromFile("./assets/BigSmoke.ttf");
-
-	
-	window->clear();
-	title.setFont(font);
-	title.setFillColor(sf::Color::Black);
-	//title.setFillColor(sf::Color::White);
-	title.setCharacterSize(100);
-	title.setString("OPCJE");
-	
-	background.draw_menu_background(window);
-	window->draw(title);
 }
 
 enum MainMenu::buttons
@@ -207,13 +295,15 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window)
 							{
 								case _GRAJ:
 									petla=false;
-									std::cout << "wybrano opcjê GRAJ" << std::endl;
+									std::cout << "opcja GRAJ" << std::endl;
 									break;
 								case _OPCJE:
-									PlayOptions(window);
-									std::cout << "wybrano opcjê OPCJE" << std::endl;
+									PlayOptions();
+									MenuButtons(800.0, 1000.0);
+									std::cout << "opcja OPCJE" << std::endl;
 									break;
 								case _WYJSCIE:
+									std::cout<<"papa" << std::endl;
 									window->close();
 									break;
 							}
@@ -233,8 +323,7 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
 	background.ready_background_texture();
 	bool pauza = true;
 	PauseButtons(window);
-	//window->setView(view_pause);
-	//PauseMenu pause(window->getSize().x, window->getSize().y);
+
 	while(pauza)
 	{
 		sf::Event event;
@@ -263,7 +352,6 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
 									std::cout << "Wznowiono gre!" << std::endl;
 									break;
 								case 1:
-								case 2:
 									window->close();
 									break;
 							}
