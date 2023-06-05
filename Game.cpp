@@ -204,7 +204,7 @@ float Game::generate_rand_dist() // generowanie pozycji X nastepnej platformy na
 void Game::generate_bombs(player play) // tworzenie i usuwanie bomb
 {
 	bomb_time = bomb_clock.getElapsedTime(); 
-	if (bomby.size() < 4 && bomb_time.asSeconds() > 4 && game_speed != 0 )
+	if (bomby.size() < 6 && bomb_time.asSeconds() > 1)
 	{
 		bomby.emplace_back(new bomb(sf::Vector2f((play.getPosition().x -200) + rand()%500, play.getPosition().y - 1200)));
 		bomb_clock.restart(); 
