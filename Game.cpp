@@ -114,29 +114,39 @@ void Game::move_all(sf::Vector2f ruch)
 }
 
 
-void Game::next_screen(player &play) // funkcja rusza wszystkie elementy na ekranie w zaleznosci od wysokosci gracza 
+void Game::next_screen(player &player) // funkcja rusza wszystkie elementy na ekranie w zaleznosci od wysokosci gracza 
 {		
-	if (play.getPosition().y < -1600 && map_number == 1 )
+	if (player.getPosition().y < -1600 && map_number == 1 )
 	{
 		map_number = 2; 
 		platformy.clear(); 
-		play.setPosition(sf::Vector2f(play.getPosition().x, -3250));
-		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(play.getPosition().x-50, -3200)));
+		player.setPosition(sf::Vector2f(player.getPosition().x, -3250));
+		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x-50, -3200)));
 		//minimap->setPosition(sf::Vector2i(play.getPosition().x - 1000, minimap->getPosition().y));
-		viev_minimap.setCenter(play.getPosition().x , play.getPosition().y -1500);
+		viev_minimap.setCenter(player.getPosition().x , player.getPosition().y -1500);
 		minimap->setView(viev_minimap); 
 	}
-	if (play.getPosition().y < -6500 && map_number == 2)
+	if (player.getPosition().y < -6500 && map_number == 2)
 	{
 		map_number = 3; 
 		platformy.clear();
-		play.setPosition(sf::Vector2f(play.getPosition().x, -7450));
-		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(play.getPosition().x - 50, -7350)));
-		viev_minimap.setCenter(play.getPosition().x, play.getPosition().y - 1350);
+		player.setPosition(sf::Vector2f(player.getPosition().x, -7450));
+		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x - 50, -7350)));
+		viev_minimap.setCenter(player.getPosition().x, player.getPosition().y - 1350);
 		
 		
 		minimap->setView(viev_minimap);
 	}
+	if (player.getPosition().y < -10000 && map_number == 3)
+	{
+		platformy.clear();
+		bomby.clear();
+		monety->clear(); 
+		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
+		player.setPosition(2100,850);
+		map_number = 1;
+	}
+
 }
 
 
@@ -206,12 +216,12 @@ void Game::generate_bombs(player play) // tworzenie i usuwanie bomb
 	bomb_time = bomb_clock.getElapsedTime(); 
 	if (bomby.size() < 6 && bomb_time.asSeconds() > 1)
 	{
-		bomby.emplace_back(new bomb(sf::Vector2f((play.getPosition().x -200) + rand()%500, play.getPosition().y - 1200)));
+		bomby.emplace_back(new bomb(sf::Vector2f(play.getPosition().x-500 + rand()%1000, play.getPosition().y - 1200)));
 		bomb_clock.restart(); 
 		std::cout << "tworze bombe " << std::endl;
 	}
 	if(bomby.size()>0)
-	if (bomby.front()->getPosition().y > play.getPosition().y + 500 && bomby.size() > 0)
+	if (bomby.front()->getPosition().y > play.getPosition().y + 500)
 	{
 		delete bomby.front(); 
 		bomby.erase(bomby.begin()); 
@@ -284,13 +294,14 @@ void Game::death(player& play, sf::RenderWindow*window) // ekran smierci
 
 void Game::pauza(sf::RenderWindow*window, player& gracz)
 {
-	MainMenu menu;
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
 	{
 		// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
 		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
 		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
 		//background.draw_tlo(window);
+        MainMenu menu;
 		for (auto x : platformy)
 		{
 			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
@@ -314,7 +325,7 @@ void Game::move_bombs()
 {
 	for (auto& x : bomby) // bomby 
 	{
-		x->move(sf::Vector2f(0, 3 * game_speed));
+		x->move(sf::Vector2f(0, 2.5));
 	}
 }
 
