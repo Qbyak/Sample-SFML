@@ -42,9 +42,9 @@ private:
 	void draw_all(sf::RenderWindow* window);	
 	// funkcja obslugujaca minimape
 	void update_minimap(player play);
-	//funkcje zapis/odczyt
+	//funkcje zapis
 	void zapis(player& play,std::string nick);
-	void odczyt();
+	
 
 private:
 	sf::RenderWindow *window;
@@ -83,12 +83,7 @@ private:
 	// 
 	int map_number; 
 	Background background;
-	//
-	struct do_zapisu
-	{
-		int score;
-		std::string name;
-	};
-	std::vector<do_zapisu> posortowany;
+	
+	
 };
 

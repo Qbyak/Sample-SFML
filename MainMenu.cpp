@@ -215,6 +215,7 @@ void MainMenu::PlayOptions()
 							{
 								case 0:
 									std::cout << "Tablica Wynikow!" << std::endl;
+									odczyt();
 									break;
 								case 1:
 									std::cout<<"autorzy" <<std::endl;
@@ -223,7 +224,7 @@ void MainMenu::PlayOptions()
 									std::cout << "powrot do menu!" <<std::endl;
 									option_window=!option_window;
 									optionwindow->close();
-									delete optionwindow;
+									
 									break;
 							}
 							break;
@@ -232,16 +233,19 @@ void MainMenu::PlayOptions()
 					break;
 				case sf::Event::Closed:
 					optionwindow->close();
-
+					delete optionwindow;
 					break;
 
 			}
 		}
+		
 
 	
 	}
 
 }
+
+
 
 enum MainMenu::buttons
 {
@@ -371,5 +375,86 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
 		draw(window);
 		
 		window->display();
+	}
+}
+
+void MainMenu::odczyt()
+{
+	std::fstream file("Wyniki.csv", std::fstream::in);
+
+	if (file.is_open())
+	{
+		std::string line;
+
+		while (getline(file, line))
+		{
+			std::stringstream str(line);
+			do_zapisu er;
+			std::string scor_in;
+			getline(str, scor_in, ',');
+			er.score = stoi(scor_in);
+			getline(str, er.name, ',');
+			posortowany.emplace_back(er);
+
+		}
+	}
+
+	std::sort(posortowany.begin(), posortowany.end(), [](const do_zapisu& A, const do_zapisu& B) {return A.score < B.score; });
+	std::reverse(posortowany.begin(), posortowany.end());
+
+	for (int i = 0; i < posortowany.size(); i++)
+	{
+		std::cout << posortowany[i].name << " " << posortowany[i].score << std::endl;
+	}
+
+	sf::RenderWindow* window3;
+	window3 = new sf::RenderWindow(sf::VideoMode(800, 1000), "SFML works!", sf::Style::None);
+	sf::Font font1;
+	font1.loadFromFile("./assets/BigSmoke.ttf");
+
+
+	sf::Text y;
+	std::string w;
+
+	for (int i = 0; i < 10; i++)
+	{
+		w = std::to_string(posortowany[i].score) + "          " + posortowany[i].name;
+		y.setString(w);
+		y.setCharacterSize(30);
+		y.setFillColor(sf::Color::Black);
+		y.setPosition(150, 10 + (30 * i));
+		y.setFont(font1);
+		tab.emplace_back(y);
+		w.clear();
+	}
+
+
+	window3->clear();
+
+	while (window3->isOpen())
+	{
+		sf::Event event3;
+		while (window3->pollEvent(event3))
+		{
+			if (event3.type == sf::Event::Closed)
+				window3->close();
+			else if (event3.type == sf::Event::KeyReleased)
+			{
+				if (event3.key.code == sf::Keyboard::Space)
+				{
+					window3->close();
+					window3->clear();
+					tab.clear();
+					posortowany.clear();
+				}
+			}
+		}
+		window3->clear();
+		background.draw_menu_background(window3);
+		for (int i = 0; i < tab.size(); i++)
+		{
+			window3->draw(tab[i]);
+		}
+		window3->display();
 	}
 }

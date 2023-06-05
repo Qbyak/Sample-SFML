@@ -2,6 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 #include "Background.h"
 #include <vector>
@@ -25,6 +28,7 @@ private:
 	void PauseButtons(sf::RenderWindow* window);
 	void OptionButtons(float width, float height);
 	void PlayOptions();
+	void odczyt();//odczyt do taveli wyników
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
 	enum buttons;
 	int selectedItemIndex;
@@ -37,5 +41,14 @@ private:
 	sf::RectangleShape pauseBackground;
 	Background background;
 	sf::View view_pause;
+	// do odczytu
+	sf::Text y;
+	std::vector<sf::Text> tab;
+	struct do_zapisu
+	{
+		int score;
+		std::string name;
+	};
+	std::vector<do_zapisu> posortowany;
 	
 };

@@ -375,37 +375,6 @@ void Game::zapis(player& play,std::string nick)
 	zapis.close();
 }
 
-void Game::odczyt()
-{
-	
-	std::fstream file("Wyniki.csv", std::fstream::in);
-	
-	if (file.is_open())
-	{
-		std::string line;
-
-		while (getline(file, line))
-		{
-			std::stringstream str(line);
-			do_zapisu er;
-			std::string scor_in;
-			getline(str, scor_in, ',');
-			er.score = stoi(scor_in);
-			getline(str, er.name, ',');
-			posortowany.emplace_back(er);
-
-		}
-	}
-
-	std::sort(posortowany.begin(), posortowany.end(), [](const do_zapisu& A, const do_zapisu& B) {return A.score < B.score; });
-	std::reverse(posortowany.begin(), posortowany.end());
-
-	for (int i = 0; i < posortowany.size(); i++)
-	{
-		std::cout << posortowany[i].name << " " << posortowany[i].score << std::endl;
-	}
-}
-
 void Game::GameOver(player& gracz)
 {
 	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
@@ -455,20 +424,9 @@ void Game::GameOver(player& gracz)
 	sf::Text text("", font1);
 	sf::Clock clock;
 
-	sf::Text y;
+	
 
-	/*for (int i = 0; i < 10; i++)
-	{
-		std::string w = std::to_string(sorto[i].score) + "          " + sorto[i].name;
-		y.setString(w);
-		y.setCharacterSize(30);
-		y.setFillColor(sf::Color::Black);
-		y.setPosition(150, 10+(30*i));
-		y.setFont(font1);
-		tab.emplace_back(y);
-		w.clear();
-
-	}*/
+	
 	while (window2.isOpen())
 	{
 		sf::Event event2;
@@ -489,14 +447,12 @@ void Game::GameOver(player& gracz)
 				if (event2.key.code == sf::Keyboard::Enter) {
 					window2.close();
 					zapis(gracz,input_text);
-					odczyt();
 					window->close();
 					minimap->close();
 					gracz.alive;
-					//*********************************************
-					Game gra;			// wiem ¿e tak nie mo¿e byæ ale to tymczosowe
+					Game gra;			
 					gra.play();
-					//************************************************
+					
 				}
 			}
 		}
@@ -518,10 +474,6 @@ void Game::GameOver(player& gracz)
 
 		window2.clear();
 		window2.draw(sprite);
-		/*for (int i = 0; i < tab.size(); i++)
-		{
-			window2.draw(tab[i]);
-		}*/
 		for (int i = 0; i < 5; i++)
 		{
 			window2.draw(t[i]);
