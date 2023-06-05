@@ -12,6 +12,7 @@
 #include "moving_platform.h"
 #include "Background.h"
 #include "disappearing_platform.h"
+#include "coin.h"
 class Game
 { public:
 	Game();
@@ -28,20 +29,22 @@ private:
 	void ready_background_texture();
 
 	// funkcje updatujace
-	void update_all(player& play); // updatuje kazda platforme 
-    void death(player& play ,  sf::RenderWindow* window); // ekran smierci 
+	void update_all(sf::RenderWindow* window, player& player); // updatuje kazda platforme 
+    void death(player& player ,  sf::RenderWindow* window); // ekran smierci 
     void move_all(sf::Vector2f ruch); // rusza wszystkie platformy 
-	void next_screen(player &play); // przygotowanie nastepnej klatki 
+	void next_screen(player &player); // przygotowanie nastepnej klatki 
 	void pauza(sf::RenderWindow *window,player& gracz); // ekran pauzy 
 	void GameOver(player& play);// ekran game over
-
+	void close_window(sf::RenderWindow *window); 
+	void update_view(sf::RenderWindow *window , player player); 
+	void update_coin_count(); 
 	//
 	void move_bombs(); 
 	// funkcje rysujace	
 	//void draw_tlo(sf::RenderWindow *window); 	
 	void draw_all(sf::RenderWindow* window);	
 	// funkcja obslugujaca minimape
-	void update_minimap(player play);
+	void update_minimap(player player);
 	//funkcje zapis
 	void zapis(player& play,std::string nick);
 	
@@ -83,7 +86,7 @@ private:
 	// 
 	int map_number; 
 	Background background;
-	
+	coin *coin_count; 
 	
 };
 

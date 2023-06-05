@@ -14,40 +14,37 @@ void Game::play()
 	background.ready_background_texture();
 	ready_game();
 	MainMenu menu;
-	player play(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
+	player player(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
 	menu.PlayMainMenu(window);
-
+	sf::RenderWindow window3(sf::VideoMode(600, 400), "SFML works!");
 	while (window->isOpen())
 	{ 
-		sf::Vector2f play_pos = play.getPosition(); 
+		sf::Vector2f play_pos = player.getPosition(); 
 
-		generate_platform(play); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
-		generate_bombs(play); // to samo tylko z bombami 
-		while (window->pollEvent(event)) // zamkniecie okna 
-		{
-			if (event.type == sf::Event::Closed)
-				window->close();
-		}
-		pauza(window,play); // pauzuje gre 
+		generate_platform(player); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
+		generate_bombs(player); // to samo tylko z bombami 
+		close_window(window); // zamykanie okna 
+		pauza(window,player); // pauzuje gre 
 		window->clear(sf::Color::Black); // czyszcenie ekranu 
-		background.draw_tlo(window); // rysowanie tla , tlo sklada sie z 6 grafik nalozonych na siebie 
-		update_all(play); // updatowanie pozycji platform oraz bomb nastepnie rysowanie ich		
+		background.draw_tlo(window); // rysowanie tla
+		update_all( window , player); // updatowanie pozycji platform oraz bomb nastepnie rysowanie ich	
+		update_coin_count(); 
         draw_all(window); // rysowanie wszystkich obiektow poza graczem 
 		move_bombs(); 
-		play.update(window, platformy, bomby , monety); // update gracza na podstawie pozycji platform i innych rzeczy nastepnie rysowanie go 
-		view_game.setCenter(play.getPosition()); 
-		window->setView(view_game); 
-		window->display(); // wyswietlanie klatki gry
-		update_minimap(play);
-		if (play.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update
+		player.update(window, platformy, bomby , monety); // update gracza na podstawie pozycji platform i innych rzeczy nastepnie rysowanie go 
+		update_view(window, player);
+		if (player.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update
 		{
-			death(play , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
+			death(player , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		}
+		window3.clear(sf::Color::Black);
+		window3.draw(*coin_count);
+		window3.display(); 
 		 	
 	}
 }
 
-void Game::generate_platform(player play) 
+void Game::generate_platform(player player) 
 {
 	int los_monety = rand() % 4; 
 	int los_kierunek = rand() % 3;
@@ -80,7 +77,7 @@ void Game::generate_platform(player play)
 		}
 		for (auto x : platformy)
 		{
-			if (x->getPosition().y  > play.getPosition().y + 800 ) 
+			if (x->getPosition().y  > player.getPosition().y + 800 ) 
 			{
 				auto element = std::find(platformy.begin(), platformy.end(), x);
 				delete x; 
@@ -90,7 +87,7 @@ void Game::generate_platform(player play)
 		if(monety->size()>0)
 			for (auto m : *monety)
 			{
-				if (m->getPosition().y > play.getPosition().y + 400 && monety->size()>0)
+				if (m->getPosition().y > player.getPosition().y + 400 && monety->size()>0)
 				{
 					auto element = std::find(monety->begin(), monety->end(), m);
 					delete m; 
@@ -164,7 +161,8 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	viev_minimap = sf::View(sf::FloatRect(1000, -2100, 2428, 3400));
 	//viev_minimap = sf::View(sf::FloatRect(1500, -2000, 2000, 3000));
 	//view_game.setCenter(650, 790);
-	//window->setView(view_game);
+	coin_count = new coin(sf::Vector2f(2200, 700)); 
+	coin_count->setScale(4, 4); 
 	window->setFramerateLimit(60);
 	minimap->setView(viev_minimap);
 	minimap->setFramerateLimit(60); 
@@ -172,6 +170,7 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	map_number = 1; 
 	//ready_background_texture();
 	background.draw_tlo(window);
+	//monety->emplace_back(coin_count); 
 	
 	
 }
@@ -211,17 +210,17 @@ float Game::generate_rand_dist() // generowanie pozycji X nastepnej platformy na
 }
 
 
-void Game::generate_bombs(player play) // tworzenie i usuwanie bomb
+void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 {
 	bomb_time = bomb_clock.getElapsedTime(); 
 	if (bomby.size() < 6 && bomb_time.asSeconds() > 1)
 	{
-		bomby.emplace_back(new bomb(sf::Vector2f(play.getPosition().x-500 + rand()%1000, play.getPosition().y - 1200)));
+		bomby.emplace_back(new bomb(sf::Vector2f(player.getPosition().x-500 + rand()%1000, player.getPosition().y - 1200)));
 		bomb_clock.restart(); 
 		std::cout << "tworze bombe " << std::endl;
 	}
 	if(bomby.size()>0)
-	if (bomby.front()->getPosition().y > play.getPosition().y + 500)
+	if (bomby.front()->getPosition().y > player.getPosition().y + 500)
 	{
 		delete bomby.front(); 
 		bomby.erase(bomby.begin()); 
@@ -229,7 +228,7 @@ void Game::generate_bombs(player play) // tworzenie i usuwanie bomb
 }
 
 
-void Game::update_all(player& play)
+void Game::update_all(sf::RenderWindow *window , player& play)
 {
 	for (auto& x : platformy) // updatowanie pozycji platform oraz rysowanie ich
 	{
@@ -375,6 +374,7 @@ void Game::update_minimap(player play )
 	background.draw_tlo(minimap); 
 	draw_all(minimap);
 	minimap->draw(play); 
+	//minimap->draw(*coin_count); 
 	minimap->display(); 
 }
 
@@ -492,4 +492,26 @@ void Game::GameOver(player& gracz)
 		window2.draw(text);
 		window2.display();
 	}
+}
+
+void Game::close_window(sf::RenderWindow *window)
+{
+	while (window->pollEvent(event)) // zamkniecie okna 
+	{
+		if (event.type == sf::Event::Closed)
+			window->close();
+	}
+}
+
+void Game::update_view(sf::RenderWindow* window , player player)
+{
+	view_game.setCenter(player.getPosition());
+	window->setView(view_game);
+	window->display(); // wyswietlanie klatki gry
+	update_minimap(player);
+}
+
+void Game::update_coin_count()
+{
+	coin_count->setPosition(view_game.getCenter().x + 100, view_game.getCenter().x - 100); 
 }
