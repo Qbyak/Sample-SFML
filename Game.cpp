@@ -284,9 +284,10 @@ void Game::death(player& play, sf::RenderWindow*window) // ekran smierci
 
 void Game::pauza(sf::RenderWindow*window, player& gracz)
 {
-	MainMenu menu;
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
 	{
+		MainMenu menu;
 		// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
 		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
 		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 

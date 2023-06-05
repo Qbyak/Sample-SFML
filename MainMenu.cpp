@@ -224,7 +224,7 @@ void MainMenu::PlayOptions()
 									std::cout << "powrot do menu!" <<std::endl;
 									option_window=!option_window;
 									optionwindow->close();
-									
+									delete optionwindow;
 									break;
 							}
 							break;
