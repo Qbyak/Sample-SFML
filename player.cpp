@@ -19,7 +19,7 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 	score = 0; 
 	setOrigin(24, 0); 
 }
-void player::update(sf::RenderWindow* okno, std::vector<platform*> platformy, std::vector<bomb*> bomby , std::vector<coin*> *monety)
+void player::update( std::vector<platform*> platformy, std::vector<bomb*> bomby , std::vector<coin*> *monety)
 {
 	//  // sprawdzilismy w funckji collision czy kolizja wystepuje z ruchom¹ platforma. jezeli tak to move_platforma jest rozna od zera a za razem gracz "jedzie" z platforma
 	move_x(platformy);

@@ -17,12 +17,11 @@ class Game
 { public:
 	Game();
 	void play();
-	void draw_tlo(sf::RenderWindow* window);
+	//void draw_tlo(sf::RenderWindow* window);
 private:
 	// funkcje generujace 
 	void generate_platform(player play); // generuje platformy z szansa na wygenerowanie monety na jednej z nich
 	void generate_bombs(player play);
-	float generate_rand_dist(); // generuje dystans w okreslonym przedziale , aby gracz doskoczyl do kazdej platformy 
 
 	// funkcje przygotowywujace
 	void ready_game();
@@ -39,9 +38,8 @@ private:
 	void update_view(sf::RenderWindow *window , player player); 
 	void update_coin_count(player &player); 
 	//
-	void move_bombs(); 
-	// funkcje rysujace	
-	//void draw_tlo(sf::RenderWindow *window); 	
+	void move_bombs(); // rusza bomby 
+
 	void draw_all(sf::RenderWindow* window , player &player , bool if_coin_count , bool if_player);	
 	// funkcja obslugujaca minimape
 	void update_minimap(player player);

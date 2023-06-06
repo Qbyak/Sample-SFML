@@ -4,29 +4,23 @@
 #include"MainMenu.h"
 Game::Game()
 {
+	background.ready_background_texture();
+	ready_game();
 }
 
 void Game::play()
 {
-	background.ready_background_texture();
-	ready_game();
 	MainMenu menu;
 	player player(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
 	menu.PlayMainMenu(window);
-	while (window->isOpen())
-	{ 
-		generate_platform(player); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
-		generate_bombs(player); // to samo tylko z bombami 
+	while (window->isOpen()) // Glowna petla gry 
+	{ 		
 		close_window(window); // zamykanie okna 
 		pauza(window,player); // pauzuje gre 
 		window->clear(sf::Color::Black); // czyszcenie ekranu 
-		background.draw_tlo(window); // rysowanie tla
-        player.update(window, platformy, bomby , monety);
-		update_all( window , player); // updatowanie pozycji platform oraz bomb nastepnie rysowanie ich	
+		update_all(window , player); // updatowanie wszystkich obiektow
         draw_all(window , player , true , true); // rysowanie wszystkich obiektow poza graczem 
-		move_bombs(); 
-		 // update gracza na podstawie pozycji platform i innych rzeczy nastepnie rysowanie go 
-		if (player.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update
+		if (player.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update gracza
 		{
 			death(player , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		} 
@@ -34,7 +28,7 @@ void Game::play()
 	}
 }
 
-void Game::generate_platform(player player) 
+void Game::generate_platform(player player) // generowanie platform na podstawie funkcji rand() oraz pozycji innych platform 
 {
 	int los_monety = rand() % 4; 
 	int los_kierunek = rand() % 3;
@@ -87,7 +81,6 @@ void Game::generate_platform(player player)
 		
 }
 
-
 void Game::move_all(sf::Vector2f ruch)
 {
 	for (auto& p : platformy)
@@ -100,8 +93,7 @@ void Game::move_all(sf::Vector2f ruch)
 	}
 }
 
-
-void Game::next_screen(player &player) // funkcja rusza wszystkie elementy na ekranie w zaleznosci od wysokosci gracza 
+void Game::next_screen(player &player) // zmiana map gry 
 {		
 	if (player.getPosition().y < -1600 && map_number == 1 )
 	{
@@ -138,10 +130,8 @@ void Game::next_screen(player &player) // funkcja rusza wszystkie elementy na ek
 
 }
 
-
 void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie poczatkowych wartosci zmiennych
 {
-	//ready_background_texture(); 
 	srand((unsigned)time(NULL));
 	platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
 	bomby.emplace_back(new bomb(sf::Vector2f(400, 20000)));
@@ -151,8 +141,6 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	minimap = new sf::RenderWindow(sf::VideoMode(500, 700), "MiniMap" , sf::Style::None);
 	view_game = sf::View(sf::FloatRect(650, 790, 800.0f, 1000.0f));
 	viev_minimap = sf::View(sf::FloatRect(1000, -2100, 2428, 3400));
-	//viev_minimap = sf::View(sf::FloatRect(1500, -2000, 2000, 3000));
-	//view_game.setCenter(650, 790);
 	coin_count = new coin(sf::Vector2f(2200, 700)); 
 	coin_count->setScale(4, 4); 
 	window->setFramerateLimit(60);
@@ -166,41 +154,6 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	coin_count_text->setScale(2, 2); 
 	
 }
-
-
-void Game::draw_tlo(sf::RenderWindow*window) // rysowanie tla 
-{
-	window->draw(tlo_s);
-    window->draw(tlo_s3);
-    window->draw(tlo_s2);
-}
-
-
-float Game::generate_rand_dist() // generowanie pozycji X nastepnej platformy na podstawie pozycji poprzedniej 
-{		                         // tak aby gracz byl w stanie doskoczyc do kazdej platformy 
-	int dodatni = 1; 
-	bool blokada = true; 
-	float wynik = 0; ;
-	while (blokada == true)
-	{
-		float random = rand() % 20;
-		random = random / 10;
-		if (rand() % 3 == 1)
-		{
-			dodatni = -1;
-		}
-		else 
-		{
-			dodatni = 1; 
-		}
-		wynik = dodatni * ( 120 + rand() % 200 ) ;
-		if (wynik + platformy.back()->getPosition().x > 1 && wynik  +  platformy.back()->getPosition().x < 599)
-		{
-			return wynik + platformy.back()->getPosition().x; 
-		}
-	}
-}
-
 
 void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 {
@@ -219,9 +172,10 @@ void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 	}
 }
 
-
-void Game::update_all(sf::RenderWindow *window , player& player)
+void Game::update_all(sf::RenderWindow *window , player& player) // aktualizuje wszystkie obiekty
 {
+	// update gracza na podstawie pozycji platform i innych rzeczy
+	player.update(platformy, bomby, monety);
 	for (auto& x : platformy) // updatowanie pozycji platform oraz rysowanie ich
 	{
 		x->update();
@@ -234,12 +188,14 @@ void Game::update_all(sf::RenderWindow *window , player& player)
 	next_screen(player); // updatowanie pozycji bomb oraz platform 
     update_view(window, player);
 	update_coin_count(player);
-	
+	move_bombs();
+	generate_platform(player); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
+	generate_bombs(player); // to samo tylko z bombami 
 }
 
-
-void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_count , bool if_player)
+void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_count , bool if_player) // rysowanie wszystkich obiektow
 {
+	background.draw_tlo(window); // rysowanie tla
 	for (auto& x : platformy)
 	{
 		window->draw(*x); 
@@ -260,8 +216,6 @@ void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_coun
 	if(if_player)
 	window->draw(player);
 }
-
-
 
 void Game::death(player& player, sf::RenderWindow*window) // ekran smierci 
 {
@@ -292,8 +246,7 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 	//window->close();
 }
 
-
-void Game::pauza(sf::RenderWindow*window, player& gracz)
+void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy 
 {
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
@@ -320,9 +273,7 @@ void Game::pauza(sf::RenderWindow*window, player& gracz)
 	}
 }
 
-
-
-void Game::move_bombs()
+void Game::move_bombs() // rusza bomby
 {
 	for (auto& x : bomby) // bomby 
 	{
@@ -330,8 +281,7 @@ void Game::move_bombs()
 	}
 }
 
-
-void Game::ready_background_texture()
+void Game::ready_background_texture() // szykuje tekstury tla 
 {
 	if (!tlo1.loadFromFile("assets/winter 8/hd.png"))
 	{
@@ -370,9 +320,7 @@ void Game::ready_background_texture()
 	tlo_s5.setScale(sf::Vector2f(3, 3));
 }
 
-
-
-void Game::update_minimap(player player )
+void Game::update_minimap(player player ) // aktualizuje minimape 
 {
 	minimap->clear(sf::Color::Blue);
 	background.draw_tlo(minimap); 
@@ -382,7 +330,7 @@ void Game::update_minimap(player player )
 	minimap->display(); 
 }
 
-void Game::zapis(player& play,std::string nick)
+void Game::zapis(player& play,std::string nick) // zapis do pliku 
 {
 	std::fstream zapis;
 	zapis.open("Wyniki.csv", std::ios::app);
@@ -390,16 +338,16 @@ void Game::zapis(player& play,std::string nick)
 	zapis.close();
 }
 
-void Game::GameOver(player& gracz)
+void Game::GameOver(player& gracz) // ekran konca gry 
 {
 	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
 	sf::Font font1;
 	std::string wynik = std::to_string(gracz.return_score());
 	font1.loadFromFile("./assets/BigSmoke.ttf");
-	sf::Texture background;
-	background.loadFromFile("./assets/winter 1/1.png");
+	sf::Texture background2;
+	background2.loadFromFile("./assets/winter 1/1.png");
 	sf::Sprite sprite;
-	sprite.setTexture(background);
+	sprite.setTexture(background2);
 	sprite.setScale(3, 3);
 
 	sf::Text t[5];
@@ -465,8 +413,9 @@ void Game::GameOver(player& gracz)
 					window->close();
 					minimap->close();
 					gracz.alive;
-					Game gra;			
-					gra.play();
+					background.ready_background_texture();					
+					ready_game();
+					play(); 
 					
 				}
 			}
@@ -507,18 +456,18 @@ void Game::close_window(sf::RenderWindow *window)
 	}
 }
 
-void Game::update_view(sf::RenderWindow* window , player player)
+void Game::update_view(sf::RenderWindow* window , player player) // aktualizuje widok gry 
 {
 	view_game.setCenter(player.getPosition());
 	window->setView(view_game);
 	update_minimap(player);
 }
 
-void Game::update_coin_count(player &player)
+void Game::update_coin_count(player &player) // aktualizuje zliczacz monet na prawym gornym rogu
 {
 	coin_count->setPosition(view_game.getCenter().x + 300, view_game.getCenter().y - 500);
 	coin_count->update(); 
 	coin_count_text->setPosition(coin_count->getPosition().x + 30, coin_count->getPosition().y + 100);
 	coin_count_text->setString(std::to_string(player.return_score()));
-}
+} 
 
