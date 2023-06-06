@@ -18,7 +18,6 @@ private:
 	sf::Texture tlo3;
 	sf::Texture tlo4;
 	sf::Texture tlo5;
-	sf::Event event;
 	sf::Sprite tlo_s;
 	sf::Sprite tlo_s2;
 	sf::Sprite tlo_s3;
