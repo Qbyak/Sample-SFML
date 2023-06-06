@@ -26,7 +26,7 @@ private:
 
 	// funkcje przygotowywujace
 	void ready_game();
-	void ready_background_texture();
+	void ready_background_texture(); 
 
 	// funkcje updatujace
 	void update_all(sf::RenderWindow* window, player& player); // updatuje kazda platforme 
@@ -37,7 +37,7 @@ private:
 	void GameOver(player& play);// ekran game over
 	void close_window(sf::RenderWindow *window); 
 	void update_view(sf::RenderWindow *window , player player); 
-	void update_coin_count(); 
+	void update_coin_count(player &player); 
 	//
 	void move_bombs(); 
 	// funkcje rysujace	
@@ -87,6 +87,7 @@ private:
 	int map_number; 
 	Background background;
 	coin *coin_count; 
-	
+	sf::Text *coin_count_text;
+	sf::Font font1;
 };
 

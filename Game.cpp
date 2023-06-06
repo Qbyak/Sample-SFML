@@ -4,9 +4,6 @@
 #include"MainMenu.h"
 Game::Game()
 {
-	std::cout << "Witamy w cloud TOWER!" << std::endl; 
-	std::cout << "Wykonali :" << std::endl; 
-	std::cout << "Aby zaczac wcisnij dowolny przycisk :-)" << std::endl;
 }
 
 void Game::play()
@@ -16,11 +13,8 @@ void Game::play()
 	MainMenu menu;
 	player player(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
 	menu.PlayMainMenu(window);
-	sf::RenderWindow window3(sf::VideoMode(600, 400), "SFML works!");
 	while (window->isOpen())
 	{ 
-		sf::Vector2f play_pos = player.getPosition(); 
-
 		generate_platform(player); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
 		generate_bombs(player); // to samo tylko z bombami 
 		close_window(window); // zamykanie okna 
@@ -28,7 +22,6 @@ void Game::play()
 		window->clear(sf::Color::Black); // czyszcenie ekranu 
 		background.draw_tlo(window); // rysowanie tla
 		update_all( window , player); // updatowanie pozycji platform oraz bomb nastepnie rysowanie ich	
-		update_coin_count(); 
         draw_all(window); // rysowanie wszystkich obiektow poza graczem 
 		move_bombs(); 
 		player.update(window, platformy, bomby , monety); // update gracza na podstawie pozycji platform i innych rzeczy nastepnie rysowanie go 
@@ -36,11 +29,11 @@ void Game::play()
 		if (player.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update
 		{
 			death(player , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
-		}
-		window3.clear(sf::Color::Black);
-		window3.draw(*coin_count);
-		window3.display(); 
-		 	
+		} 
+		update_coin_count(player);
+		window->draw(*coin_count); 
+		window->draw(*coin_count_text); 
+		window->display(); // wyswietlanie klatki gry
 	}
 }
 
@@ -141,6 +134,8 @@ void Game::next_screen(player &player) // funkcja rusza wszystkie elementy na ek
 		monety->clear(); 
 		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
 		player.setPosition(2100,850);
+		viev_minimap.setCenter(player.getPosition().x, player.getPosition().y - 1350);
+		minimap->setView(viev_minimap); 
 		map_number = 1;
 	}
 
@@ -168,10 +163,10 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	minimap->setFramerateLimit(60); 
 	minimap->setPosition(sf::Vector2i(50,300)); 
 	map_number = 1; 
-	//ready_background_texture();
 	background.draw_tlo(window);
-	//monety->emplace_back(coin_count); 
-	
+	font1.loadFromFile("./assets/BigSmoke.ttf");
+	coin_count_text = new sf::Text("0", font1);
+	coin_count_text->setScale(2, 2); 
 	
 }
 
@@ -213,7 +208,7 @@ float Game::generate_rand_dist() // generowanie pozycji X nastepnej platformy na
 void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 {
 	bomb_time = bomb_clock.getElapsedTime(); 
-	if (bomby.size() < 6 && bomb_time.asSeconds() > 1)
+	if (bomby.size() < 6 && bomb_time.asSeconds() > 2)
 	{
 		bomby.emplace_back(new bomb(sf::Vector2f(player.getPosition().x-500 + rand()%1000, player.getPosition().y - 1200)));
 		bomb_clock.restart(); 
@@ -368,6 +363,8 @@ void Game::ready_background_texture()
 	tlo_s5.setScale(sf::Vector2f(3, 3));
 }
 
+
+
 void Game::update_minimap(player play )
 {
 	minimap->clear(sf::Color::Blue);
@@ -507,11 +504,14 @@ void Game::update_view(sf::RenderWindow* window , player player)
 {
 	view_game.setCenter(player.getPosition());
 	window->setView(view_game);
-	window->display(); // wyswietlanie klatki gry
 	update_minimap(player);
 }
 
-void Game::update_coin_count()
+void Game::update_coin_count(player &player)
 {
-	coin_count->setPosition(view_game.getCenter().x + 100, view_game.getCenter().x - 100); 
+	coin_count->setPosition(view_game.getCenter().x + 300, view_game.getCenter().y - 500);
+	coin_count->update(); 
+	coin_count_text->setPosition(coin_count->getPosition().x + 30, coin_count->getPosition().y + 100);
+	coin_count_text->setString(std::to_string(player.return_score()));
 }
+
