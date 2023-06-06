@@ -21,18 +21,15 @@ void Game::play()
 		pauza(window,player); // pauzuje gre 
 		window->clear(sf::Color::Black); // czyszcenie ekranu 
 		background.draw_tlo(window); // rysowanie tla
+        player.update(window, platformy, bomby , monety);
 		update_all( window , player); // updatowanie pozycji platform oraz bomb nastepnie rysowanie ich	
-        draw_all(window); // rysowanie wszystkich obiektow poza graczem 
+        draw_all(window , player , true , true); // rysowanie wszystkich obiektow poza graczem 
 		move_bombs(); 
-		player.update(window, platformy, bomby , monety); // update gracza na podstawie pozycji platform i innych rzeczy nastepnie rysowanie go 
-		update_view(window, player);
+		 // update gracza na podstawie pozycji platform i innych rzeczy nastepnie rysowanie go 
 		if (player.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update
 		{
 			death(player , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		} 
-		update_coin_count(player);
-		window->draw(*coin_count); 
-		window->draw(*coin_count_text); 
 		window->display(); // wyswietlanie klatki gry
 	}
 }
@@ -223,7 +220,7 @@ void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 }
 
 
-void Game::update_all(sf::RenderWindow *window , player& play)
+void Game::update_all(sf::RenderWindow *window , player& player)
 {
 	for (auto& x : platformy) // updatowanie pozycji platform oraz rysowanie ich
 	{
@@ -234,11 +231,14 @@ void Game::update_all(sf::RenderWindow *window , player& play)
 	{
 		m->update(); 
 	}
-	next_screen(play); // updatowanie pozycji bomb oraz platform 
+	next_screen(player); // updatowanie pozycji bomb oraz platform 
+    update_view(window, player);
+	update_coin_count(player);
+	
 }
 
 
-void Game::draw_all(sf::RenderWindow*window)
+void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_count , bool if_player)
 {
 	for (auto& x : platformy)
 	{
@@ -252,15 +252,22 @@ void Game::draw_all(sf::RenderWindow*window)
 	{
 		window->draw(*m);
 	}
+	if (if_coin_count)
+	{
+		window->draw(*coin_count);
+		window->draw(*coin_count_text);
+	}
+	if(if_player)
+	window->draw(player);
 }
 
 
 
-void Game::death(player& play, sf::RenderWindow*window) // ekran smierci 
+void Game::death(player& player, sf::RenderWindow*window) // ekran smierci 
 {
 	for (auto x : bomby)
 	{
-		if (play.getGlobalBounds().intersects(x->getGlobalBounds()))
+		if (player.getGlobalBounds().intersects(x->getGlobalBounds()))
 		{
 			sf::Clock zegar;
 			x->move(sf::Vector2f(-100, 0));
@@ -268,7 +275,7 @@ void Game::death(player& play, sf::RenderWindow*window) // ekran smierci
 			{
 				window->clear(sf::Color::White);
 				background.draw_tlo(window);
-				draw_all(window);
+				draw_all(window , player , false , false);
 				x->update(true, zegar);
 				window->draw(*x);
 				window->display();
@@ -279,8 +286,8 @@ void Game::death(player& play, sf::RenderWindow*window) // ekran smierci
 	system("CLS");
 	std::cout << "Przegrales!" << std::endl;
 	std::cout << "Wcisnij cokolwiek aby kontynuowac" << std::endl;
-	std::cout << "Wynik gracza to: " <<play.return_score()<< std::endl;
-	GameOver(play);
+	std::cout << "Wynik gracza to: " <<player.return_score()<< std::endl;
+	GameOver(player);
 	//std::cin.get();
 	//window->close();
 }
@@ -296,13 +303,12 @@ void Game::pauza(sf::RenderWindow*window, player& gracz)
 		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
 		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
 		//background.draw_tlo(window);
-        MainMenu menu;
 		for (auto x : platformy)
 		{
 			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
 		}
 		menu.PlayPauseMenu(window,gracz); 
-		draw_all(window);
+		draw_all(window , gracz , true , true);
 		window->draw(gracz);
 		window->display();
 		std::cout << "Zapauzowano!" << std::endl;
@@ -366,12 +372,12 @@ void Game::ready_background_texture()
 
 
 
-void Game::update_minimap(player play )
+void Game::update_minimap(player player )
 {
 	minimap->clear(sf::Color::Blue);
 	background.draw_tlo(minimap); 
-	draw_all(minimap);
-	minimap->draw(play); 
+	draw_all(minimap , player , false , true);
+	minimap->draw(player); 
 	//minimap->draw(*coin_count); 
 	minimap->display(); 
 }

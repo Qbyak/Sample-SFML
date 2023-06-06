@@ -27,7 +27,6 @@ void player::update(sf::RenderWindow* okno, std::vector<platform*> platformy, st
 	if_przegrana(bomby , platformy); // sprawdzanie czy gracz zyje 
 	animate(); // po zakonczonym ruszaniu gracza animujemy go na podstawie zmienionej pozycji 
 	add_score(monety); // sprawdza kolizje z monetami nastepnie zwieksza wynik gracza 
-	draw(okno);
 	
 }
 
@@ -53,10 +52,6 @@ sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi
 	return predkosc;
 }
 
-void player::draw(sf::RenderWindow* okno)
-{
-	okno->draw(*this);
-}
 
 bool player::collision(std::vector<platform*> platformy, bool blokada) // funkcja sprawdzajaca kolizje miedzy graczem a obiektami 
 {

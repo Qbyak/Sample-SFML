@@ -42,7 +42,7 @@ private:
 	void move_bombs(); 
 	// funkcje rysujace	
 	//void draw_tlo(sf::RenderWindow *window); 	
-	void draw_all(sf::RenderWindow* window);	
+	void draw_all(sf::RenderWindow* window , player &player , bool if_coin_count , bool if_player);	
 	// funkcja obslugujaca minimape
 	void update_minimap(player player);
 	//funkcje zapis
