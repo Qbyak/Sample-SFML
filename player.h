@@ -14,10 +14,12 @@ class player : public sf::Sprite
 		alive
 	};
 public:
-	player(int klasa, sf::Vector2f pos); 		
+	player(int klasa, sf::Vector2f pos); 	
+	player(); 
 	void update(std::vector<platform*> platformy, std::vector<bomb*> bomby , std::vector<coin*> *monety); // updatuje pozycje oraz predkosc gracza
 	status get_status(); // zwraca enuma stan , tzn dead lub alive
 	int return_score(); 
+	void set_status(bool status);
 private:
 	bool collision(std::vector<platform*> platformy, bool blokada); // kolizja 
 	void animate(); 
@@ -44,8 +46,11 @@ private:
 		left, right, fall , stand
 	};
 	sf::Clock clock; 
-	sf::Time time; 
 	travel kierunek;
+	int numer_klatki_animacji;
+	sf::Time czas_animacji;
 	sf::Clock collision_clock; 
+	// vector intRectow do funkcji animate
+	std::vector <sf::IntRect> klatki_animacji; 
 };
 

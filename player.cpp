@@ -18,6 +18,29 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 	stan = alive; 
 	score = 0; 
 	setOrigin(24, 0); 
+	for (int i = 0; i < 10; i++)
+	{
+		klatki_animacji.emplace_back(sf::IntRect(96 + 51 * i, 0, 48, 48));
+	}
+}
+player::player()
+{
+	if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
+	{
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
+setPosition(sf::Vector2f(2050, 790));
+setTexture(klasa);
+setScale(2, 2);
+setTextureRect(sf::IntRect(0, 0, 48, 48));
+grawitacja = sf::Vector2f(0, 0.3);
+stan = alive;
+score = 0;
+setOrigin(24, 0);
+for (int i = 0; i < 10; i++)
+{
+	klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
+}
 }
 void player::update( std::vector<platform*> platformy, std::vector<bomb*> bomby , std::vector<coin*> *monety)
 {
@@ -95,41 +118,26 @@ player::status player::get_status()
 
 void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn left lub right nastepnie szykuje klatki animacji 
 {
-	time = clock.getElapsedTime(); 
-	if (kierunek == right || kierunek == left) // ruch lewo prawo
+	if (clock.getElapsedTime().asSeconds() > czas_animacji.asSeconds() + 0.15)
 	{
-          if (time.asSeconds() > 1.5)
-		       clock.restart(); 
-		if (time.asSeconds() < 0.15)
-		setTextureRect(sf::IntRect(96, 0, 48, 48));
-		else if (time.asSeconds() < 0.3)
-			setTextureRect(sf::IntRect(140, 0, 48, 48));
-		else if (time.asSeconds() < 0.45)
-			setTextureRect(sf::IntRect(192, 0, 48, 48));
-		else if (time.asSeconds() < 0.6)
-			setTextureRect(sf::IntRect(240, 0, 48, 48));
-			else if (time.asSeconds() < 0.75)
-			setTextureRect(sf::IntRect(288, 0, 48, 48));
-			else if (time.asSeconds() < 0.9)
-		setTextureRect(sf::IntRect(336, 0, 48, 48));
-			else if (time.asSeconds() < 1.05)
-		setTextureRect(sf::IntRect(384, 0, 48, 48));
-			else if (time.asSeconds() < 1.2)
-		setTextureRect(sf::IntRect(432, 0, 48, 48));
-			else if (time.asSeconds() < 1.35)
-		setTextureRect(sf::IntRect(480, 0, 48, 48)); 
-			else if (time.asSeconds() < 1.5)
-		setTextureRect(sf::IntRect(528, 0, 48, 48));
-		if (kierunek == left && getScale().x == 2) // obracanie sprita w lewo 
-		{
-			setScale(-2, 2);
-		}
-		else  if (kierunek == right && getScale().x == -2) // obracanie sprita w prawo 
-		{
-			setScale(2, 2);
-		}
-			
+		numer_klatki_animacji++;
+		czas_animacji = clock.getElapsedTime();
 	}
+	if (czas_animacji.asSeconds() > 1.5)
+	{
+		clock.restart();
+		czas_animacji = clock.getElapsedTime();
+		numer_klatki_animacji = 0;
+	}
+	setTextureRect(klatki_animacji[numer_klatki_animacji]);
+	if (kierunek == left && getScale().x == 2) // obracanie sprita w lewo 
+	{
+			setScale(-2, 2);
+	}
+	else  if (kierunek == right && getScale().x == -2) // obracanie sprita w prawo 
+	{
+			setScale(2, 2);
+	}			
 	else if(kierunek == stand) // gdy stoi 
 
 	{
@@ -139,8 +147,6 @@ void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn le
 	{
 		setTextureRect(sf::IntRect(140, 0, 48, 48));
 	}
-
-
 }
 
 void player::move_x(std::vector<platform*> platformy)
@@ -208,4 +214,10 @@ void player::add_score(std::vector<coin*> *monety)
 int player::return_score()
 {
 	return score;
+}
+
+void player::set_status(bool status)
+{
+	if (status)
+	stan = alive; 
 }

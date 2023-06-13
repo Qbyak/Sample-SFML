@@ -1,6 +1,6 @@
 #include "coin.h"
 
-coin::coin(sf::Vector2f pozycja)
+coin::coin(sf::Vector2f pozycja = sf::Vector2f(0,0))
 {
 	if (!tekstura.loadFromFile("assets/coin_gold.png"))
 	{
@@ -11,6 +11,11 @@ coin::coin(sf::Vector2f pozycja)
 	setTextureRect(sf::IntRect(96, 0, 32, 20)); 
 	setPosition(pozycja); 
 	setScale(2, 2); 
+	numer_klatki_animacji = 0; 
+	for (int i = 0; i < 8; i++)
+	{
+		klatki_animacji.emplace_back(sf::IntRect(0 + 32 * i, 0, 32, 20)); 
+	}
 }
 
 coin::~coin()
@@ -25,22 +30,16 @@ void coin::update() // funkcja update wywolujaca animacje
 
 void coin::animate() // animacja na podstawie uplynietego czasu 
 {
-	if (clock.getElapsedTime().asSeconds() < 0.15)
-		setTextureRect(sf::IntRect(0, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 0.3)
-		setTextureRect(sf::IntRect(32, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 0.45)
-		setTextureRect(sf::IntRect(64, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 0.6)
-		setTextureRect(sf::IntRect(96, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 0.75)
-		setTextureRect(sf::IntRect(128, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 0.9)
-		setTextureRect(sf::IntRect(160, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 1.05)
-		setTextureRect(sf::IntRect(192, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() < 1.2)
-		setTextureRect(sf::IntRect(224, 0, 32, 20));
-	else if (clock.getElapsedTime().asSeconds() > 1.2)
-		clock.restart(); 
+	if (clock.getElapsedTime().asSeconds() > czas_animacji.asSeconds() + 0.15)
+	{
+		numer_klatki_animacji++; 
+		czas_animacji = clock.getElapsedTime(); 
+	}
+	if (czas_animacji.asSeconds() > 1.2)
+	{
+		clock.restart();
+		czas_animacji = clock.getElapsedTime(); 
+		numer_klatki_animacji = 0; 
+	}
+	setTextureRect(klatki_animacji[numer_klatki_animacji]);
 }

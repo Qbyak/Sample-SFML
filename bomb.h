@@ -10,7 +10,8 @@ public:
 	bomb(sf::Vector2f pos); 
 	~bomb(); 
     //funkcje 
-	void update(bool boom , sf::Clock clock ); 
+	bool update(); 
+	void reset_clock(); 
 private:
 	void animate_boom(sf::Clock clock); // animcja wybuchu 
 private:
@@ -18,9 +19,12 @@ private:
 	sf::Texture tekstura;
 	sf::Texture tekstura_wybuch; 
 	sf::Sprite sprite; 
-	//czas
-	sf::Time czas;
-	bool blokada_zegar; 
+	//zmienne do animacji 
+	int numer_klatki_animacji;
+	sf::Time czas_animacji;
+	sf::Clock collision_clock;
+	std::vector <sf::IntRect> klatki_animacji; 
+	sf::Clock clock;
 
 };
 

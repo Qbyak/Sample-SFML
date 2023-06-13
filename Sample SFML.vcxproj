@@ -142,6 +142,7 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="bomb.cpp" />
     <ClCompile Include="coin.cpp" />
+    <ClCompile Include="coin_counter.cpp" />
     <ClCompile Include="disappearing_platform.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="bomb.h" />
     <ClInclude Include="coin.h" />
+    <ClInclude Include="coin_counter.h" />
     <ClInclude Include="disappearing_platform.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MainMenu.h" />

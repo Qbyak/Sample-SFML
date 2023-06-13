@@ -12,5 +12,8 @@ private:
 	void animate(); // animacja
 	sf::Texture tekstura; // teksutra 
 	sf::Clock clock; // zegar uzywany do animacji 
+	std::vector<sf::IntRect> klatki_animacji; 
+	int numer_klatki_animacji; 
+	sf::Time czas_animacji; 
 };
 

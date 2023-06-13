@@ -13,6 +13,8 @@
 #include "Background.h"
 #include "disappearing_platform.h"
 #include "coin.h"
+#include "coin_counter.h"
+#include "MainMenu.h"
 class Game
 { public:
 	Game();
@@ -36,7 +38,6 @@ private:
 	void GameOver(player& play);// ekran game over
 	void close_window(sf::RenderWindow *window); 
 	void update_view(sf::RenderWindow *window , player player); 
-	void update_coin_count(player &player); 
 	//
 	void move_bombs(); // rusza bomby 
 
@@ -45,7 +46,6 @@ private:
 	void update_minimap(player player);
 	//funkcje zapis
 	void zapis(player& play,std::string nick);
-	
 
 private:
 	sf::RenderWindow *window;
@@ -70,7 +70,6 @@ private:
 	sf::Sprite tlo_s3;
 	sf::Sprite tlo_s4;
 	sf::Sprite tlo_s5;
-
 	// glowna zmienna event
 	sf::Event event;
 
@@ -78,14 +77,15 @@ private:
 	sf::Clock clock;
 	bool pauza_bool;
 	float game_speed; 
-	//
+	// 'widoki' gry , minimapa oraz glowne okno 
 	sf::View view_game;
 	sf::View viev_minimap;
 	// 
-	int map_number; 
-	Background background;
-	coin *coin_count; 
-	sf::Text *coin_count_text;
-	sf::Font font1;
+	int map_number; // numer mapy
+	// obiekty potrzebne do gry 
+	Background background; // tlo
+	coin_counter  licznik_gracza; // licznik gracza
+	player gracz;  // gracz
+	MainMenu menu; // obiekt menu odpowiezialny za pauzy itp 
 };
 

@@ -1,7 +1,4 @@
 #include "Game.h"
-#include "player.h"
-#include "coin.h"
-#include"MainMenu.h"
 Game::Game()
 {
 	background.ready_background_texture();
@@ -10,19 +7,17 @@ Game::Game()
 
 void Game::play()
 {
-	MainMenu menu;
-	player player(1, sf::Vector2f(2050, 790)); //tworzenie gracza 
-	menu.PlayMainMenu(window);
+	menu.PlayMainMenu(window); // wyswietla menu gry 
 	while (window->isOpen()) // Glowna petla gry 
 	{ 		
 		close_window(window); // zamykanie okna 
-		pauza(window,player); // pauzuje gre 
+		pauza(window,gracz); // pauzuje gre 
 		window->clear(sf::Color::Black); // czyszcenie ekranu 
-		update_all(window , player); // updatowanie wszystkich obiektow
-        draw_all(window , player , true , true); // rysowanie wszystkich obiektow poza graczem 
-		if (player.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update gracza
+		update_all(window , gracz); // updatowanie wszystkich obiektow
+        draw_all(window , gracz , true , true); // rysowanie wszystkich obiektow
+		if (gracz.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update gracza
 		{
-			death(player , window); //jezeli gracz jest 'dead' to funkcja konczy gre 
+			death(gracz, window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		} 
 		window->display(); // wyswietlanie klatki gry
 	}
@@ -31,7 +26,7 @@ void Game::play()
 void Game::generate_platform(player player) // generowanie platform na podstawie funkcji rand() oraz pozycji innych platform 
 {
 	int los_monety = rand() % 4; 
-	int los_kierunek = rand() % 3;
+	int los_kierunek = rand() % 2;
 	int kierunek_ruchu = 1;
 	if (los_kierunek == 1)
 	{
@@ -141,17 +136,12 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	minimap = new sf::RenderWindow(sf::VideoMode(500, 700), "MiniMap" , sf::Style::None);
 	view_game = sf::View(sf::FloatRect(650, 790, 800.0f, 1000.0f));
 	viev_minimap = sf::View(sf::FloatRect(1000, -2100, 2428, 3400));
-	coin_count = new coin(sf::Vector2f(2200, 700)); 
-	coin_count->setScale(4, 4); 
 	window->setFramerateLimit(60);
 	minimap->setView(viev_minimap);
 	minimap->setFramerateLimit(60); 
 	minimap->setPosition(sf::Vector2i(50,300)); 
 	map_number = 1; 
 	background.draw_tlo(window);
-	font1.loadFromFile("./assets/BigSmoke.ttf");
-	coin_count_text = new sf::Text("0", font1);
-	coin_count_text->setScale(2, 2); 
 	
 }
 
@@ -187,10 +177,10 @@ void Game::update_all(sf::RenderWindow *window , player& player) // aktualizuje 
 	}
 	next_screen(player); // updatowanie pozycji bomb oraz platform 
     update_view(window, player);
-	update_coin_count(player);
 	move_bombs();
 	generate_platform(player); // sprawdzanie pozycji platform , nastepnie generowanie lub usuwanie zbednych platform
 	generate_bombs(player); // to samo tylko z bombami 
+	licznik_gracza.aktualizuj_wynik(player, view_game, window); // obiekt licznika gracza 
 }
 
 void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_count , bool if_player) // rysowanie wszystkich obiektow
@@ -208,13 +198,11 @@ void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_coun
 	{
 		window->draw(*m);
 	}
-	if (if_coin_count)
-	{
-		window->draw(*coin_count);
-		window->draw(*coin_count_text);
-	}
-	if(if_player)
-	window->draw(player);
+	if (if_player)
+		window->draw(player);
+	if(if_coin_count)
+	licznik_gracza.draw(window); 
+
 }
 
 void Game::death(player& player, sf::RenderWindow*window) // ekran smierci 
@@ -223,14 +211,15 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 	{
 		if (player.getGlobalBounds().intersects(x->getGlobalBounds()))
 		{
-			sf::Clock zegar;
 			x->move(sf::Vector2f(-100, 0));
-			while (zegar.getElapsedTime().asSeconds() < 2)
+			bool blokada_animacji = true; 
+			x->reset_clock();
+			while (blokada_animacji)
 			{
 				window->clear(sf::Color::White);
 				background.draw_tlo(window);
 				draw_all(window , player , false , false);
-				x->update(true, zegar);
+				blokada_animacji = x->update();
 				window->draw(*x);
 				window->display();
 
@@ -412,9 +401,12 @@ void Game::GameOver(player& gracz) // ekran konca gry
 					zapis(gracz,input_text);
 					window->close();
 					minimap->close();
-					gracz.alive;
-					background.ready_background_texture();					
-					ready_game();
+					platformy.clear();
+					bomby.clear();
+					monety->clear();
+					gracz = player(1, sf::Vector2f(0, 0)); 
+					background.ready_background_texture();
+					ready_game();				
 					play(); 
 					
 				}
@@ -463,11 +455,4 @@ void Game::update_view(sf::RenderWindow* window , player player) // aktualizuje 
 	update_minimap(player);
 }
 
-void Game::update_coin_count(player &player) // aktualizuje zliczacz monet na prawym gornym rogu
-{
-	coin_count->setPosition(view_game.getCenter().x + 300, view_game.getCenter().y - 500);
-	coin_count->update(); 
-	coin_count_text->setPosition(coin_count->getPosition().x + 30, coin_count->getPosition().y + 100);
-	coin_count_text->setString(std::to_string(player.return_score()));
-} 
 
