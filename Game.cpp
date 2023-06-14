@@ -80,8 +80,11 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 				if (m->getPosition().y > player.getPosition().y + 400 && monety->size()>0)
 				{
 					auto element = std::find(monety->begin(), monety->end(), m);
-					delete m; 
-					monety->erase(element);
+					if (element != monety->end())
+					{
+						delete m;
+						monety->erase(element);
+					}
 				}
 			}
 		if (serca->size() > 0)
@@ -178,7 +181,7 @@ void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 	bomb_time = bomb_clock.getElapsedTime(); 
 	if(bomby->size() == 0)
 		bomby->emplace_back(new bomb(sf::Vector2f(player.getPosition().x - 500 + rand() % 1000, player.getPosition().y - 2500)));
-	if (bomby->size() < 6 && bomb_time.asSeconds() > 2)
+	if (bomby->size() < 10 && bomb_time.asSeconds() > 2.5)
 	{
 		bomby->emplace_back(new bomb(sf::Vector2f(player.getPosition().x-500 + rand()%1000, player.getPosition().y - 2500)));
 		bomb_clock.restart(); 
@@ -194,7 +197,7 @@ void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 void Game::update_all(sf::RenderWindow *window , player& player) // aktualizuje wszystkie obiekty
 {
 	// update gracza na podstawie pozycji platform i innych rzeczy
-	player.update(platformy, bomby, monety , serca);
+	player.update(platformy, bomby, monety , serca , event);
 	for (auto& x : *platformy) // updatowanie pozycji platform oraz rysowanie ich
 	{
 		x->update();

@@ -2,18 +2,21 @@
 
 coin_counter::coin_counter(sf::Vector2f pozycja) : coin(pozycja)
 {
-	font1.loadFromFile("./assets/BigSmoke.ttf");
+	font1.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
 	tekst = new sf::Text("0", font1);
 	tekst->setScale(2, 2);
 	setScale(3, 3); 
+	tekst->setFillColor(sf::Color::Yellow);
 }
 coin_counter::coin_counter() : coin(sf::Vector2f(0,0))
 {
-	font1.loadFromFile("./assets/BigSmoke.ttf");
+	font1.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
 	tekst = new sf::Text("0", font1);
+	tekst->setFillColor(sf::Color::Yellow);
 	tekst->setScale(2, 2);
 	setScale(3, 3);
 	serca_zycia = new std::vector<heart*>; 
+	
 }
 
 

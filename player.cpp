@@ -42,11 +42,11 @@ for (int i = 0; i < 10; i++)
 	klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
 }
 }
-void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca)
+void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca ,sf::Event event)
 {
 	//  // sprawdzilismy w funckji collision czy kolizja wystepuje z ruchom¹ platforma. jezeli tak to move_platforma jest rozna od zera a za razem gracz "jedzie" z platforma
 	move_x(platformy);
-	move_y(platformy);
+	move_y(platformy , event);
 	if_przegrana(bomby , platformy); // sprawdzanie czy gracz zyje 
 	animate(); // po zakonczonym ruszaniu gracza animujemy go na podstawie zmienionej pozycji 
 	add_score(monety); // sprawdza kolizje z monetami nastepnie zwieksza wynik gracza 
@@ -89,7 +89,7 @@ bool player::collision(std::vector<platform*> *platformy, bool blokada) // funkc
 		}
 		 else if (getGlobalBounds().intersects(platforma->getGlobalBounds()) && v_gracz.y < 0)
 		 {
-			 move(0, -0.1); // debugging , tzn jezeli gracz znajduje sie w platformie oraz spada to zamiast zatrzymac sie to nie zablokuje sie 
+			 move(0, 0.2); // debugging , tzn jezeli gracz znajduje sie w platformie oraz spada to zamiast zatrzymac sie to nie zablokuje sie 
 		 }
 	}
 	return kolizja; 
@@ -172,7 +172,7 @@ void player::move_x(std::vector<platform*> *platformy)
 	v_gracz.x = 0; // po zakonczonym ruchu zerujemy predkosc gracza na osi x 
 }
 
-void player::move_y(std::vector<platform*> *platformy)
+void player::move_y(std::vector<platform*> *platformy , sf::Event event)
 {
 	pozycja = getPosition();
 	if (v_gracz.y < 8)
@@ -182,21 +182,14 @@ void player::move_y(std::vector<platform*> *platformy)
 	move(v_gracz);// tutaj to samo tylko dla osi y 
 	move(move_platform);
 	if (collision(platformy, false) == true)
-	{
-		
-		setPosition(pozycja);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		{				
-					 if ( collision_clock.getElapsedTime().asSeconds() < 0.05)
-					 {
-						 v_gracz.y -= 30;
-					 }
-					 else
-					v_gracz.y -= 22;
+	{    setPosition(pozycja);
+		if (collision_clock.getElapsedTime().asSeconds() < 1 && event.key.code == sf::Keyboard::W)
+		{
+			v_gracz.y -= 30;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		{
-			v_gracz.y -= 22;
+		{								 
+					v_gracz.y -= 22;
 		}
 		
 	}      
