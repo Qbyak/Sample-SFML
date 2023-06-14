@@ -3,13 +3,11 @@
 
 player::player(int klasa_gracza, sf::Vector2f pos) 
 {
-	if (klasa_gracza == 1)
-	{
+	
 		if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
 		{
 			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
 		}
-	}
 	setPosition(pos);
 	setTexture(klasa);
 	setScale(2, 2);
@@ -21,7 +19,7 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 	setOrigin(24, 0); 
 	for (int i = 0; i < 10; i++)
 	{
-		klatki_animacji.emplace_back(sf::IntRect(96 + 51 * i, 0, 48, 48));
+		klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
 	}
 }
 player::player()
@@ -103,7 +101,7 @@ void player::if_przegrana(std::vector<bomb*> *bomby , std::vector<platform*> *pl
 	if(platformy->size()>0)
 	if (getGlobalBounds().top + getGlobalBounds().height > platformy->front()->getPosition().y + 300)
 	{
-		stan = dead; 
+		zycia_gracza = 0; 
 	}
 	for (auto &x : *bomby)
 	{
@@ -256,4 +254,9 @@ void player::set_status(bool status)
 int player::return_lives()
 {
 	return zycia_gracza; 
+}
+
+void player::set_texture(sf::Texture tekstura)
+{
+	setTexture(tekstura);
 }

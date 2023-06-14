@@ -22,6 +22,7 @@ public:
 	int return_score(); 
 	void set_status(bool status);
 	int return_lives(); 
+	void set_texture(sf::Texture tekstura);
 private:
 	bool collision(std::vector<platform*> *platformy, bool blokada); // kolizja 
 	void animate(); 

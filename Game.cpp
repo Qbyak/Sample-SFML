@@ -156,6 +156,7 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	monety = new std::vector<coin*>;
 	bomby = new std::vector<bomb*>; 
 	platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
+	gracz.setPosition(sf::Vector2f(2100, 800)); 
 	bomby->emplace_back(new bomb(sf::Vector2f(400, 20000)));
 	game_speed = 0; 
 	window = new sf::RenderWindow(sf::VideoMode(800, 1000), "Cloud tower",sf::Style::None); // tworzenie okna  
@@ -181,7 +182,6 @@ void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 	{
 		bomby->emplace_back(new bomb(sf::Vector2f(player.getPosition().x-500 + rand()%1000, player.getPosition().y - 2500)));
 		bomb_clock.restart(); 
-		std::cout << "tworze bombe " << std::endl;
 	}
 	if(bomby->front() != nullptr)
 	if (bomby->front()->getPosition().y > player.getPosition().y + 500)
@@ -258,14 +258,8 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 
 			}
 		}
+		GameOver(gracz); 
 	}
-	system("CLS");
-	std::cout << "Przegrales!" << std::endl;
-	std::cout << "Wcisnij cokolwiek aby kontynuowac" << std::endl;
-	std::cout << "Wynik gracza to: " <<player.return_score()<< std::endl;
-	GameOver(player);
-	//std::cin.get();
-	//window->close();
 }
 
 void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy 
@@ -286,12 +280,7 @@ void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy
 		draw_all(window , gracz , true , true);
 		window->draw(gracz);
 		window->display();
-		std::cout << "Zapauzowano!" << std::endl;
-		//pause.Play(window);
 		clock.restart();
-
-
-
 	}
 }
 
@@ -437,9 +426,16 @@ void Game::GameOver(player& gracz) // ekran konca gry
 					platformy->clear();
 					bomby->clear();
 					monety->clear();
-					gracz = player(1, sf::Vector2f(0, 0)); 
+					gracz = player(); 
 					background.ready_background_texture();
-					ready_game();				
+					ready_game(); 
+					sf::Texture klasa; 
+					if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
+					{
+						std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+					}
+					gracz.setTexture(klasa); // niewiadomo dla czego trzeba bylo zrobic metode do ustawiania tekstury
+					// poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
 					play(); 
 					
 				}

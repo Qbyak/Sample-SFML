@@ -10,10 +10,6 @@ bomb::bomb(sf::Vector2f pos)
 	{
 		std::cout << "Nie za³adowano grafiki bomby" << std::endl;
 	}
-	else
-	{
-		//std::cout << "Tworze bombe" << std::endl; 
-	}
 	setPosition(pos); 
 	setTexture(tekstura);
 	setScale(0.5, 0.5); 
@@ -40,9 +36,7 @@ bool bomb::update()
 		if (clock.getElapsedTime().asSeconds() > 4)
 			return false;
 		else
-			return true;
-		std::cout << "animuje";
-	
+			return true;	
 }
 
 void bomb::reset_clock()
