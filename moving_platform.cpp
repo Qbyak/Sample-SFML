@@ -3,7 +3,7 @@
 moving_platform::moving_platform(sf::Vector2f speed, sf::Vector2f size, sf::Vector2f position) : platform(size , position)
 {
 	platform_speed = speed; 
-	//setFillColor(sf::Color::Blue);
+
 	setOutlineColor(sf::Color::Blue);
 	initial_pos = position; 
 	//std::cout << "Tworze platforme ruszajaca" << std::endl; 

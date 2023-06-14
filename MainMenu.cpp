@@ -1,21 +1,22 @@
 #include "MainMenu.h"
 
 
-MainMenu::MainMenu()
+MainMenu::MainMenu()//konstruktor menu, wczytywanie tekstur t³a
 {
 	std::cout << "tworze menu" << std::endl;
-	selectedItemIndex = 0; 
+	background.ready_background_texture();
+	selectedButtonIndex = 0; 
 }
 MainMenu::~MainMenu()
 {
 	std::cout << "kasuje menu" << std::endl;
 }
-void MainMenu::LoadFonts()
+void MainMenu::LoadFonts()//wczytywanie czcionek
 {
-	font.loadFromFile("./assets/BigSmoke.ttf");
-	text_font.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
+	font.loadFromFile("./assets/BigSmoke.ttf");//czcionka tytulowa i przyciskow
+	text_font.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");//czcionka tabeli wynikow
 }
-void MainMenu::MenuButtons(float width, float height)
+void MainMenu::MenuButtons(float width, float height)//przyciski menu g³ównego
 {
 	LoadFonts();
 	//ustawienie tytu³u
@@ -24,16 +25,15 @@ void MainMenu::MenuButtons(float width, float height)
 	title.setCharacterSize(120);
 	title.setString("Cloudy Tower");
 	title.setPosition(sf::Vector2f(5, 50));
-	//wprowadzenie tekstu na przycisków
-	std::vector<sf::FloatRect> textbounds;
-	std::vector<sf::FloatRect> buttonbounds;
+	//ustawienie ilosci przyciskow w danym menu
 	button.resize(3);
 	buttontext.resize(3);
+	//wprowadzenie tekstu na przycisków
 	buttontext[0].setString("GRAJ");
 	buttontext[1].setString("OPCJE");
 	buttontext[2].setString("WYJSCIE");
 	//pêtla tworz¹ca przyciski
-	for(int i = 0; i < MAX_NUMBER_OF_BUTTONS; i++)
+	for(int i = 0; i < button.size(); i++)
 	{
 		//ustawienie tekstu na przyciskach
 		buttontext[i].setFont(font);
@@ -54,25 +54,26 @@ void MainMenu::MenuButtons(float width, float height)
 		button[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
 	}
 
-	selectedItemIndex = 1;
-
+	selectedButtonIndex = 1;
+	//czyszczenie wektorow
+	textbounds.clear();
+	buttonbounds.clear();
 }
-void MainMenu::PauseButtons(sf::RenderWindow* window)
+void MainMenu::PauseButtons(sf::RenderWindow* window) //przyciski menu pauzy
 {
 	LoadFonts();
-	sf::View view(window->getView());
+	sf::View view(window->getView());//uzyskanie widoku okna
 	std::cout << "obiekt pauzy" << std::endl;
-
+	//ustawienie napisu PAUZA
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);
-
 	title.setCharacterSize(100);
 	title.setString("PAUZA");
-	title.setPosition(sf::Vector2f(view.getCenter().x + 250, view.getCenter().y + 50));
+	title.setPosition(sf::Vector2f(view.getCenter().x + 250, view.getCenter().y + 50));//ustawienie pozycji przycisków pod widok
 
 	
 
-	//TEKST PRZYCISKU GRAJ
+	//analogicznie do pêtli menu
 	button.resize(2);
 	buttontext.resize(2);
 	buttontext[0].setString("WZNOW");
@@ -95,14 +96,13 @@ void MainMenu::PauseButtons(sf::RenderWindow* window)
 		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
 		button[i].setPosition(sf::Vector2f(view.getCenter().x + 400, view.getCenter().y + (320 * (i + 1)) + 50));
 	}
-	pauseBackground.setFillColor(sf::Color(0, 0, 0, 1));
-	pauseBackground.setSize(sf::Vector2f(800, 1000));
-	pauseBackground.setPosition(sf::Vector2f(view.getCenter().x, view.getCenter().y));
-	selectedItemIndex = 0;
-
+	selectedButtonIndex = 0;
+	textbounds.clear();
+	buttonbounds.clear();
 }
-void MainMenu::OptionButtons(float width, float height)
+void MainMenu::OptionButtons(float width, float height)//przyciski menu opcji
 {
+	//analogicznie do poprzednich menu
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);
 	title.setCharacterSize(100);
@@ -112,6 +112,7 @@ void MainMenu::OptionButtons(float width, float height)
 	buttontext.clear();
 	button.resize(3);
 	buttontext.resize(3);
+
 	buttontext[0].setString("TABLICA WYNIKOW");
 	buttontext[1].setString("AUTORZY");
 	buttontext[2].setString("POWROT");
@@ -135,13 +136,15 @@ void MainMenu::OptionButtons(float width, float height)
 		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
 		button[i].setPosition(sf::Vector2f(400, (250 * (i + 1)) + 20));
 	}
+	textbounds.clear();
+	buttonbounds.clear();
 }
 int MainMenu::GetPressedItem()
 {
-	return selectedItemIndex;
+	return selectedButtonIndex;
 }
 
-void MainMenu::draw(sf::RenderWindow* window)
+void MainMenu::draw(sf::RenderWindow* window)//rysowanie przyciskow i tytulu danego menu na ekran
 {  
 	window->draw(title);
 	for(int i = 0; i < std::size(button); i++)
@@ -154,37 +157,38 @@ void MainMenu::draw(sf::RenderWindow* window)
 //przesuwanie opcji menu w górê
 void MainMenu::MoveUp()
 {
-	if(selectedItemIndex - 1 >= 0)
+	if(selectedButtonIndex - 1 >= 0)
 	{
-		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
-		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
-		selectedItemIndex--;
-		buttontext[selectedItemIndex].setFillColor(sf::Color::Red);
-		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
+		buttontext[selectedButtonIndex].setFillColor(sf::Color::Black);
+		button[selectedButtonIndex].setOutlineColor(sf::Color::Black);
+		selectedButtonIndex--;
+		buttontext[selectedButtonIndex].setFillColor(sf::Color::Red);
+		button[selectedButtonIndex].setOutlineColor(sf::Color::Red);
 	}
 }
 
 //przesuwanie opcji menu w dó³
 void MainMenu::MoveDown()
 {
-	if(selectedItemIndex + 1 < std::size(button))
+	if(selectedButtonIndex + 1 < std::size(button))
 	{
-		buttontext[selectedItemIndex].setFillColor(sf::Color::Black);
-		button[selectedItemIndex].setOutlineColor(sf::Color::Black);
-		selectedItemIndex++;
-		buttontext[selectedItemIndex].setFillColor(sf::Color::Red);
-		button[selectedItemIndex].setOutlineColor(sf::Color::Red);
+		buttontext[selectedButtonIndex].setFillColor(sf::Color::Black);
+		button[selectedButtonIndex].setOutlineColor(sf::Color::Black);
+		selectedButtonIndex++;
+		buttontext[selectedButtonIndex].setFillColor(sf::Color::Red);
+		button[selectedButtonIndex].setOutlineColor(sf::Color::Red);
 	}
 }
 
-void MainMenu::PlayOptions()
+void MainMenu::PlayOptions()//pêtla menu opcji
 {
+	//tworzenie okna opcji
 	sf::RenderWindow* optionwindow;
 	optionwindow= new sf::RenderWindow(sf::VideoMode(800,1000),"Opcje",sf::Style::None);
-
+	//wprowadzenie danych okna do metody z przyciskami
 	OptionButtons(static_cast<float>(optionwindow->getSize().x), (static_cast<float>( optionwindow->getSize().y)));
 
-	bool option_window=true;
+	bool option_window=true;//inicjalizacja pêtli opcji
 	while(option_window)
 	{
 		sf::Event event;
@@ -192,6 +196,7 @@ void MainMenu::PlayOptions()
 		{
 			switch(event.type)
 			{
+				//prze³¹czanie pomiêdzy przyciskami
 				case sf::Event::KeyReleased:
 					switch(event.key.code)
 					{
@@ -204,21 +209,21 @@ void MainMenu::PlayOptions()
 							std::cout << "opcja nizej" << std::endl;
 							MoveDown();
 							break;
-
+							//nacisniecie przycisku
 						case sf::Keyboard::Return:
 							switch(GetPressedItem())
 							{
 								case 0:
 									std::cout << "Tablica Wynikow!" << std::endl;
-									odczyt();
+									odczyt();//odczyt tabeli wynikow z pliku i przedstawienie jej
 									break;
 								case 1:
 									std::cout<<"autorzy" <<std::endl;
-									autorzy();
+									autorzy();//przedstawienie autorow w nowym oknie
 									break;
 								case 2:
 									std::cout << "powrot do menu!" <<std::endl;
-									option_window=!option_window;
+									option_window=!option_window;//zakonczenie pêtli menu opcji, powrót do menu
 									optionwindow->close();
 
 									break;
@@ -237,16 +242,14 @@ void MainMenu::PlayOptions()
 		optionwindow->draw(title);
 		optionwindow->display();
 		}
-		
 
-	
 	}
 	delete optionwindow;
 }
 
 
 
-enum MainMenu::buttons
+enum MainMenu::buttons //ustawienie statusu przycisku w menu g³ownym
 {
 	_GRAJ,
 	_OPCJE,
@@ -256,14 +259,13 @@ enum MainMenu::buttons
 
 
 
-void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
+void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)//pêtla menu g³ownego
 {
-	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
+	MainMenu::buttons button = MainMenu::buttons::_OPCJE;//przypisanie przycisku domyœlnego do opcji
 
-	background.ready_background_texture();
-	MenuButtons(800.0,1000.0);
+	MenuButtons(static_cast<float>(window->getSize().x), (static_cast<float>(window->getSize().y)));
 
-	bool petla=true;
+	bool petla=true;//petla menu
 	while(petla)
 	{
 		sf::Event event;
@@ -271,7 +273,7 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
 		while(window->pollEvent(event))
 		{
 			switch(event.type)
-			{
+			{//wybór przycisku 
 				case sf::Event::KeyReleased:
 					switch(event.key.code)
 					{
@@ -297,15 +299,15 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
 							switch(button)
 							{
 								case _GRAJ:
-									petla=false;
+									petla=false;//zakonczenie petli, przejscie do gry
 									std::cout << "opcja GRAJ" << std::endl;
 									break;
 								case _OPCJE:
-									PlayOptions();
-									MenuButtons(800.0, 1000.0);
+									PlayOptions();//uruchomienie menu opcji
+									MenuButtons(static_cast<float>(window->getSize().x), (static_cast<float>(window->getSize().y))); //powrot do przyciskow menu glownego
 									std::cout << "opcja OPCJE" << std::endl;
 									break;
-								case _WYJSCIE:
+								case _WYJSCIE://wyjscie z gry
 									std::cout<<"papa" << std::endl;
 									window->close();
 									minimap->close();
@@ -322,11 +324,11 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
   }
   
 }
-void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap, player &play)
+void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap, player &play)//pêtla menu pauzy
 {
-	background.ready_background_texture();
-	bool pauza = true;
-	PauseButtons(window);
+	
+	bool pauza = true;//petla pauzy
+	PauseButtons(window);//inicjalizacja przyciskow
 
 	while(pauza)
 	{
@@ -352,7 +354,7 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap
 							switch(GetPressedItem())
 							{
 								case 0:
-									pauza = !pauza;
+									pauza = !pauza;//powrot do gry
 									std::cout << "Wznowiono gre!" << std::endl;
 									break;
 								case 1:
@@ -381,40 +383,39 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap
 
 void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie i wyœwietlenie
 {
-	std::fstream file("Wyniki.csv", std::fstream::in);
+	std::fstream file("Wyniki.csv", std::fstream::in);//otworzenie i utworzenie pliku
+	//stworzenie okna pod tablicê wynikow
+	sf::RenderWindow* score_window;
+	score_window = new sf::RenderWindow(sf::VideoMode(800, 1000), "Tablica wynikow", sf::Style::None);
+
+	sf::Text NickLp, tytul, score, exit;
+	std::string lp_nick, wynik;
 
 	if (file.is_open())
 	{
 		std::string line;
-
+		//oddzielanie wyniku od nicku
 		while (getline(file, line))
 		{
 			std::stringstream str(line);
-			do_zapisu er;
+			do_zapisu wynik_nick;
 			std::string scor_in;
 			getline(str, scor_in, ',');
-			er.score = stoi(scor_in);
-			getline(str, er.name, ',');
-			posortowany.emplace_back(er);
+			wynik_nick.score = stoi(scor_in);
+			getline(str, wynik_nick.name, ',');
+			posortowany.emplace_back(wynik_nick);
 
 		}
 	}
-
+	//sortowanie wynikow za pomoc¹ lambdy rosn¹co
 	std::sort(posortowany.begin(), posortowany.end(), [](const do_zapisu& A, const do_zapisu& B) {return A.score < B.score; });
+	//odwrócenie wektora aby wyniki by³y posortowane malej¹co
 	std::reverse(posortowany.begin(), posortowany.end());
-
+	//odczyt wszystkich wyników w konsoli
 	for (int i = 0; i < posortowany.size(); i++)
 	{
 		std::cout << posortowany[i];
 	}
-
-
-
-	sf::RenderWindow* score_window;
-	score_window = new sf::RenderWindow(sf::VideoMode(800, 1000), "Tablica wynikow", sf::Style::None);
-
-	sf::Text text1, tytul, text3, exit;
-	std::string lp_nick, wynik;
 
 	tytul.setString("Tablica Wynikow");
 	tytul.setCharacterSize(70);
@@ -422,23 +423,23 @@ void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie 
 	tytul.setPosition(125, 50);
 	tytul.setFont(font);
 
-	
+	//ustawienie parametrów pierwszych 20 wyników do pokazania na ekranie
 	for (int i = 0; i<posortowany.size()&&i<20; i++)
 	{
 		lp_nick = std::to_string(i + 1) + ". " + posortowany[i].name;
 		wynik = std::to_string(posortowany[i].score);
-		text1.setString(lp_nick);
-		text3.setString(wynik);
-		text1.setCharacterSize(35);
-		text3.setCharacterSize(35);
-		text1.setFillColor(sf::Color::Black);
-		text3.setFillColor(sf::Color::Black);
-		text1.setPosition(250, 150 + (35 * i));
-		text3.setPosition(500, 150 + (35 * i));
-		text1.setFont(text_font);
-		text3.setFont(text_font);
-		tab.emplace_back(text1);
-		tab.emplace_back(text3);
+		NickLp.setString(lp_nick);
+		score.setString(wynik);
+		NickLp.setCharacterSize(35);
+		score.setCharacterSize(35);
+		NickLp.setFillColor(sf::Color::Black);
+		score.setFillColor(sf::Color::Black);
+		NickLp.setPosition(250, 150 + (35 * i));
+		score.setPosition(500, 150 + (35 * i));
+		NickLp.setFont(text_font);
+		score.setFont(text_font);
+		tab.emplace_back(NickLp);
+		tab.emplace_back(score);
 		lp_nick.clear();
 		wynik.clear();
 	}
@@ -449,7 +450,7 @@ void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie 
 	exit.setFont(text_font);
 
 	score_window->clear();
-
+	//wyswietlanie tabeli wynikow na ekranie
 	while (score_window->isOpen())
 	{
 		sf::Event event;
@@ -458,7 +459,8 @@ void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie 
 			if (event.type == sf::Event::Closed)
 				score_window->close();
 			else if (event.type == sf::Event::KeyReleased)
-			{
+			{ 
+				//zamykanie okna po wciœniêciu escape
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					score_window->close();
@@ -490,10 +492,10 @@ void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
 	
 	sf::RenderWindow* window4;
 	window4 = new sf::RenderWindow(sf::VideoMode(800, 1000), "Autorzy!", sf::Style::None);
-
+	sf::Vector2f ruch;
+	//tworzenie napisów
 	LoadFonts();
 	sf::Text text[5];
-	std::vector<sf::FloatRect> textbounds;
 	text[0].setString("TWORCY GRY");
 	text[1].setString("Wiktor Krakowski");
 	text[2].setString("Hubert Kubiak");
@@ -536,6 +538,7 @@ void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
 				}
 			}
 		}
+		//animacja napisów
 		if (ruch.y >= 0.5)
 		{
 			ruch.y = 0.5;
@@ -561,6 +564,7 @@ void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
 		}
 		window4->display();
 	}
+	textbounds.clear();
 	delete window4;
 }
 void MainMenu::zapis(player& play, std::string nick) // zapis do pliku 
@@ -583,7 +587,7 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 	sf::Sprite sprite;
 	sprite.setTexture(background2);
 	sprite.setScale(3, 3);
-
+	//tworzenie napisow w oknie
 	sf::Text t[5];
 	t[0].setString("Game over");
 	t[0].setCharacterSize(50);
@@ -623,7 +627,7 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 
 
 
-
+	//resetowanie gry, wprowadzanie nicku i zamykanie okna
 	while(window2.isOpen())
 	{
 		sf::Event event2;
@@ -633,20 +637,23 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 				window2.close();
 			else if(event2.type == sf::Event::TextEntered)
 			{
-				if(std::isprint(event2.text.unicode) && input_text.size() < 10)
+				//zamiana unicode na char
+				if(std::isprint(event2.text.unicode) && input_text.size() < 10)//ograniczenie do 10 znaków
 					input_text += event2.text.unicode;
 			}
 			else if(event2.type == sf::Event::KeyReleased)
 			{
+				//umo¿liwienie kasowania znaków przy pomy³ce
 				if(event2.key.code == sf::Keyboard::BackSpace)
 				{
 					if(!input_text.empty())
 						input_text.pop_back();
 				}
-				if(event2.key.code == sf::Keyboard::Enter && !input_text.empty())
+				//zamykanie gry
+				if(event2.key.code == sf::Keyboard::Enter && !input_text.empty())//zabezpieczenie przed pustym nickiem
 				{
 					window2.close();
-
+					
 					zapis(gracz, input_text);
 					window->close();
 					minimap->close();
@@ -654,17 +661,17 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 					bomby->clear();
 					monety->clear();
 					gracz = player();
-					background.ready_background_texture();
+					
 				}
 			}
 		}
-
+		//tworzenie migaj¹cego kursora
 		static sf::Time text_effect_time;
 		static bool show_cursor;
 
 		text_effect_time += clock.restart();
 
-		if(text_effect_time >= sf::seconds(0.5f))
+		if(text_effect_time >= sf::seconds(0.5f)&& input_text.size() < 10)
 		{
 			show_cursor = !show_cursor;
 			text_effect_time = sf::Time::Zero;

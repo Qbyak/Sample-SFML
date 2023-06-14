@@ -268,7 +268,7 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 		{
 			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
 		}
-		gracz.setTexture(klasa); // niewiadomo dla czego trzeba bylo zrobic metode do ustawiania tekstury
+		gracz.setTexture(klasa); // niewiadomo dlaczego trzeba bylo zrobic metode do ustawiania tekstury
 		//poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
 		ready_game();
 		play();
@@ -280,15 +280,15 @@ void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
 	{
-		MainMenu menu;
-		// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
-		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
-		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
-		//background.draw_tlo(window);
-		for (auto x : *platformy)
-		{
-			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
-		}
+		//MainMenu menu;
+		//// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
+		//// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
+		//window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
+		////background.draw_tlo(window);
+		//for (auto x : *platformy)
+		//{
+		//	x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
+		//}
 		menu.PlayPauseMenu(window,minimap,gracz); 
 		draw_all(window , gracz , true , true);
 		window->draw(gracz);

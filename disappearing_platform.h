@@ -8,7 +8,7 @@ class disappearing_platform : public platform
 public:
 	disappearing_platform(sf::Vector2f switch_speed2 ,sf::Vector2f size, sf::Vector2f position);
 	~disappearing_platform(); 
-	virtual void update(); 
+	void update(); 
 private:
 
 private:
