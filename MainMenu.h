@@ -14,7 +14,8 @@ class MainMenu
 {
 public:
 	void PlayMainMenu(sf::RenderWindow* window);//pêtla menu g³ównego
-
+	void GameOver(player& gracz, sf::RenderWindow* window, std::vector<platform*>* platformy, std::vector<bomb*>* bomby, std::vector<coin*>* monety,
+		sf::RenderWindow* minimap);
 	void PlayPauseMenu(sf::RenderWindow* window,player &play);
 	MainMenu();//konstruktor menu, tworzenie przycisków
 	~MainMenu();
@@ -30,6 +31,8 @@ private:
 	void PlayOptions();
 	void odczyt();//odczyt do taveli wyników
 	void autorzy();//okno wyœwietlaj¹ce autorów
+	void zapis(player& play, std::string nick);
+	
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
 	enum buttons;
 	int selectedItemIndex;

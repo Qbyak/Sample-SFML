@@ -240,6 +240,7 @@ void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_coun
 
 void Game::death(player& player, sf::RenderWindow*window) // ekran smierci 
 {
+	
 	for (auto x : *bomby)
 	{
 		if (player.getGlobalBounds().intersects(x->getGlobalBounds()))
@@ -258,7 +259,16 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 
 			}
 		}
-		GameOver(gracz); 
+		menu.GameOver(gracz, window,platformy,bomby,monety, minimap);
+		sf::Texture klasa;
+		if(!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
+		{
+			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+		}
+		gracz.setTexture(klasa); // niewiadomo dla czego trzeba bylo zrobic metode do ustawiania tekstury
+		// poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
+		ready_game();
+		play();
 	}
 }
 
@@ -339,134 +349,6 @@ void Game::update_minimap(player player ) // aktualizuje minimape
 	minimap->draw(player); 
 	//minimap->draw(*coin_count); 
 	minimap->display(); 
-}
-
-void Game::zapis(player& play,std::string nick) // zapis do pliku 
-{
-	std::fstream zapis;
-	zapis.open("Wyniki.csv", std::ios::app);
-	zapis << play.return_score() << ',' << nick << std::endl;
-	zapis.close();
-}
-
-void Game::GameOver(player& gracz) // ekran konca gry 
-{
-	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
-	sf::Font font1,font2;
-	std::string wynik = std::to_string(gracz.return_score());
-	font1.loadFromFile("./assets/BigSmoke.ttf");
-	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
-	sf::Texture background2;
-	background2.loadFromFile("./assets/winter 1/1.png");
-	sf::Sprite sprite;
-	sprite.setTexture(background2);
-	sprite.setScale(3, 3);
-
-	sf::Text t[5];
-	t[0].setString("Game over");
-	t[0].setCharacterSize(50);
-	t[0].setFillColor(sf::Color::Black);
-	t[0].setPosition(170, 30);
-	t[0].setFont(font1);
-
-	t[1].setString("Twoj wynik");
-	t[1].setCharacterSize(30);
-	t[1].setFillColor(sf::Color::Black);
-	t[1].setPosition(150, 125);
-	t[1].setFont(font1);
-
-	t[2].setString(wynik);
-	t[2].setCharacterSize(30);
-	t[2].setFillColor(sf::Color::Black);
-	t[2].setPosition(450, 125);
-	t[2].setFont(font1);
-
-	t[3].setString("Podaj swoj nick i nacisnij enter aby wrocic do menu");
-	t[3].setCharacterSize(20);
-	t[3].setFillColor(sf::Color::Black);
-	t[3].setPosition(50, 200);
-	t[3].setFont(font1);
-
-	t[4].setString("nick");
-	t[4].setCharacterSize(30);
-	t[4].setFillColor(sf::Color::Black);
-	t[4].setPosition(150, 300);
-	t[4].setFont(font1);
-
-
-
-	std::string input_text;
-	sf::Text text("", font2);
-	sf::Clock clock;
-
-	
-
-	
-	while (window2.isOpen())
-	{
-		sf::Event event2;
-		while (window2.pollEvent(event2))
-		{
-			if (event2.type == sf::Event::Closed)
-				window2.close();
-			else if (event2.type == sf::Event::TextEntered)
-			{
-				if (std::isprint(event2.text.unicode) && input_text.size() < 10)
-					input_text += event2.text.unicode;
-			}
-			else if (event2.type == sf::Event::KeyReleased) {
-				if (event2.key.code == sf::Keyboard::BackSpace) {
-					if (!input_text.empty())
-						input_text.pop_back();
-				}
-				if (event2.key.code == sf::Keyboard::Enter) {
-					window2.close();
-					zapis(gracz,input_text);
-					window->close();
-					minimap->close();
-					platformy->clear();
-					bomby->clear();
-					monety->clear();
-					gracz = player(); 
-					background.ready_background_texture();
-					ready_game(); 
-					sf::Texture klasa; 
-					if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
-					{
-						std::cout << "Nie za³adowano grafiki gracza" << std::endl;
-					}
-					gracz.setTexture(klasa); // niewiadomo dla czego trzeba bylo zrobic metode do ustawiania tekstury
-					// poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
-					play(); 
-					
-				}
-			}
-		}
-		static sf::Time text_effect_time;
-		static bool show_cursor;
-
-		text_effect_time += clock.restart();
-
-		if (text_effect_time >= sf::seconds(0.5f))
-		{
-			show_cursor = !show_cursor;
-			text_effect_time = sf::Time::Zero;
-		}
-
-		text.setString(input_text + (show_cursor ? '_' : ' '));
-		text.setPosition(350, 300);
-		text.setFillColor(sf::Color::Black);
-
-
-		window2.clear();
-		window2.draw(sprite);
-		for (int i = 0; i < 5; i++)
-		{
-			window2.draw(t[i]);
-		}
-		window2.draw(text);
-		window2.display();
-	}
 }
 
 void Game::close_window(sf::RenderWindow *window)

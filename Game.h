@@ -46,7 +46,7 @@ private:
 	// funkcja obslugujaca minimape
 	void update_minimap(player player);
 	//funkcje zapis
-	void zapis(player& play,std::string nick);
+	
 
 private:
 	sf::RenderWindow *window;
