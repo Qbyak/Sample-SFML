@@ -7,7 +7,7 @@ Game::Game()
 
 void Game::play()
 {
-	menu.PlayMainMenu(window); // wyswietla menu gry 
+	menu.PlayMainMenu(window,minimap); // wyswietla menu gry 
 	while (window->isOpen()) // Glowna petla gry 
 	{ 		
 		close_window(window); // zamykanie okna 
@@ -266,7 +266,7 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
 		}
 		gracz.setTexture(klasa); // niewiadomo dla czego trzeba bylo zrobic metode do ustawiania tekstury
-		// poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
+		//poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
 		ready_game();
 		play();
 	}
@@ -286,7 +286,7 @@ void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy
 		{
 			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
 		}
-		menu.PlayPauseMenu(window,gracz); 
+		menu.PlayPauseMenu(window,minimap,gracz); 
 		draw_all(window , gracz , true , true);
 		window->draw(gracz);
 		window->display();
@@ -366,5 +366,3 @@ void Game::update_view(sf::RenderWindow* window , player player) // aktualizuje 
 	window->setView(view_game);
 	update_minimap(player);
 }
-
-

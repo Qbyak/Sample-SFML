@@ -12,7 +12,7 @@ public:
 	void draw_menu_background(sf::RenderWindow* window);
 	void draw_pause_background(sf::RenderWindow* window, player& play);
 private:
-	std::vector<sf::Texture> tlo;
+
 	sf::Texture tlo1;
 	sf::Texture tlo2;
 	sf::Texture tlo3;

@@ -13,10 +13,10 @@
 class MainMenu
 {
 public:
-	void PlayMainMenu(sf::RenderWindow* window);//pêtla menu g³ównego
+	void PlayMainMenu(sf::RenderWindow* window, sf::RenderWindow* minimap);//pêtla menu g³ównego
 	void GameOver(player& gracz, sf::RenderWindow* window, std::vector<platform*>* platformy, std::vector<bomb*>* bomby, std::vector<coin*>* monety,
 		sf::RenderWindow* minimap);
-	void PlayPauseMenu(sf::RenderWindow* window,player &play);
+	void PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap, player& play);
 	MainMenu();//konstruktor menu, tworzenie przycisków
 	~MainMenu();
 private:
@@ -24,7 +24,6 @@ private:
 	void MoveUp();//przesuwanie w górê
 	void MoveDown();//przesuwanie w dó³
 	int GetPressedItem();//getter selectedItemIndex
-	//void draw_tlo(sf::RenderWindow*window);
 	void MenuButtons(float width, float height);
 	void PauseButtons(sf::RenderWindow* window);
 	void OptionButtons(float width, float height);
@@ -32,13 +31,13 @@ private:
 	void odczyt();//odczyt do taveli wyników
 	void autorzy();//okno wyœwietlaj¹ce autorów
 	void zapis(player& play, std::string nick);
-	
+	void LoadFonts();
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
 	enum buttons;
 	int selectedItemIndex;
 	std::vector<sf::Text> buttontext;
 	sf::Text title;
-	sf::Font font;
+	sf::Font font, text_font;
 	std::vector<sf::FloatRect> textbounds;
 	std::vector<sf::FloatRect> buttonbounds;
 	std::vector<sf::RectangleShape> button;
@@ -50,7 +49,7 @@ private:
 	std::vector<sf::Text> tab;
 	struct do_zapisu
 	{
-		int score;
+		int score=0;
 		std::string name;
 	};
 	std::vector<do_zapisu> posortowany;

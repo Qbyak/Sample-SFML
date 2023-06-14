@@ -3,18 +3,20 @@
 
 MainMenu::MainMenu()
 {
-	
+	std::cout << "tworze menu" << std::endl;
 }
 MainMenu::~MainMenu()
 {
 	std::cout << "kasuje menu" << std::endl;
 }
-
+void MainMenu::LoadFonts()
+{
+	font.loadFromFile("./assets/BigSmoke.ttf");
+	text_font.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
+}
 void MainMenu::MenuButtons(float width, float height)
 {
-	//wczytanie czcionki
-	font.loadFromFile("./assets/BigSmoke.ttf");
-
+	LoadFonts();
 	//ustawienie tytu³u
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);
@@ -56,11 +58,9 @@ void MainMenu::MenuButtons(float width, float height)
 }
 void MainMenu::PauseButtons(sf::RenderWindow* window)
 {
-
+	LoadFonts();
 	sf::View view(window->getView());
-
 	std::cout << "obiekt pauzy" << std::endl;
-	font.loadFromFile("./assets/BigSmoke.ttf");
 
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);
@@ -180,18 +180,12 @@ void MainMenu::PlayOptions()
 {
 	sf::RenderWindow* optionwindow;
 	optionwindow= new sf::RenderWindow(sf::VideoMode(800,1000),"Opcje",sf::Style::None);
-	font.loadFromFile("./assets/BigSmoke.ttf");
 
 	OptionButtons(static_cast<float>(optionwindow->getSize().x), (static_cast<float>( optionwindow->getSize().y)));
 
 	bool option_window=true;
 	while(option_window)
 	{
-		background.draw_menu_background(optionwindow);
-		draw(optionwindow);
-		optionwindow->draw(title);
-		optionwindow->display();
-
 		sf::Event event;
 		while(optionwindow->pollEvent(event))
 		{
@@ -233,17 +227,20 @@ void MainMenu::PlayOptions()
 
 					break;
 				case sf::Event::Closed:
-					
-					delete optionwindow;
+					optionwindow->close();
 					break;
 
 			}
+		background.draw_menu_background(optionwindow);
+		draw(optionwindow);
+		optionwindow->draw(title);
+		optionwindow->display();
 		}
 		
 
 	
 	}
-
+	delete optionwindow;
 }
 
 
@@ -258,7 +255,7 @@ enum MainMenu::buttons
 
 
 
-void MainMenu::PlayMainMenu(sf::RenderWindow *window)
+void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
 {
 	MainMenu::buttons button = MainMenu::buttons::_OPCJE;
 
@@ -310,6 +307,7 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window)
 								case _WYJSCIE:
 									std::cout<<"papa" << std::endl;
 									window->close();
+									minimap->close();
 									break;
 							}
 
@@ -323,7 +321,7 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window)
   }
   
 }
-void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
+void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap, player &play)
 {
 	background.ready_background_texture();
 	bool pauza = true;
@@ -358,6 +356,7 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
 									break;
 								case 1:
 									window->close();
+									minimap->close();
 									break;
 							}
 							break;
@@ -410,25 +409,20 @@ void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie 
 
 
 
-	sf::RenderWindow* window3;
-	window3 = new sf::RenderWindow(sf::VideoMode(800, 1000), "SFML works!", sf::Style::None);
-	sf::Font font1, font2;
-	font1.loadFromFile("./assets/BigSmoke.ttf");
-	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
+	sf::RenderWindow* score_window;
+	score_window = new sf::RenderWindow(sf::VideoMode(800, 1000), "Tablica wynikow", sf::Style::None);
 
-
-
-	sf::Text text1, text2, text3;
+	sf::Text text1, tytul, text3, exit;
 	std::string lp_nick, wynik;
 
-	text2.setString("Tablica Wynikow");
-	text2.setCharacterSize(70);
-	text2.setFillColor(sf::Color::Black);
-	text2.setPosition(125, 50);
-	text2.setFont(font1);
+	tytul.setString("Tablica Wynikow");
+	tytul.setCharacterSize(70);
+	tytul.setFillColor(sf::Color::Black);
+	tytul.setPosition(125, 50);
+	tytul.setFont(font);
 
-
-	for (int i = 0; i < 20; i++)
+	
+	for (int i = 0; i<posortowany.size()&&i<20; i++)
 	{
 		lp_nick = std::to_string(i + 1) + ". " + posortowany[i].name;
 		wynik = std::to_string(posortowany[i].score);
@@ -440,86 +434,84 @@ void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie 
 		text3.setFillColor(sf::Color::Black);
 		text1.setPosition(250, 150 + (35 * i));
 		text3.setPosition(500, 150 + (35 * i));
-		text1.setFont(font2);
-		text3.setFont(font2);
+		text1.setFont(text_font);
+		text3.setFont(text_font);
 		tab.emplace_back(text1);
 		tab.emplace_back(text3);
 		lp_nick.clear();
 		wynik.clear();
 	}
+	exit.setString("Nacisnij esc zeby wrocic");
+	exit.setCharacterSize(40);
+	exit.setFillColor(sf::Color::Black);
+	exit.setPosition(400, 900);
+	exit.setFont(text_font);
 
+	score_window->clear();
 
-	window3->clear();
-
-	while (window3->isOpen())
+	while (score_window->isOpen())
 	{
-		sf::Event event3;
-		while (window3->pollEvent(event3))
+		sf::Event event;
+		while (score_window->pollEvent(event))
 		{
-			if (event3.type == sf::Event::Closed)
-				window3->close();
-			else if (event3.type == sf::Event::KeyReleased)
+			if (event.type == sf::Event::Closed)
+				score_window->close();
+			else if (event.type == sf::Event::KeyReleased)
 			{
-				if (event3.key.code == sf::Keyboard::Space)
+				if (event.key.code == sf::Keyboard::Escape)
 				{
-					window3->close();
-					window3->clear();
+					score_window->close();
+					score_window->clear();
 					tab.clear();
 					posortowany.clear();
 					system("cls");
 				}
 			}
 		}
-		window3->clear();
-		background.draw_menu_background(window3);
-		window3->draw(text2);
+		score_window->clear();
+		background.draw_menu_background(score_window);
+		score_window->draw(tytul);
+		if(posortowany.size()>0)
+		{ 
 		for (int i = 0; i < tab.size(); i++)
 		{
-			window3->draw(tab[i]);
+			score_window->draw(tab[i]);
 		}
-		window3->display();
+		}
+		score_window->draw(exit);
+		score_window->display();
 	}
+	delete score_window;
 }
 
 void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
 {
+	
 	sf::RenderWindow* window4;
-	window4 = new sf::RenderWindow(sf::VideoMode(800, 1000), "SFML works!", sf::Style::None);
-	sf::Font font1, font2;
-	font1.loadFromFile("./assets/BigSmoke.ttf");
-	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
+	window4 = new sf::RenderWindow(sf::VideoMode(800, 1000), "Autorzy!", sf::Style::None);
 
+	LoadFonts();
 	sf::Text text[5];
-
+	std::vector<sf::FloatRect> textbounds;
 	text[0].setString("TWORCY GRY");
-	text[0].setCharacterSize(70);
-	text[0].setFillColor(sf::Color::Black);
-	text[0].setPosition(200, 450);
-	text[0].setFont(font1);
-
 	text[1].setString("Wiktor Krakowski");
-	text[1].setCharacterSize(70);
-	text[1].setFillColor(sf::Color::Black);
-	text[1].setPosition(150, 1200);
-	text[1].setFont(font1);
-
 	text[2].setString("Hubert Kubiak");
-	text[2].setCharacterSize(70);
-	text[2].setFillColor(sf::Color::Black);
-	text[2].setPosition(150, 1280);
-	text[2].setFont(font1);
-
 	text[3].setString("Jakub Kubiak");
-	text[3].setCharacterSize(70);
-	text[3].setFillColor(sf::Color::Black);
-	text[3].setPosition(150, 1360);
-	text[3].setFont(font1);
-
+	for(int i = 0; i < 4; i++)
+	{
+		text[i].setFont(font);
+		text[i].setCharacterSize(70);
+		text[i].setFillColor(sf::Color::Black);
+		textbounds.emplace_back(text[i].getLocalBounds());
+		text[i].setOrigin(sf::Vector2f(textbounds[i].left+textbounds[i].width/2.0f, textbounds[i].top + textbounds[i].height / 2.0f));
+		text[i].setPosition(sf::Vector2f(400.0f,100.0f*(i+10)));
+	}
+	text[0].setPosition(sf::Vector2f(400.0f, 100.0f ));
 	text[4].setString("Nacisnij esc zeby wrocic");
 	text[4].setCharacterSize(40);
 	text[4].setFillColor(sf::Color::Black);
 	text[4].setPosition(400, 900);
-	text[4].setFont(font2);
+	text[4].setFont(text_font);
 
 	sf::Clock clock;
 
@@ -549,15 +541,15 @@ void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
 		}
 		window4->clear();
 		background.draw_menu_background(window4);
-		text[0].move(ruch);
-		if (text[1].getPosition().y > 100)
+		
+		if (text[1].getPosition().y > 300)
 		{
 			for (int i = 1; i < 4; i++)
 			{
 				text[i].move(ruch);
 			}
 		}
-		if (text[1].getPosition().y < 101)
+		if (text[1].getPosition().y < 401)
 		{
 			window4->draw(text[4]);
 		}
@@ -568,7 +560,7 @@ void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
 		}
 		window4->display();
 	}
-
+	delete window4;
 }
 void MainMenu::zapis(player& play, std::string nick) // zapis do pliku 
 {
@@ -577,16 +569,16 @@ void MainMenu::zapis(player& play, std::string nick) // zapis do pliku
 	zapis << play.return_score() << ',' << nick << std::endl;
 	zapis.close();
 }
+
 void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platform*>* platformy,std::vector<bomb*>* bomby,std::vector<coin*>* monety,
 	sf::RenderWindow* minimap) // ekran konca gry 
 {
 	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
-	sf::Font font1, font2;
+	LoadFonts();
 	std::string wynik = std::to_string(gracz.return_score());
-	font1.loadFromFile("./assets/BigSmoke.ttf");
-	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
+
 	sf::Texture background2;
-	background2.loadFromFile("./assets/winter 1/1.png");
+	background2.loadFromFile("./assets/winter 8/1.png");
 	sf::Sprite sprite;
 	sprite.setTexture(background2);
 	sprite.setScale(3, 3);
@@ -596,36 +588,36 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 	t[0].setCharacterSize(50);
 	t[0].setFillColor(sf::Color::Black);
 	t[0].setPosition(170, 30);
-	t[0].setFont(font1);
+	t[0].setFont(font);
 
 	t[1].setString("Twoj wynik");
 	t[1].setCharacterSize(30);
 	t[1].setFillColor(sf::Color::Black);
 	t[1].setPosition(150, 125);
-	t[1].setFont(font1);
+	t[1].setFont(font);
 
 	t[2].setString(wynik);
 	t[2].setCharacterSize(30);
 	t[2].setFillColor(sf::Color::Black);
 	t[2].setPosition(450, 125);
-	t[2].setFont(font1);
+	t[2].setFont(font);
 
 	t[3].setString("Podaj swoj nick i nacisnij enter aby wrocic do menu");
-	t[3].setCharacterSize(20);
+	t[3].setCharacterSize(22);
 	t[3].setFillColor(sf::Color::Black);
 	t[3].setPosition(50, 200);
-	t[3].setFont(font1);
+	t[3].setFont(font);
 
-	t[4].setString("nick");
-	t[4].setCharacterSize(30);
+	t[4].setString("NICK: ");
+	t[4].setCharacterSize(40);
 	t[4].setFillColor(sf::Color::Black);
 	t[4].setPosition(150, 300);
-	t[4].setFont(font1);
+	t[4].setFont(text_font);
 
 
 
 	std::string input_text;
-	sf::Text text("", font2);
+	sf::Text text("", text_font);
 	sf::Clock clock;
 
 
@@ -650,7 +642,7 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 					if(!input_text.empty())
 						input_text.pop_back();
 				}
-				if(event2.key.code == sf::Keyboard::Enter)
+				if(event2.key.code == sf::Keyboard::Enter && !input_text.empty())
 				{
 					window2.close();
 
@@ -662,10 +654,6 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 					monety->clear();
 					gracz = player();
 					background.ready_background_texture();
-					//ready_game();
-					
-					//play();
-
 				}
 			}
 		}
