@@ -352,9 +352,10 @@ void Game::zapis(player& play,std::string nick) // zapis do pliku
 void Game::GameOver(player& gracz) // ekran konca gry 
 {
 	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
-	sf::Font font1;
+	sf::Font font1,font2;
 	std::string wynik = std::to_string(gracz.return_score());
 	font1.loadFromFile("./assets/BigSmoke.ttf");
+	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
 	sf::Texture background2;
 	background2.loadFromFile("./assets/winter 1/1.png");
 	sf::Sprite sprite;
@@ -395,7 +396,7 @@ void Game::GameOver(player& gracz) // ekran konca gry
 
 
 	std::string input_text;
-	sf::Text text("", font1);
+	sf::Text text("", font2);
 	sf::Clock clock;
 
 	

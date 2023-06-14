@@ -219,13 +219,13 @@ void MainMenu::PlayOptions()
 									break;
 								case 1:
 									std::cout<<"autorzy" <<std::endl;
+									autorzy();
 									break;
 								case 2:
 									std::cout << "powrot do menu!" <<std::endl;
 									option_window=!option_window;
 									optionwindow->close();
 
-									delete optionwindow; //u mnie dziala, nie wiem jak u was
 									break;
 							}
 							break;
@@ -233,7 +233,7 @@ void MainMenu::PlayOptions()
 
 					break;
 				case sf::Event::Closed:
-					optionwindow->close();
+					
 					delete optionwindow;
 					break;
 
@@ -379,7 +379,7 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, player &play)
 	}
 }
 
-void MainMenu::odczyt()
+void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie i wyœwietlenie
 {
 	std::fstream file("Wyniki.csv", std::fstream::in);
 
@@ -405,28 +405,47 @@ void MainMenu::odczyt()
 
 	for (int i = 0; i < posortowany.size(); i++)
 	{
-		std::cout << posortowany[i].name << " " << posortowany[i].score << std::endl;
+		std::cout << posortowany[i];
 	}
+
+
 
 	sf::RenderWindow* window3;
 	window3 = new sf::RenderWindow(sf::VideoMode(800, 1000), "SFML works!", sf::Style::None);
-	sf::Font font1;
+	sf::Font font1, font2;
 	font1.loadFromFile("./assets/BigSmoke.ttf");
+	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
 
 
-	sf::Text y;
-	std::string w;
 
-	for (int i = 0; i < 10; i++)
+	sf::Text text1, text2, text3;
+	std::string lp_nick, wynik;
+
+	text2.setString("Tablica Wynikow");
+	text2.setCharacterSize(70);
+	text2.setFillColor(sf::Color::Black);
+	text2.setPosition(125, 50);
+	text2.setFont(font1);
+
+
+	for (int i = 0; i < 20; i++)
 	{
-		w = std::to_string(posortowany[i].score) + "          " + posortowany[i].name;
-		y.setString(w);
-		y.setCharacterSize(30);
-		y.setFillColor(sf::Color::Black);
-		y.setPosition(150, 10 + (30 * i));
-		y.setFont(font1);
-		tab.emplace_back(y);
-		w.clear();
+		lp_nick = std::to_string(i + 1) + ". " + posortowany[i].name;
+		wynik = std::to_string(posortowany[i].score);
+		text1.setString(lp_nick);
+		text3.setString(wynik);
+		text1.setCharacterSize(35);
+		text3.setCharacterSize(35);
+		text1.setFillColor(sf::Color::Black);
+		text3.setFillColor(sf::Color::Black);
+		text1.setPosition(250, 150 + (35 * i));
+		text3.setPosition(500, 150 + (35 * i));
+		text1.setFont(font2);
+		text3.setFont(font2);
+		tab.emplace_back(text1);
+		tab.emplace_back(text3);
+		lp_nick.clear();
+		wynik.clear();
 	}
 
 
@@ -447,15 +466,107 @@ void MainMenu::odczyt()
 					window3->clear();
 					tab.clear();
 					posortowany.clear();
+					system("cls");
 				}
 			}
 		}
 		window3->clear();
 		background.draw_menu_background(window3);
+		window3->draw(text2);
 		for (int i = 0; i < tab.size(); i++)
 		{
 			window3->draw(tab[i]);
 		}
 		window3->display();
 	}
+}
+
+void MainMenu::autorzy() // okno wyœwietlaj¹ce autorów
+{
+	sf::RenderWindow* window4;
+	window4 = new sf::RenderWindow(sf::VideoMode(800, 1000), "SFML works!", sf::Style::None);
+	sf::Font font1, font2;
+	font1.loadFromFile("./assets/BigSmoke.ttf");
+	font2.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
+
+	sf::Text text[5];
+
+	text[0].setString("TWORCY GRY");
+	text[0].setCharacterSize(70);
+	text[0].setFillColor(sf::Color::Black);
+	text[0].setPosition(200, 450);
+	text[0].setFont(font1);
+
+	text[1].setString("Wiktor Krakowski");
+	text[1].setCharacterSize(70);
+	text[1].setFillColor(sf::Color::Black);
+	text[1].setPosition(150, 1200);
+	text[1].setFont(font1);
+
+	text[2].setString("Hubert Kubiak");
+	text[2].setCharacterSize(70);
+	text[2].setFillColor(sf::Color::Black);
+	text[2].setPosition(150, 1280);
+	text[2].setFont(font1);
+
+	text[3].setString("Jakub Kubiak");
+	text[3].setCharacterSize(70);
+	text[3].setFillColor(sf::Color::Black);
+	text[3].setPosition(150, 1360);
+	text[3].setFont(font1);
+
+	text[4].setString("Nacisnij esc zeby wrocic");
+	text[4].setCharacterSize(40);
+	text[4].setFillColor(sf::Color::Black);
+	text[4].setPosition(400, 900);
+	text[4].setFont(font2);
+
+	sf::Clock clock;
+
+	while (window4->isOpen())
+	{
+		clock.restart().asSeconds();
+		ruch.y -= 10 * clock.getElapsedTime().asSeconds();
+		sf::Event event4;
+		while (window4->pollEvent(event4))
+		{
+			if (event4.type == sf::Event::Closed)
+				window4->close();
+			else if (event4.type == sf::Event::KeyReleased)
+			{
+				if (event4.key.code == sf::Keyboard::Escape)
+				{
+					window4->close();
+					window4->clear();
+					clock.restart();
+					ruch.y = 0;
+				}
+			}
+		}
+		if (ruch.y >= 0.5)
+		{
+			ruch.y = 0.5;
+		}
+		window4->clear();
+		background.draw_menu_background(window4);
+		text[0].move(ruch);
+		if (text[1].getPosition().y > 100)
+		{
+			for (int i = 1; i < 4; i++)
+			{
+				text[i].move(ruch);
+			}
+		}
+		if (text[1].getPosition().y < 101)
+		{
+			window4->draw(text[4]);
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			window4->draw(text[i]);
+		}
+		window4->display();
+	}
+
 }

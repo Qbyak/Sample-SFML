@@ -29,6 +29,7 @@ private:
 	void OptionButtons(float width, float height);
 	void PlayOptions();
 	void odczyt();//odczyt do taveli wyników
+	void autorzy();//okno wyœwietlaj¹ce autorów
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
 	enum buttons;
 	int selectedItemIndex;
@@ -50,5 +51,11 @@ private:
 		std::string name;
 	};
 	std::vector<do_zapisu> posortowany;
+	friend std::ostream& operator <<(std::ostream& s, const do_zapisu& v)
+	{
+		return s << "nick: " << v.name << ", wynik: " << v.score << std::endl;
+	}
+	//pomocnicze
+	sf::Vector2f ruch;
 	
 };
