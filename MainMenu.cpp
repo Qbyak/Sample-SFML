@@ -681,7 +681,6 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 		text.setPosition(350, 300);
 		text.setFillColor(sf::Color::Black);
 
-
 		window2.clear();
 		window2.draw(sprite);
 		for(int i = 0; i < 5; i++)
