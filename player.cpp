@@ -12,8 +12,10 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 	setTexture(klasa);
 	setScale(2, 2);
 	setTextureRect(sf::IntRect(0, 0, 48, 48));
+	numer_klatki_animacji = 0; 
 	grawitacja = sf::Vector2f(0, 0.3); 
 	stan = alive;
+	kierunek = fall; 
 	zycia_gracza = 1; 
 	score = 0; 
 	setOrigin(24, 0); 
@@ -34,9 +36,11 @@ setScale(2, 2);
 setTextureRect(sf::IntRect(0, 0, 48, 48));
 grawitacja = sf::Vector2f(0, 0.3);
 stan = alive;
+kierunek = fall;
 score = 0;
 setOrigin(24, 0);
 zycia_gracza = 1;
+numer_klatki_animacji = 0;
 for (int i = 0; i < 10; i++)
 {
 	klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));

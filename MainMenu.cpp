@@ -4,6 +4,7 @@
 MainMenu::MainMenu()
 {
 	std::cout << "tworze menu" << std::endl;
+	selectedItemIndex = 0; 
 }
 MainMenu::~MainMenu()
 {
