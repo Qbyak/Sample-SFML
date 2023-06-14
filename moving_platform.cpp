@@ -6,12 +6,12 @@ moving_platform::moving_platform(sf::Vector2f speed, sf::Vector2f size, sf::Vect
 	//setFillColor(sf::Color::Blue);
 	setOutlineColor(sf::Color::Blue);
 	initial_pos = position; 
-	std::cout << "Tworze platforme ruszajaca" << std::endl; 
+	//std::cout << "Tworze platforme ruszajaca" << std::endl; 
 }
 
 moving_platform::~moving_platform()
 {
-	std::cout << "Usuwam ruszajaca platforme" << std::endl; 
+	//std::cout << "Usuwam ruszajaca platforme" << std::endl; 
 }
 
 void moving_platform::update()

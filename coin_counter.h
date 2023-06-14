@@ -8,10 +8,13 @@ class coin_counter : public coin
 	void aktualizuj_wynik(player gracz , sf::View widok , sf::RenderWindow *window); 
     void draw(sf::RenderWindow* window); 
 private:
-	
+	void update_hearts(player gracz);
 private:
 	sf::Font font1;
 	sf::Text *tekst;
+	std::vector<heart*> *serca_zycia; 
+	sf::Vector2f pozycja;
+	int number;
 };
 
 

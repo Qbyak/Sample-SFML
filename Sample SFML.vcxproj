@@ -145,6 +145,7 @@
     <ClCompile Include="coin_counter.cpp" />
     <ClCompile Include="disappearing_platform.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="heart.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="moving_platform.cpp" />
     <ClCompile Include="platform.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="coin_counter.h" />
     <ClInclude Include="disappearing_platform.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="heart.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="moving_platform.h" />
     <ClInclude Include="platform.h" />

@@ -15,6 +15,7 @@
 #include "coin.h"
 #include "coin_counter.h"
 #include "MainMenu.h"
+#include "heart.h"
 class Game
 { public:
 	Game();
@@ -51,9 +52,10 @@ private:
 	sf::RenderWindow *window;
 	sf::RenderWindow* minimap; 
 	// vectory obiektow na planszy 
-	std::vector<platform*> platformy;
-	std::vector<bomb*> bomby; 
+	std::vector<platform*> *platformy;
+	std::vector<bomb*> *bomby; 
 	std::vector<coin*> *monety; 
+	std::vector<heart*> *serca;
 
 	// zmienne czasowe do animacji bomby
 	sf::Clock bomb_clock; 

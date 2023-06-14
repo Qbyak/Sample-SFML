@@ -32,35 +32,46 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 	{
 		kierunek_ruchu = -1; 
 	}
-		if (platformy.size() < 14) 
+	if (platformy->size() == 0)
+	{
+		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(0, 0)));
+	}
+		if (platformy->size() < 14)  
 		{
 			int los = rand() % 6;
 			if (los == 1 || los ==2)
-			{ // platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(generate_rand_dist(), platformy.back()->getPosition().y - 200)));
-				platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(platformy.back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy.back()->getPosition().y - 200)));
+			{ // platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(generate_rand_dist(), platformy->back()->getPosition().y - 200)));
+				platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(platformy->back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy->back()->getPosition().y - 200)));
 				if (los_monety == 3)
-					monety->emplace_back(new coin(sf::Vector2f(platformy.back()->getPosition().x + rand() % 100, platformy.back()->getPosition().y - 50))); 
+					monety->emplace_back(new coin(sf::Vector2f(platformy->back()->getPosition().x + rand() % 100, platformy->back()->getPosition().y - 50))); 
+			    if (rand() % 20 == 5)   // pseudo-losowa szansa na pojawienie sie serca
+					serca->emplace_back(new heart(sf::Vector2f(platformy->back()->getPosition().x + 50 , platformy->back()->getPosition().y - 50), sf::Vector2f(0.5, 0.5)));
 			}
 			else if (los == 3 || los == 4)
 			{
-				platformy.emplace_back(new moving_platform(sf::Vector2f((rand() % 30) / 10 + 2, 0), sf::Vector2f(200, 50), sf::Vector2f(platformy.back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy.back()->getPosition().y - 200)));
+				platformy->emplace_back(new moving_platform(sf::Vector2f((rand() % 30) / 10 + 2, 0), sf::Vector2f(200, 50), sf::Vector2f(platformy->back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy->back()->getPosition().y - 200)));
 				if (los_monety == 3)
-				monety->emplace_back(new coin(sf::Vector2f(platformy.back()->getPosition().x + rand() % 100, platformy.back()->getPosition().y - 50)));
+				monety->emplace_back(new coin(sf::Vector2f(platformy->back()->getPosition().x + rand() % 100, platformy->back()->getPosition().y - 50)));
+				if (rand() % 20 == 5)
+					serca->emplace_back(new heart(sf::Vector2f(platformy->back()->getPosition().x + 50, platformy->back()->getPosition().y - 50), sf::Vector2f(0.5, 0.5)));
 			}
 			else if (los == 5)
 			{
-				platformy.emplace_back(new disappearing_platform(sf::Vector2f(3 + (rand() % 30) / 10, 1.2 - (rand() % 50) / 100), sf::Vector2f(200, 50), sf::Vector2f(platformy.back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy.back()->getPosition().y - 200)));
+				platformy->emplace_back(new disappearing_platform(sf::Vector2f(3 + (rand() % 30) / 10, 1.2 - (rand() % 50) / 100), sf::Vector2f(200, 50), sf::Vector2f(platformy->back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy->back()->getPosition().y - 200)));
 				if (los_monety == 3)
-					monety->emplace_back(new coin(sf::Vector2f(platformy.back()->getPosition().x + rand() % 100, platformy.back()->getPosition().y - 50)));
+					monety->emplace_back(new coin(sf::Vector2f(platformy->back()->getPosition().x + rand() % 100, platformy->back()->getPosition().y - 50)));
+				if (rand() % 20 == 5)
+					serca->emplace_back(new heart(sf::Vector2f(platformy->back()->getPosition().x + 50, platformy->back()->getPosition().y - 50), sf::Vector2f(0.5, 0.5)));
 			}
 		}
-		for (auto x : platformy)
+		for (auto x : *platformy)
 		{
 			if (x->getPosition().y  > player.getPosition().y + 800 ) 
 			{
-				auto element = std::find(platformy.begin(), platformy.end(), x);
-				delete x; 
-				platformy.erase(element); 
+				auto element = std::find(platformy->begin(), platformy->end(), x);
+
+					delete x;
+					platformy->erase(element);
 			}
 		}
 		if(monety->size()>0)
@@ -73,12 +84,24 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 					monety->erase(element);
 				}
 			}
+		if (serca->size() > 0)
+		{
+			for (auto s : *serca)
+			{
+				if (s->getPosition().y > player.getPosition().y + 700)
+				{
+					auto element = std::find(serca->begin(), serca->end(), s);
+					delete s;
+					serca->erase(element); 
+				}
+			}
+		}
 		
 }
 
 void Game::move_all(sf::Vector2f ruch)
 {
-	for (auto& p : platformy)
+	for (auto& p : *platformy)
 	{
 		p->move(ruch); 
 	}
@@ -93,9 +116,9 @@ void Game::next_screen(player &player) // zmiana map gry
 	if (player.getPosition().y < -1600 && map_number == 1 )
 	{
 		map_number = 2; 
-		platformy.clear(); 
-		player.setPosition(sf::Vector2f(player.getPosition().x, -3250));
-		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x-50, -3200)));
+		platformy->clear(); 
+		player.setPosition(sf::Vector2f(player.getPosition().x, -3300));
+		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x-50, -3200)));
 		//minimap->setPosition(sf::Vector2i(play.getPosition().x - 1000, minimap->getPosition().y));
 		viev_minimap.setCenter(player.getPosition().x , player.getPosition().y -1500);
 		minimap->setView(viev_minimap); 
@@ -103,9 +126,9 @@ void Game::next_screen(player &player) // zmiana map gry
 	if (player.getPosition().y < -6500 && map_number == 2)
 	{
 		map_number = 3; 
-		platformy.clear();
+		platformy->clear();
 		player.setPosition(sf::Vector2f(player.getPosition().x, -7450));
-		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x - 50, -7350)));
+		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x - 50, -7350)));
 		viev_minimap.setCenter(player.getPosition().x, player.getPosition().y - 1350);
 		
 		
@@ -113,11 +136,11 @@ void Game::next_screen(player &player) // zmiana map gry
 	}
 	if (player.getPosition().y < -10000 && map_number == 3)
 	{
-		platformy.clear();
-		bomby.clear();
+		platformy->clear();
+		bomby->clear();
 		monety->clear(); 
-		platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
-		player.setPosition(2100,850);
+		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
+		player.setPosition(2100,800);
 		viev_minimap.setCenter(player.getPosition().x, player.getPosition().y - 1350);
 		minimap->setView(viev_minimap); 
 		map_number = 1;
@@ -128,10 +151,13 @@ void Game::next_screen(player &player) // zmiana map gry
 void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie poczatkowych wartosci zmiennych
 {
 	srand((unsigned)time(NULL));
-	platformy.emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
-	bomby.emplace_back(new bomb(sf::Vector2f(400, 20000)));
+	platformy = new std::vector<platform*>; 
+	serca = new std::vector<heart*>;
+	monety = new std::vector<coin*>;
+	bomby = new std::vector<bomb*>; 
+	platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
+	bomby->emplace_back(new bomb(sf::Vector2f(400, 20000)));
 	game_speed = 0; 
-	monety = new std::vector<coin*>; 
 	window = new sf::RenderWindow(sf::VideoMode(800, 1000), "Cloud tower",sf::Style::None); // tworzenie okna  
 	minimap = new sf::RenderWindow(sf::VideoMode(500, 700), "MiniMap" , sf::Style::None);
 	view_game = sf::View(sf::FloatRect(650, 790, 800.0f, 1000.0f));
@@ -141,32 +167,35 @@ void Game::ready_game() // przygotowanie gry , ladowanie grafik oraz ustalanie p
 	minimap->setFramerateLimit(60); 
 	minimap->setPosition(sf::Vector2i(50,300)); 
 	map_number = 1; 
-	background.draw_tlo(window);
+	background.draw_tlo(window);	
+	serca->emplace_back(new heart(sf::Vector2f(0, 0) , sf::Vector2f(2,2))); 
 	
 }
 
 void Game::generate_bombs(player player) // tworzenie i usuwanie bomb
 {
 	bomb_time = bomb_clock.getElapsedTime(); 
-	if (bomby.size() < 6 && bomb_time.asSeconds() > 2)
+	if(bomby->size() == 0)
+		bomby->emplace_back(new bomb(sf::Vector2f(player.getPosition().x - 500 + rand() % 1000, player.getPosition().y - 2500)));
+	if (bomby->size() < 6 && bomb_time.asSeconds() > 2)
 	{
-		bomby.emplace_back(new bomb(sf::Vector2f(player.getPosition().x-500 + rand()%1000, player.getPosition().y - 1200)));
+		bomby->emplace_back(new bomb(sf::Vector2f(player.getPosition().x-500 + rand()%1000, player.getPosition().y - 2500)));
 		bomb_clock.restart(); 
 		std::cout << "tworze bombe " << std::endl;
 	}
-	if(bomby.size()>0)
-	if (bomby.front()->getPosition().y > player.getPosition().y + 500)
+	if(bomby->front() != nullptr)
+	if (bomby->front()->getPosition().y > player.getPosition().y + 500)
 	{
-		delete bomby.front(); 
-		bomby.erase(bomby.begin()); 
+		delete bomby->front(); 
+		bomby->erase(bomby->begin()); 
 	}
 }
 
 void Game::update_all(sf::RenderWindow *window , player& player) // aktualizuje wszystkie obiekty
 {
 	// update gracza na podstawie pozycji platform i innych rzeczy
-	player.update(platformy, bomby, monety);
-	for (auto& x : platformy) // updatowanie pozycji platform oraz rysowanie ich
+	player.update(platformy, bomby, monety , serca);
+	for (auto& x : *platformy) // updatowanie pozycji platform oraz rysowanie ich
 	{
 		x->update();
 	}
@@ -186,17 +215,21 @@ void Game::update_all(sf::RenderWindow *window , player& player) // aktualizuje 
 void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_count , bool if_player) // rysowanie wszystkich obiektow
 {
 	background.draw_tlo(window); // rysowanie tla
-	for (auto& x : platformy)
+	for (auto& x : *platformy)
 	{
 		window->draw(*x); 
 	}
-	for (auto& x : bomby)
+	for (auto& x : *bomby)
 	{
 		window->draw(*x);
 	}	
 	for (auto& m : *monety)
 	{
 		window->draw(*m);
+	}
+	for (auto& s : *serca)
+	{
+		window->draw(*s); 
 	}
 	if (if_player)
 		window->draw(player);
@@ -207,7 +240,7 @@ void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_coun
 
 void Game::death(player& player, sf::RenderWindow*window) // ekran smierci 
 {
-	for (auto x : bomby)
+	for (auto x : *bomby)
 	{
 		if (player.getGlobalBounds().intersects(x->getGlobalBounds()))
 		{
@@ -245,7 +278,7 @@ void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy
 		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
 		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
 		//background.draw_tlo(window);
-		for (auto x : platformy)
+		for (auto x : *platformy)
 		{
 			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
 		}
@@ -264,7 +297,7 @@ void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy
 
 void Game::move_bombs() // rusza bomby
 {
-	for (auto& x : bomby) // bomby 
+	for (auto& x : *bomby) // bomby 
 	{
 		x->move(sf::Vector2f(0, 2.5));
 	}
@@ -401,8 +434,8 @@ void Game::GameOver(player& gracz) // ekran konca gry
 					zapis(gracz,input_text);
 					window->close();
 					minimap->close();
-					platformy.clear();
-					bomby.clear();
+					platformy->clear();
+					bomby->clear();
 					monety->clear();
 					gracz = player(1, sf::Vector2f(0, 0)); 
 					background.ready_background_texture();

@@ -12,7 +12,7 @@ bomb::bomb(sf::Vector2f pos)
 	}
 	else
 	{
-		std::cout << "Tworze bombe" << std::endl; 
+		//std::cout << "Tworze bombe" << std::endl; 
 	}
 	setPosition(pos); 
 	setTexture(tekstura);
@@ -27,9 +27,7 @@ bomb::bomb(sf::Vector2f pos)
 
 bomb::~bomb()
 {
-	std::cout << "Usuwam bombe" << std::endl; 
-	
-	
+	//std::cout << "Usuwam bombe" << std::endl; 	
 }
 
 bool bomb::update()
@@ -43,6 +41,7 @@ bool bomb::update()
 			return false;
 		else
 			return true;
+		std::cout << "animuje";
 	
 }
 

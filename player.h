@@ -6,6 +6,7 @@
 #include "moving_platform.h"
 #include "bomb.h" 
 #include "coin.h"
+#include "heart.h"
 class player : public sf::Sprite 
 {public:
 	enum status // enum musi byc publiczny poniewaz w klasie game sprawdzamy stan gracza
@@ -16,18 +17,20 @@ class player : public sf::Sprite
 public:
 	player(int klasa, sf::Vector2f pos); 	
 	player(); 
-	void update(std::vector<platform*> platformy, std::vector<bomb*> bomby , std::vector<coin*> *monety); // updatuje pozycje oraz predkosc gracza
+	void update(std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca); // updatuje pozycje oraz predkosc gracza
 	status get_status(); // zwraca enuma stan , tzn dead lub alive
 	int return_score(); 
 	void set_status(bool status);
+	int return_lives(); 
 private:
-	bool collision(std::vector<platform*> platformy, bool blokada); // kolizja 
+	bool collision(std::vector<platform*> *platformy, bool blokada); // kolizja 
 	void animate(); 
-	void move_x(std::vector<platform*> platformy); // ruch w osi x
-	void move_y(std::vector<platform*> platformy); // ruch w osi y 
+	void move_x(std::vector<platform*> *platformy); // ruch w osi x
+	void move_y(std::vector<platform*> *platformy); // ruch w osi y 
 	sf::Vector2f sprawdz_klaw(); // sprawdza wcisniete klawisze 
-    void if_przegrana(std::vector<bomb*> bomby , std::vector<platform*> platformy); // sprawdza czy grac zyje czy nie 
+    void if_przegrana(std::vector<bomb*> *bomby , std::vector<platform*> *platformy); // sprawdza czy grac zyje czy nie 
 	void add_score(std::vector<coin*> *monety);
+	void update_lives(std::vector<heart*> *serca);
 private:
 	sf::Vector2f v_gracz; // predkosc gracza
 	sf::Vector2f grawitacja; // grawitacja
@@ -47,10 +50,13 @@ private:
 	};
 	sf::Clock clock; 
 	travel kierunek;
+	// zmienne potrzebne do animacji
 	int numer_klatki_animacji;
 	sf::Time czas_animacji;
 	sf::Clock collision_clock; 
 	// vector intRectow do funkcji animate
 	std::vector <sf::IntRect> klatki_animacji; 
+	//
+	int zycia_gracza; 
 };
 

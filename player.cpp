@@ -15,7 +15,8 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 	setScale(2, 2);
 	setTextureRect(sf::IntRect(0, 0, 48, 48));
 	grawitacja = sf::Vector2f(0, 0.3); 
-	stan = alive; 
+	stan = alive;
+	zycia_gracza = 1; 
 	score = 0; 
 	setOrigin(24, 0); 
 	for (int i = 0; i < 10; i++)
@@ -37,12 +38,13 @@ grawitacja = sf::Vector2f(0, 0.3);
 stan = alive;
 score = 0;
 setOrigin(24, 0);
+zycia_gracza = 1;
 for (int i = 0; i < 10; i++)
 {
 	klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
 }
 }
-void player::update( std::vector<platform*> platformy, std::vector<bomb*> bomby , std::vector<coin*> *monety)
+void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca)
 {
 	//  // sprawdzilismy w funckji collision czy kolizja wystepuje z ruchom¹ platforma. jezeli tak to move_platforma jest rozna od zera a za razem gracz "jedzie" z platforma
 	move_x(platformy);
@@ -50,7 +52,7 @@ void player::update( std::vector<platform*> platformy, std::vector<bomb*> bomby 
 	if_przegrana(bomby , platformy); // sprawdzanie czy gracz zyje 
 	animate(); // po zakonczonym ruszaniu gracza animujemy go na podstawie zmienionej pozycji 
 	add_score(monety); // sprawdza kolizje z monetami nastepnie zwieksza wynik gracza 
-	
+	update_lives(serca); // sprawdza kolizje z sercami i odpowiednio dodaje zycia 
 }
 
 sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi X
@@ -76,11 +78,11 @@ sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi
 }
 
 
-bool player::collision(std::vector<platform*> platformy, bool blokada) // funkcja sprawdzajaca kolizje miedzy graczem a obiektami 
+bool player::collision(std::vector<platform*> *platformy, bool blokada) // funkcja sprawdzajaca kolizje miedzy graczem a obiektami 
 {
 	move_platform = sf::Vector2f(0, 0); 
 	bool kolizja = false; 
-	for (auto platforma : platformy)
+	for (auto platforma : *platformy)
 	{	
 		 if (getGlobalBounds().intersects(platforma->getGlobalBounds()) && v_gracz.y >= 0 && getGlobalBounds().top + getGlobalBounds().height - 19*grawitacja.y - 3 <= platforma->getGlobalBounds().top)
 		{
@@ -96,19 +98,29 @@ bool player::collision(std::vector<platform*> platformy, bool blokada) // funkcj
 }
 
 
-void player::if_przegrana(std::vector<bomb*> bomby , std::vector<platform*> platformy) // sprwadza kolizje miedzy graczem a bombami
+void player::if_przegrana(std::vector<bomb*> *bomby , std::vector<platform*> *platformy) // sprwadza kolizje miedzy graczem a bombami
 {   
-	if (getGlobalBounds().top + getGlobalBounds().height > platformy.front()->getPosition().y + 300)
+	if(platformy->size()>0)
+	if (getGlobalBounds().top + getGlobalBounds().height > platformy->front()->getPosition().y + 300)
 	{
 		stan = dead; 
 	}
-	for (auto x : bomby)
+	for (auto &x : *bomby)
 	{
-		if (getGlobalBounds().intersects(x->getGlobalBounds()))
+		if (getGlobalBounds().intersects(x->getGlobalBounds()) && zycia_gracza == 1)
 		{
-			stan = dead; 
+			zycia_gracza = 0; // musi byc ten warunek poniewaz animacja wybychu bomby znajduje sie w samym obiekcie bomby
+			// wiec jezeli ja usuniemy to nie bedzie mozna wykonac animacji poniewaz nie bedzie obiektu 
+		}
+		else if (getGlobalBounds().intersects(x->getGlobalBounds()) )
+		{
+			zycia_gracza = zycia_gracza - 1; 
+			auto element = std::find(bomby->begin(), bomby->end(), x);
+			bomby->erase(element); 
 		}
 	}
+	if(zycia_gracza == 0)
+		stan = dead;
 }
 
 player::status player::get_status()
@@ -149,7 +161,7 @@ void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn le
 	}
 }
 
-void player::move_x(std::vector<platform*> platformy)
+void player::move_x(std::vector<platform*> *platformy)
 {
 	pozycja = getPosition();
 	move(sprawdz_klaw());// ruch jest rozpatrywany osobno w plaszczyznie x oraz y , tutaj jest plaszczyzna X 
@@ -162,7 +174,7 @@ void player::move_x(std::vector<platform*> platformy)
 	v_gracz.x = 0; // po zakonczonym ruchu zerujemy predkosc gracza na osi x 
 }
 
-void player::move_y(std::vector<platform*> platformy)
+void player::move_y(std::vector<platform*> *platformy)
 {
 	pozycja = getPosition();
 	if (v_gracz.y < 8)
@@ -205,8 +217,27 @@ void player::add_score(std::vector<coin*> *monety)
 		{
 			score++; 
 			auto element = std::find(monety->begin(), monety->end(), m);
-			delete(m);
-			monety->erase(element);
+			if (element != monety->end())
+			{
+				delete(m);
+				monety->erase(element);
+			}
+		}
+	}
+}
+
+void player::update_lives(std::vector<heart*> *serca)
+{
+	for (auto& s : *serca)
+	{
+		if (this->getGlobalBounds().intersects(s->getGlobalBounds()) && zycia_gracza < 3)
+		{
+			auto x = std::find(serca->begin(), serca->end(), s);
+			if (x != serca->end())
+			{
+				serca->erase(x);
+				zycia_gracza++;
+			}
 		}
 	}
 }
@@ -220,4 +251,9 @@ void player::set_status(bool status)
 {
 	if (status)
 	stan = alive; 
+}
+
+int player::return_lives()
+{
+	return zycia_gracza; 
 }

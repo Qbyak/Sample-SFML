@@ -4,14 +4,14 @@ disappearing_platform::disappearing_platform(sf::Vector2f switch_speed2 , sf::Ve
 	switch_speed = switch_speed2; 
 	pozycja = position; 
 	setFillColor(sf::Color::Magenta); 
-	std::cout << "Tworze platforme znikajaca" << std::endl; 
+	//std::cout << "Tworze platforme znikajaca" << std::endl; 
 	offset = rand() % 20 / 20; 
 	clock.restart(); 
 }
 
 disappearing_platform::~disappearing_platform()
 {
-	std::cout << "Usuwam znikajaca platforme" << std::endl; 
+	//std::cout << "Usuwam znikajaca platforme" << std::endl; 
 }
 
 void disappearing_platform::update() // platforma znika w okreslonych interwalach , na okreslony czas , oraz z okreslonym przesunieciem pierwotnym
