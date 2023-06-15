@@ -8,23 +8,20 @@ Game::Game()
 void Game::play()
 {
 	menu.PlayMainMenu(window,minimap); // wyswietla menu gry 
-	
-	while (window->isOpen()) // Glowna petla gry 
-	{ 	
-		if(menu.getState() != MainMenu::_WYJSCIE)
-		{
+	while(window->isOpen()) // Glowna petla gry 
+	{
+		window->clear(sf::Color::Black); // czyszczenie ekranu 
 		close_window(window); // zamykanie okna 
-		pauza(window,gracz); // pauzuje gre 
-		window->clear(sf::Color::Black); // czyszcenie ekranu 
 		update_all(window , gracz); // updatowanie wszystkich obiektow
         draw_all(window , gracz , true , true); // rysowanie wszystkich obiektow
 		if (gracz.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update gracza
 		{
 			death(gracz, window); //jezeli gracz jest 'dead' to funkcja konczy gre 
-		} 
-		window->display(); // wyswietlanie klatki gry
-	    }
+		}
+		pauza(window, gracz);
+		window->display();// wyswietlanie klatki gry		
 	}
+	clear_all(window,minimap,platformy,bomby,monety,serca);
 }
 
 void Game::generate_platform(player player) // generowanie platform na podstawie funkcji rand() oraz pozycji innych platform 
@@ -266,6 +263,8 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 
 			}
 		}
+		if(window->isOpen())
+		{ 
 		menu.GameOver(gracz, window,platformy,bomby,monety, minimap);
 		sf::Texture klasa;
 		if(!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
@@ -276,28 +275,21 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 		//poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
 		ready_game();
 		play();
+		}
 	}
 }
 
 void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy 
 {
-	
+	if(window->isOpen())
+	{ 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
 	{
-		//MainMenu menu;
-		//// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
-		//// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
-		//window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
-		////background.draw_tlo(window);
-		//for (auto x : *platformy)
-		//{
-		//	x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
-		//}
+	
 		menu.PlayPauseMenu(window,minimap,gracz); 
-		draw_all(window , gracz , true , true);
-		window->draw(gracz);
 		window->display();
 		clock.restart();
+	}
 	}
 }
 
@@ -307,6 +299,18 @@ void Game::move_bombs() // rusza bomby
 	{
 		x->move(sf::Vector2f(0, 2.5));
 	}
+}
+
+void Game::clear_all(sf::RenderWindow* window, sf::RenderWindow* minimap, std::vector<platform*>* platformy,
+	std::vector<bomb*>* bomby, std::vector<coin*>* monety, std::vector<heart*>* serca)
+{
+	//delete window;
+	//delete minimap;
+	platformy->clear();
+	bomby->clear();
+	monety->clear();
+	serca->clear();
+	std::cout << "czyszczenie pamieci" << std::endl;
 }
 
 void Game::ready_background_texture() // szykuje tekstury tla 

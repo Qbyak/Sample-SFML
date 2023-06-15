@@ -255,9 +255,8 @@ void MainMenu::PlayOptions()//pêtla menu opcji
 void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)//pêtla menu g³ownego
 {
 	
-
 	MenuButtons(static_cast<float>(window->getSize().x), (static_cast<float>(window->getSize().y)));
-
+	_button = _OPCJE;
 	bool petla=true;//petla menu
 	while(petla)
 	{
@@ -439,6 +438,7 @@ void MainMenu::odczyt() //odczyt wyników graczy z pliku csv oraz ich sortowanie 
 		lp_nick.clear();
 		wynik.clear();
 	}
+	
 	exit.setString("Nacisnij esc zeby wrocic");
 	exit.setCharacterSize(40);
 	exit.setFillColor(sf::Color::Black);
@@ -657,7 +657,7 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 					bomby->clear();
 					monety->clear();
 					gracz = player();
-					
+					std::cout << "czyszczenie pamieci po przegranej" <<std::endl;
 				}
 			}
 		}
@@ -686,4 +686,5 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 		window2.draw(text);
 		window2.display();
 	}
+	
 }

@@ -41,8 +41,9 @@ private:
 	void update_view(sf::RenderWindow *window , player player); 
 	//
 	void move_bombs(); // rusza bomby 
-
-	void draw_all(sf::RenderWindow* window , player &player , bool if_coin_count , bool if_player);	
+	void clear_all(sf::RenderWindow* window, sf::RenderWindow* minimap, std::vector<platform*>* platformy,
+		std::vector<bomb*>* bomby,std::vector<coin*>* monety,std::vector<heart*>* serca);
+	void draw_all(sf::RenderWindow* window , player &player , bool if_coin_count , bool if_player);	// vectory obiektow na planszy 
 	// funkcja obslugujaca minimape
 	void update_minimap(player player);
 	//funkcje zapis
