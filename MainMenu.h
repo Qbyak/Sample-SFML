@@ -23,9 +23,9 @@ private:
 	void MoveUp();//przesuwanie w górê
 	void MoveDown();//przesuwanie w dó³
 	int GetPressedItem();//getter selectedItemIndex
-	void MenuButtons(float width, float height);//przyciski menu g³ównego
+	void MenuButtons();//przyciski menu g³ównego
 	void PauseButtons(sf::RenderWindow* window);//przyciski menu pauzy
-	void OptionButtons(float width, float height);//przyciski menu opcji
+	void OptionButtons();//przyciski menu opcji
 	void PlayOptions();//pêtla menu opcji
 	void odczyt();//odczyt do tabeli wyników
 	void autorzy();//okno wyœwietlaj¹ce autorów

@@ -17,7 +17,7 @@ void MainMenu::LoadFonts()//wczytywanie czcionek
 	font.loadFromFile("./assets/BigSmoke.ttf");//czcionka tytulowa i przyciskow
 	text_font.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");//czcionka tabeli wynikow
 }
-void MainMenu::MenuButtons(float width, float height)//przyciski menu g³ównego
+void MainMenu::MenuButtons()//przyciski menu g³ównego
 {
 	LoadFonts();
 	//ustawienie tytu³u
@@ -97,11 +97,11 @@ void MainMenu::PauseButtons(sf::RenderWindow* window) //przyciski menu pauzy
 		button[i].setOrigin(sf::Vector2f(buttonbounds[i].left + buttonbounds[i].width / 2, buttonbounds[i].top + buttonbounds[i].height / 2));
 		button[i].setPosition(sf::Vector2f(view.getCenter().x + 400, view.getCenter().y + (320 * (i + 1)) + 50));
 	}
-	selectedButtonIndex = 0;
+	selectedButtonIndex = 1;
 	textbounds.clear();
 	buttonbounds.clear();
 }
-void MainMenu::OptionButtons(float width, float height)//przyciski menu opcji
+void MainMenu::OptionButtons()//przyciski menu opcji
 {
 	//analogicznie do poprzednich menu
 	title.setFont(font);
@@ -187,8 +187,9 @@ void MainMenu::PlayOptions()//pêtla menu opcji
 	sf::RenderWindow* optionwindow;
 	optionwindow= new sf::RenderWindow(sf::VideoMode(800,1000),"Opcje",sf::Style::None);
 	//wprowadzenie danych okna do metody z przyciskami
-	OptionButtons(static_cast<float>(optionwindow->getSize().x), (static_cast<float>( optionwindow->getSize().y)));
-
+	OptionButtons();
+	MoveUp();
+	MoveDown();
 	bool option_window=true;//inicjalizacja pêtli opcji
 	while(option_window)
 	{
@@ -202,12 +203,12 @@ void MainMenu::PlayOptions()//pêtla menu opcji
 					switch(event.key.code)
 					{
 						case sf::Keyboard::Up:
-							std::cout << "opcja wyzej" << std::endl;
+							
 							MoveUp();
 							break;
 
 						case sf::Keyboard::Down:
-							std::cout << "opcja nizej" << std::endl;
+							
 							MoveDown();
 							break;
 							//nacisniecie przycisku
@@ -215,15 +216,15 @@ void MainMenu::PlayOptions()//pêtla menu opcji
 							switch(GetPressedItem())
 							{
 								case 0:
-									std::cout << "Tablica Wynikow!" << std::endl;
+									
 									odczyt();//odczyt tabeli wynikow z pliku i przedstawienie jej
 									break;
 								case 1:
-									std::cout<<"autorzy" <<std::endl;
+									
 									autorzy();//przedstawienie autorow w nowym oknie
 									break;
 								case 2:
-									std::cout << "powrot do menu!" <<std::endl;
+									
 									option_window=!option_window;//zakonczenie pêtli menu opcji, powrót do menu
 									optionwindow->close();
 
@@ -251,7 +252,9 @@ void MainMenu::PlayOptions()//pêtla menu opcji
 void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)//pêtla menu g³ownego
 {
 	
-	MenuButtons(static_cast<float>(window->getSize().x), (static_cast<float>(window->getSize().y)));
+	MenuButtons();
+	MoveUp();
+	MoveDown();
 	_button = _OPCJE;
 	bool petla=true;//petla menu
 	while(petla)
@@ -288,16 +291,17 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
 							{
 								case _GRAJ:
 									petla=false;//zakonczenie petli, przejscie do gry
-									std::cout << "opcja GRAJ" << std::endl;
+									
 									break;
 								case _OPCJE:
 									PlayOptions();//uruchomienie menu opcji
-									MenuButtons(static_cast<float>(window->getSize().x), (static_cast<float>(window->getSize().y))); //powrot do przyciskow menu glownego
-									std::cout << "opcja OPCJE" << std::endl;
+									MenuButtons(); //powrot do przyciskow menu glownego
+									MoveUp();
+									MoveDown();
 									break;
 								case _WYJSCIE://wyjscie z gry
 									petla=false;
-									std::cout<<"Wyjscie z gry" << std::endl;
+									
 									window->close();
 									minimap->close();
 									break;
@@ -318,7 +322,7 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap
 	
 	bool pauza = true;//petla pauzy
 	PauseButtons(window);//inicjalizacja przyciskow
-
+	MoveUp();//ustawienie domyœlne przycisku na WZNÓW
 	while(pauza)
 	{
 		sf::Event event;
@@ -330,12 +334,12 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap
 					switch(event.key.code)
 					{
 						case sf::Keyboard::Up:
-							std::cout << "opcja wyzej" << std::endl;
+							
 							MoveUp();
 							break;
 
 						case sf::Keyboard::Down:
-							std::cout << "opcja nizej" << std::endl;
+							
 							MoveDown();
 							break;
 
@@ -344,7 +348,7 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap
 							{
 								case 0:
 									pauza = !pauza;//powrot do gry
-									std::cout << "Wznowiono gre!" << std::endl;
+									
 									break;
 								case 1:
 									pauza=!pauza;
