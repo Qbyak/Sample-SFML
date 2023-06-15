@@ -89,5 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SFML.props" />
+    <None Include="Wyniki.csv" />
   </ItemGroup>
 </Project>

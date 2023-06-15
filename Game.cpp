@@ -304,6 +304,7 @@ void Game::move_bombs() // rusza bomby
 void Game::clear_all(sf::RenderWindow* window, sf::RenderWindow* minimap, std::vector<platform*>* platformy,
 	std::vector<bomb*>* bomby, std::vector<coin*>* monety, std::vector<heart*>* serca)
 {
+	//do poprawki
 	//delete window;
 	//delete minimap;
 	platformy->clear();
