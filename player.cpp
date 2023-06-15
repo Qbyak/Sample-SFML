@@ -26,25 +26,7 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 }
 player::player()
 {
-	if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
-	{
-		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
-	}
-setPosition(sf::Vector2f(2050, 790));
-setTexture(klasa);
-setScale(2, 2);
-setTextureRect(sf::IntRect(0, 0, 48, 48));
-grawitacja = sf::Vector2f(0, 0.3);
-stan = alive;
-kierunek = fall;
-score = 0;
-setOrigin(24, 0);
-zycia_gracza = 1;
-numer_klatki_animacji = 0;
-for (int i = 0; i < 10; i++)
-{
-	klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
-}
+	setParameters();
 }
 void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca ,sf::Event event)
 {
@@ -56,7 +38,28 @@ void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomb
 	add_score(monety); // sprawdza kolizje z monetami nastepnie zwieksza wynik gracza 
 	update_lives(serca); // sprawdza kolizje z sercami i odpowiednio dodaje zycia 
 }
-
+void player::setParameters()
+{
+	if(!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
+	{
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
+	setPosition(sf::Vector2f(2050, 790));
+	setTexture(klasa);
+	setScale(2, 2);
+	setTextureRect(sf::IntRect(0, 0, 48, 48));
+	grawitacja = sf::Vector2f(0, 0.3);
+	stan = alive;
+	kierunek = fall;
+	score = 0;
+	setOrigin(24, 0);
+	zycia_gracza = 1;
+	numer_klatki_animacji = 0;
+	for(int i = 0; i < 10; i++)
+	{
+		klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
+	}
+}
 sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi X
 {
 	sf::Vector2f predkosc(0, 0);

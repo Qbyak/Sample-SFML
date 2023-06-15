@@ -19,6 +19,7 @@ public:
 	player(); 
 	void update(std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca , sf::Event event); // updatuje pozycje oraz predkosc gracza
 	status get_status(); // zwraca enuma stan , tzn dead lub alive
+	void setParameters();
 	int return_score(); //zwraca wynik
 	int return_lives(); //zwraca liczbê zyc
 	void set_texture(sf::Texture tekstura);//ustawianie tekstury gracza na nowo po game over

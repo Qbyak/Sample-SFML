@@ -1,10 +1,6 @@
 #include "MainMenu.h"
 
 
-MainMenu::buttons MainMenu::getState()
-{
-	return _button;
-}
 
 MainMenu::MainMenu()//konstruktor menu, wczytywanie tekstur t³a
 {
@@ -571,12 +567,12 @@ void MainMenu::zapis(player& play, std::string nick) // zapis do pliku
 	zapis.close();
 }
 
-void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platform*>* platformy,std::vector<bomb*>* bomby,std::vector<coin*>* monety,
+void MainMenu::GameOver(player& player,sf::RenderWindow*window, std::vector<platform*>* platformy,std::vector<bomb*>* bomby,std::vector<coin*>* monety,
 	sf::RenderWindow* minimap) // ekran konca gry 
 {
 	sf::RenderWindow window2(sf::VideoMode(600, 400), "SFML works!", sf::Style::None);
 	LoadFonts();
-	std::string wynik = std::to_string(gracz.return_score());
+	std::string wynik = std::to_string(player.return_score());
 
 	sf::Texture background2;
 	background2.loadFromFile("./assets/winter 8/1.png");
@@ -650,14 +646,14 @@ void MainMenu::GameOver(player& gracz,sf::RenderWindow*window, std::vector<platf
 				{
 					window2.close();
 					
-					zapis(gracz, input_text);
+					zapis(player, input_text);
 					window->close();
 					minimap->close();
 					platformy->clear();
 					bomby->clear();
 					monety->clear();
-					gracz = player();
-					std::cout << "czyszczenie pamieci po przegranej" <<std::endl;
+					player.setParameters();
+					//std::cout << "czyszczenie pamieci po przegranej" <<std::endl;
 				}
 			}
 		}
