@@ -16,8 +16,8 @@ platform::platform(sf::Vector2f size , sf::Vector2f position) : sf::RectangleSha
         setTextureRect(sf::IntRect(0, 0, tekstura.getSize().x / 5, tekstura.getSize().y / 10));
         setTexture(&tekstura, true);
         setTextureRect(sf::IntRect(0, 0, size.x * 2, size.y * 2));
-
-
+        setFillColor(sf::Color(0+ std::round(255-abs(position.y)/60), 0 + std::round(255 -abs(position.y) / 60), 0 + std::round(255-abs(position.y) / 60), 255));
+        
 }
  
 

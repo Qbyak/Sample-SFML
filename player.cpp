@@ -178,7 +178,7 @@ void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn le
 		setTextureRect(sf::IntRect(0, 0, 32, 32));
 		setTexture(Fall_t); 
 	}
-	else if (player_jump == jump)
+	else if (player_jump == jump) // zmienna player_jump umozliwia rozrozniania w funkcji akcji gracza
 	{
 		setTextureRect(sf::IntRect(0, 0, 32, 32));
 		setTexture(Jump_t); 
@@ -187,9 +187,7 @@ void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn le
 	{
 		setTexture(DoubleJump_t); 
 		setTextureRect(klatki_animacji_doublejump[numer_klatki_animacji_doublejump]); 
-		std::cout << "double jump!!\n"; 
 	}
-	std::cout << v_gracz.y << std::endl;
 }
 
 void player::move_x(std::vector<platform*> *platformy)
@@ -243,7 +241,6 @@ void player::move_y(std::vector<platform*> *platformy , sf::Event event)
 	 else
 	{
 		player_jump = nothing; 
-		//std::cout << "nic\n"; 
 	}
 	
 }
