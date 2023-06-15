@@ -8,19 +8,20 @@ Game::Game()
 void Game::play() // glowna metoda oraz petla gry 
 {
 	menu.PlayMainMenu(window,minimap); // wyswietla menu gry 
-	while (window->isOpen()) // Glowna petla gry 
-	{ 		
+	while(window->isOpen()) // Glowna petla gry 
+	{
+		window->clear(sf::Color::Black); // czyszczenie ekranu 
 		close_window(window); // zamykanie okna 
-		pauza(window,gracz); // pauzuje gre 
-		window->clear(sf::Color::Black); // czyszcenie ekranu 
 		update_all(window , gracz); // updatowanie wszystkich obiektow
         draw_all(window , gracz , true , true); // rysowanie wszystkich obiektow
 		if (gracz.get_status() == player::dead) // sprawdzanie warunku konca gry  , sam status dead czy alive jest aktualizowany w funkcji update gracza
 		{
 			death(gracz, window); //jezeli gracz jest 'dead' to funkcja konczy gre 
-		} 
-		window->display(); // wyswietlanie klatki gry
+		}
+		pauza(window, gracz);
+		window->display();// wyswietlanie klatki gry		
 	}
+	clear_all(window,minimap,platformy,bomby,monety,serca);
 }
 
 void Game::generate_platform(player player) // generowanie platform na podstawie funkcji rand() oraz pozycji innych platform 
@@ -262,38 +263,33 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 
 			}
 		}
+		if(window->isOpen())
+		{ 
 		menu.GameOver(gracz, window,platformy,bomby,monety, minimap);
 		sf::Texture klasa;
 		if(!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
 		{
 			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
 		}
-		gracz.setTexture(klasa); // niewiadomo dla czego trzeba bylo zrobic metode do ustawiania tekstury
+		gracz.setTexture(klasa); // niewiadomo dlaczego trzeba bylo zrobic metode do ustawiania tekstury
 		//poniewaz przy kolejnym odplaniu gry , mimo wczytywania tekstury zostawala ona cala biala
 		ready_game();
 		play();
+		}
 	}
 }
 
 void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy 
 {
-	
+	if(window->isOpen())
+	{ 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
 	{
-		MainMenu menu;
-		// wywolujemy element klasy pauza ktory pobiera okno oraz rysuje swoje elementy na to
-		// zaokraglamy pozycje elementow do liczb calkowtych aby elementy nie "skakaly" po ekranie 
-		window->clear(); // nastepnie rysujemy nowa klatke , po czym przekazujemy tak narysowane okno do funkcji "Play"; 
-		//background.draw_tlo(window);
-		for (auto x : *platformy)
-		{
-			x->setPosition(std::round(x->getPosition().x), std::round(x->getPosition().y));
-		}
+	
 		menu.PlayPauseMenu(window,minimap,gracz); 
-		draw_all(window , gracz , true , true);
-		window->draw(gracz);
 		window->display();
 		clock.restart();
+	}
 	}
 }
 
@@ -303,6 +299,45 @@ void Game::move_bombs() // rusza bomby
 	{
 		x->move(sf::Vector2f(0, 2.5));
 	}
+}
+
+void Game::ready_background_texture() // szykuje tekstury tla 
+{
+	if (!tlo1.loadFromFile("assets/winter 8/hd.png"))
+	{
+		std::cout << "nie zaladowano tla";
+	}
+	tlo_s.setTexture(tlo1);
+	tlo_s.setScale(3, 3);
+	tlo_s.setPosition(-1000, -3500);
+	if (!tlo2.loadFromFile("assets/winter 7/hd.png"))
+	{
+		std::cout << "nie zaladowano tla";
+	}
+	tlo_s2.setTexture(tlo2);
+	tlo_s2.setPosition(sf::Vector2f(-1000, -7000));
+	tlo_s2.setScale(sf::Vector2f(3, 3));
+	if (!tlo3.loadFromFile("assets/winter 4/hd.png"))
+	{
+		std::cout << "nie zaladowano tla";
+	}
+	tlo_s3.setTexture(tlo3);
+	tlo_s3.setPosition(sf::Vector2f(-1000, -10500));
+	tlo_s3.setScale(sf::Vector2f(3, 3));
+	if (!tlo4.loadFromFile("assets/parallax-mountain-trees.png"))
+	{
+		std::cout << "nie zaladowano tla";
+	}
+	tlo_s4.setTexture(tlo4);
+	tlo_s4.setPosition(sf::Vector2f(0-1000, 4000-9000));
+	tlo_s4.setScale(sf::Vector2f(3, 3));
+	if (!tlo5.loadFromFile("assets/parallax-mountain-mountains.png"))
+	{
+		std::cout << "nie zaladowano tla";
+	}
+	tlo_s5.setTexture(tlo5);
+	tlo_s5.setPosition(sf::Vector2f(0-1000, 0-9000));
+	tlo_s5.setScale(sf::Vector2f(3, 3));
 }
 
 void Game::update_minimap(player player ) // aktualizuje minimape 

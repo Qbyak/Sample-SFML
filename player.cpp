@@ -202,7 +202,7 @@ void player::move_y(std::vector<platform*> *platformy , sf::Event event)
 	}
 }
 
-void player::add_score(std::vector<coin*> *monety)
+void player::add_score(std::vector<coin*> *monety)//dodawanie wyniku gracza przez zbieranie monet
 {
 	for (auto& m : *monety)
 	{
@@ -219,7 +219,7 @@ void player::add_score(std::vector<coin*> *monety)
 	}
 }
 
-void player::update_lives(std::vector<heart*> *serca)
+void player::update_lives(std::vector<heart*> *serca) //aktualizacja stanu serc 
 {
 	for (auto& s : *serca)
 	{
@@ -235,23 +235,18 @@ void player::update_lives(std::vector<heart*> *serca)
 	}
 }
 
-int player::return_score()
+int player::return_score()//zwracanie wyniku gracza
 {
 	return score;
 }
 
-void player::set_status(bool status)
-{
-	if (status)
-	stan = alive; 
-}
 
-int player::return_lives()
+int player::return_lives()//zwracanie liczby zyc
 {
 	return zycia_gracza; 
 }
 
-void player::set_texture(sf::Texture tekstura)
+void player::set_texture(sf::Texture tekstura)//ustawianie tekstury gracza na nowo po game over
 {
 	setTexture(tekstura);
 }
