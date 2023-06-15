@@ -1,13 +1,12 @@
 #include "player.h"
 #include "Game.h"
 
-player::player(int klasa_gracza, sf::Vector2f pos) 
+player::player(int klasa_gracza, sf::Vector2f pos) // ustawianie podstawowych parametrow 
 {
-	
-		if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
-		{
-			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
-		}
+	if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
+	{
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
 	setPosition(pos);
 	setTexture(klasa);
 	setScale(2, 2);
@@ -19,12 +18,12 @@ player::player(int klasa_gracza, sf::Vector2f pos)
 	zycia_gracza = 1; 
 	score = 0; 
 	setOrigin(24, 0); 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++) // przygotowanie wektora z klatkami animacji 
 	{
 		klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
 	}
 }
-player::player()
+player::player() // ustawianie podstawowych parametrow 
 {
 	if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
 	{
@@ -41,14 +40,14 @@ score = 0;
 setOrigin(24, 0);
 zycia_gracza = 1;
 numer_klatki_animacji = 0;
-for (int i = 0; i < 10; i++)
+for (int i = 0; i < 10; i++) // przygotowanie wektora z klatkami animacji 
 {
 	klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
 }
 }
 void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomby , std::vector<coin*> *monety , std::vector<heart*> *serca ,sf::Event event)
 {
-	//  // sprawdzilismy w funckji collision czy kolizja wystepuje z ruchom¹ platforma. jezeli tak to move_platforma jest rozna od zera a za razem gracz "jedzie" z platforma
+	// sprawdzilismy w funckji collision czy kolizja wystepuje z ruchom¹ platforma. jezeli tak to move_platforma jest rozna od zera a za razem gracz "jedzie" z platforma
 	move_x(platformy);
 	move_y(platformy , event);
 	if_przegrana(bomby , platformy); // sprawdzanie czy gracz zyje 
@@ -60,7 +59,6 @@ void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomb
 sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi X
 {
 	sf::Vector2f predkosc(0, 0);
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		predkosc.x = -3;

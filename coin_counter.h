@@ -12,7 +12,7 @@ private:
 private:
 	sf::Font font1;
 	sf::Text *tekst;
-	std::vector<heart*> *serca_zycia; 
+	std::vector<heart*> *serca_zycia; // wektor obiektow odpowiadajacych zycia gracza
 	sf::Vector2f pozycja;
 	int number;
 };

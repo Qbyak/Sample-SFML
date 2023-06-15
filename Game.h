@@ -28,7 +28,6 @@ private:
 
 	// funkcje przygotowywujace
 	void ready_game();
-	void ready_background_texture(); 
 
 	// funkcje updatujace
 	void update_all(sf::RenderWindow* window, player& player); // updatuje kazda platforme 
@@ -61,17 +60,6 @@ private:
 	sf::Clock bomb_clock; 
 	sf::Time bomb_time; 
 
-	// tekstury oraz sprite'y dla tla
-	sf::Texture tlo1; 
-	sf::Texture tlo2;
-	sf::Texture tlo3;
-	sf::Texture tlo4;
-	sf::Texture tlo5;
-	sf::Sprite tlo_s;
-	sf::Sprite tlo_s2;
-	sf::Sprite tlo_s3;
-	sf::Sprite tlo_s4;
-	sf::Sprite tlo_s5;
 	// glowna zmienna event
 	sf::Event event;
 

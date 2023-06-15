@@ -7,12 +7,12 @@
 class Background
 {
 public:
-	void ready_background_texture();
-	void draw_tlo(sf::RenderWindow *window);
-	void draw_menu_background(sf::RenderWindow* window);
-	void draw_pause_background(sf::RenderWindow* window, player& play);
+	void ready_background_texture(); //szykuje tekstury 
+	void draw_tlo(sf::RenderWindow *window); // rysowanie tla
+	void draw_menu_background(sf::RenderWindow* window); // rysowanie tla menu
+	void draw_pause_background(sf::RenderWindow* window, player& play); // rysowanie tla pauzy 
 private:
-
+	// tekstury oraz sprite'y do tla 
 	sf::Texture tlo1;
 	sf::Texture tlo2;
 	sf::Texture tlo3;

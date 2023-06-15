@@ -8,13 +8,13 @@ void Background::draw_tlo(sf::RenderWindow* window) // rysowanie tla
 	window->draw(tlo_s4);
 	window->draw(tlo_s2);
 }
-void Background::draw_menu_background(sf::RenderWindow* window)
+void Background::draw_menu_background(sf::RenderWindow* window) // rysowanie tla menu
 {
 	tlo_s.setScale(sf::Vector2f(1, 1));
 	tlo_s.setPosition(1, 1);
 	window->draw(tlo_s);
 }
-void Background::draw_pause_background(sf::RenderWindow* window,player& play)
+void Background::draw_pause_background(sf::RenderWindow* window,player& play) // rysowanie tla pauzy
 {
 	tlo_s.setScale(sf::Vector2f(1, 1));
 	tlo_s.setPosition(play.getPosition().x-2050, play.getPosition().y-500);
@@ -22,7 +22,7 @@ void Background::draw_pause_background(sf::RenderWindow* window,player& play)
 	window->setView(view);
 	window->draw(tlo_s);
 }
-void Background::ready_background_texture()
+void Background::ready_background_texture() // przygotowanie tekstur 
 {
 		if(!tlo1.loadFromFile("assets/winter 8/hd.png"))
 		{

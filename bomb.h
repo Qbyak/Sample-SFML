@@ -22,9 +22,7 @@ private:
 	//zmienne do animacji 
 	int numer_klatki_animacji;
 	sf::Time czas_animacji;
-	sf::Clock collision_clock;
 	std::vector <sf::IntRect> klatki_animacji; 
 	sf::Clock clock;
-
 };
 

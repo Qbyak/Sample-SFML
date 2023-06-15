@@ -1,44 +1,46 @@
 #include "coin_counter.h"
 
-coin_counter::coin_counter(sf::Vector2f pozycja) : coin(pozycja)
+coin_counter::coin_counter(sf::Vector2f pozycja) : coin(pozycja) // inicjalizacja zmiennych 
 {
 	font1.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
 	tekst = new sf::Text("0", font1);
 	tekst->setScale(2, 2);
 	setScale(3, 3); 
 	tekst->setFillColor(sf::Color::Yellow);
+	serca_zycia = new std::vector<heart*>; 
+	number = 0;
 }
-coin_counter::coin_counter() : coin(sf::Vector2f(0,0))
+coin_counter::coin_counter() : coin(sf::Vector2f(0,0)) // inicjalizacja zmiennych
 {
 	font1.loadFromFile("./assets/FronzyFreeTrial-mLVlP.otf");
 	tekst = new sf::Text("0", font1);
 	tekst->setFillColor(sf::Color::Yellow);
 	tekst->setScale(2, 2);
 	setScale(3, 3);
-	serca_zycia = new std::vector<heart*>; 
-	
+	serca_zycia = new std::vector<heart*>;  	
+	number = 0;
 }
 
 
-void coin_counter::aktualizuj_wynik(player gracz , sf::View widok , sf::RenderWindow *window)
+void coin_counter::aktualizuj_wynik(player gracz , sf::View widok , sf::RenderWindow *window) // aktualizacja parametow jak i polozenia
 {
-	setPosition(widok.getCenter().x + 300, widok.getCenter().y - 500);
+	setPosition(widok.getCenter().x + 300, widok.getCenter().y - 500); // ustawianie pozycji w rogu
 	update(); 
 	update_hearts(gracz); 
-	tekst->setPosition(getPosition().x + 30,getPosition().y + 50);
+	tekst->setPosition(getPosition().x + 30,getPosition().y + 50); // ustawianie pozycji w rogu
 	tekst->setString(std::to_string(gracz.return_score()));
-	 number = 0; 
+	number = 0; // na podstawie ilosci zyc w klasie gracza 
 	if (serca_zycia->size() > 0)
 	{
 		for (auto& x : *serca_zycia)
 		{
-			x->setPosition(getPosition().x - 30 + 40 * number, getPosition().y + 150);
+			x->setPosition(getPosition().x - 30 + 40 * number, getPosition().y + 150); // ustawianie pozycji w rogu 
 				number++; 
 		}
 	}
 }
 
-void coin_counter::draw(sf::RenderWindow* window)
+void coin_counter::draw(sf::RenderWindow* window) // rysowanie
 {
 	window->draw(*this);
 	window->draw(*tekst); 
@@ -48,7 +50,7 @@ void coin_counter::draw(sf::RenderWindow* window)
 	}
 }
 
-void coin_counter::update_hearts(player gracz)
+void coin_counter::update_hearts(player gracz) // aktualizacja ilosci serc 
 {
 	if (gracz.return_lives() > serca_zycia->size())
 	{

@@ -5,7 +5,7 @@ Game::Game()
 	ready_game();
 }
 
-void Game::play()
+void Game::play() // glowna metoda oraz petla gry 
 {
 	menu.PlayMainMenu(window,minimap); // wyswietla menu gry 
 	while (window->isOpen()) // Glowna petla gry 
@@ -102,7 +102,7 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 		
 }
 
-void Game::move_all(sf::Vector2f ruch)
+void Game::move_all(sf::Vector2f ruch) // rusza wszystko
 {
 	for (auto& p : *platformy)
 	{
@@ -303,45 +303,6 @@ void Game::move_bombs() // rusza bomby
 	{
 		x->move(sf::Vector2f(0, 2.5));
 	}
-}
-
-void Game::ready_background_texture() // szykuje tekstury tla 
-{
-	if (!tlo1.loadFromFile("assets/winter 8/hd.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s.setTexture(tlo1);
-	tlo_s.setScale(3, 3);
-	tlo_s.setPosition(-1000, -3500);
-	if (!tlo2.loadFromFile("assets/winter 7/hd.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s2.setTexture(tlo2);
-	tlo_s2.setPosition(sf::Vector2f(-1000, -7000));
-	tlo_s2.setScale(sf::Vector2f(3, 3));
-	if (!tlo3.loadFromFile("assets/winter 4/hd.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s3.setTexture(tlo3);
-	tlo_s3.setPosition(sf::Vector2f(-1000, -10500));
-	tlo_s3.setScale(sf::Vector2f(3, 3));
-	if (!tlo4.loadFromFile("assets/parallax-mountain-trees.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s4.setTexture(tlo4);
-	tlo_s4.setPosition(sf::Vector2f(0-1000, 4000-9000));
-	tlo_s4.setScale(sf::Vector2f(3, 3));
-	if (!tlo5.loadFromFile("assets/parallax-mountain-mountains.png"))
-	{
-		std::cout << "nie zaladowano tla";
-	}
-	tlo_s5.setTexture(tlo5);
-	tlo_s5.setPosition(sf::Vector2f(0-1000, 0-9000));
-	tlo_s5.setScale(sf::Vector2f(3, 3));
 }
 
 void Game::update_minimap(player player ) // aktualizuje minimape 
