@@ -1,29 +1,6 @@
 #include "player.h"
 #include "Game.h"
 
-player::player(int klasa_gracza, sf::Vector2f pos) 
-{
-	
-		if (!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
-		{
-			std::cout << "Nie za³adowano grafiki gracza" << std::endl;
-		}
-	setPosition(pos);
-	setTexture(klasa);
-	setScale(2, 2);
-	setTextureRect(sf::IntRect(0, 0, 48, 48));
-	numer_klatki_animacji = 0; 
-	grawitacja = sf::Vector2f(0, 0.3); 
-	stan = alive;
-	kierunek = fall; 
-	zycia_gracza = 1; 
-	score = 0; 
-	setOrigin(24, 0); 
-	for (int i = 0; i < 10; i++)
-	{
-		klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
-	}
-}
 player::player()
 {
 	setParameters();
@@ -40,24 +17,24 @@ void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomb
 }
 void player::setParameters()
 {
-	if(!klasa.loadFromFile("assets/warpgal-shooting-sheet-alpha.png"))
+	if(!klasa.loadFromFile("assets/Pink Man/Run (32x32).png"))
 	{
 		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
 	}
 	setPosition(sf::Vector2f(2050, 790));
 	setTexture(klasa);
 	setScale(2, 2);
-	setTextureRect(sf::IntRect(0, 0, 48, 48));
+	setTextureRect(sf::IntRect(0, 0, 32, 32));
 	grawitacja = sf::Vector2f(0, 0.3);
 	stan = alive;
 	kierunek = fall;
 	score = 0;
-	setOrigin(24, 0);
+	setOrigin(16, 16);
 	zycia_gracza = 1;
 	numer_klatki_animacji = 0;
 	for(int i = 0; i < 10; i++)
 	{
-		klatki_animacji.emplace_back(sf::IntRect(96 + 48 * i, 0, 48, 48));
+		klatki_animacji.emplace_back(sf::IntRect(0 + 32 * i, 0, 32, 32));
 	}
 }
 sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi X
@@ -158,11 +135,11 @@ void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn le
 	else if(kierunek == stand) // gdy stoi 
 
 	{
-		setTextureRect(sf::IntRect(0, 0, 48, 48));
+		setTextureRect(sf::IntRect(0, 0, 32, 32));
 	}
 	if (kierunek == fall) // gdy spada
 	{
-		setTextureRect(sf::IntRect(140, 0, 48, 48));
+		setTextureRect(sf::IntRect(140, 0, 32, 32));
 	}
 }
 

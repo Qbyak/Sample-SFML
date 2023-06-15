@@ -91,4 +91,27 @@
     <None Include="SFML.props" />
     <None Include="Wyniki.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\Pink Man\Double Jump (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="assets\Pink Man\Fall (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="assets\Pink Man\Hit (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="assets\Pink Man\Idle (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="assets\Pink Man\Jump (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="assets\Pink Man\Run (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="assets\Pink Man\Wall Jump (32x32).png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
