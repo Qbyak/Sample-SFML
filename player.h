@@ -40,23 +40,33 @@ private:
 	//
 	int score; 
 	// tekstury gracza 
-	sf::Sprite gracz; 
-	sf::Texture klasa;
+	sf::Texture Run_t;
+	sf::Texture Fall_t; 
+	sf::Texture Idle_t; 
+	sf::Texture Jump_t; 
+	sf::Texture DoubleJump_t; 
 	//status gracza 
 	status stan; 
 	// zmienne uzyte do funkcji animate 
 	enum travel
 	{
-		left, right, fall , stand
+		left, right , stand
+	};
+	enum jumping
+	{
+		 double_jump ,  jump , fall , nothing
 	};
 	sf::Clock clock; 
 	travel kierunek;
+	jumping player_jump; 
 	// zmienne potrzebne do animacji
 	int numer_klatki_animacji;
+	int numer_klatki_animacji_doublejump;
 	sf::Time czas_animacji;
 	sf::Clock collision_clock; 
 	// vector intRectow do funkcji animate
 	std::vector <sf::IntRect> klatki_animacji; 
+	std::vector <sf::IntRect> klatki_animacji_doublejump;
 	//liczba zyc
 	int zycia_gracza; 
 };

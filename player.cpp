@@ -17,24 +17,47 @@ void player::update( std::vector<platform*> *platformy, std::vector<bomb*> *bomb
 }
 void player::setParameters()
 {
-	if(!klasa.loadFromFile("assets/Pink Man/Run (32x32).png"))
+	if(!Run_t.loadFromFile("assets/Pink Man/Run (32x32).png"))
+	{
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
+	if (!Fall_t.loadFromFile("assets/Pink Man/Fall (32x32).png"))
+	{ 
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
+	if (!Idle_t.loadFromFile("assets/Pink Man/Idle (32x32).png"))
+	{
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
+	if (!Jump_t.loadFromFile("assets/Pink Man/Jump (32x32).png"))
+	{
+		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
+	}
+	if (!DoubleJump_t.loadFromFile("assets/Pink Man/Double Jump (32x32).png"))
 	{
 		std::cout << "Nie za³adowano grafiki gracza" << std::endl;
 	}
 	setPosition(sf::Vector2f(2050, 790));
-	setTexture(klasa);
+	setTexture(Run_t);
 	setScale(2, 2);
 	setTextureRect(sf::IntRect(0, 0, 32, 32));
+	v_gracz.y = 8.2; 
 	grawitacja = sf::Vector2f(0, 0.3);
 	stan = alive;
-	kierunek = fall;
+	kierunek = stand;
+	player_jump = nothing; 
 	score = 0;
-	setOrigin(16, 16);
+	setOrigin(16, 0);
 	zycia_gracza = 1;
 	numer_klatki_animacji = 0;
-	for(int i = 0; i < 10; i++)
+	numer_klatki_animacji_doublejump = 0;
+	for(int i = 0; i < 11; i++)
 	{
 		klatki_animacji.emplace_back(sf::IntRect(0 + 32 * i, 0, 32, 32));
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		klatki_animacji_doublejump.emplace_back(sf::IntRect(0 + 32 * i, 0, 32, 32));
 	}
 }
 sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi X
@@ -66,7 +89,7 @@ bool player::collision(std::vector<platform*> *platformy, bool blokada) // funkc
 	bool kolizja = false; 
 	for (auto platforma : *platformy)
 	{	
-		 if (getGlobalBounds().intersects(platforma->getGlobalBounds()) && v_gracz.y >= 0 && getGlobalBounds().top + getGlobalBounds().height - 19*grawitacja.y - 3 <= platforma->getGlobalBounds().top)
+		 if (getGlobalBounds().intersects(platforma->getGlobalBounds()) && v_gracz.y >= 0 && getGlobalBounds().top + getGlobalBounds().height - 19*grawitacja.y -3  <= platforma->getGlobalBounds().top)
 		{
 			move_platform = platforma->return_speed();
 			kolizja = true;	
@@ -112,18 +135,30 @@ player::status player::get_status()
 
 void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn left lub right nastepnie szykuje klatki animacji 
 {
-	if (clock.getElapsedTime().asSeconds() > czas_animacji.asSeconds() + 0.15)
+	setTexture(Run_t);
+	if (clock.getElapsedTime().asSeconds() > czas_animacji.asSeconds() + 0.10)
 	{
 		numer_klatki_animacji++;
+		numer_klatki_animacji_doublejump++;
 		czas_animacji = clock.getElapsedTime();
 	}
-	if (czas_animacji.asSeconds() > 1.5)
+	if (numer_klatki_animacji == 11)
 	{
 		clock.restart();
 		czas_animacji = clock.getElapsedTime();
 		numer_klatki_animacji = 0;
 	}
-	setTextureRect(klatki_animacji[numer_klatki_animacji]);
+	if (numer_klatki_animacji_doublejump == 6)
+	{
+		numer_klatki_animacji_doublejump = 0; 
+	}
+	if (kierunek == left || kierunek == right || kierunek == stand)
+	{
+		//setTexture(Run_t); 
+		setTextureRect(klatki_animacji[numer_klatki_animacji]);
+	}
+	if(kierunek == left || kierunek == right)
+               setTexture(Run_t);
 	if (kierunek == left && getScale().x == 2) // obracanie sprita w lewo 
 	{
 			setScale(-2, 2);
@@ -133,14 +168,28 @@ void player::animate() // funkcja animate pobiera kierunek ruchu gracza , tzn le
 			setScale(2, 2);
 	}			
 	else if(kierunek == stand) // gdy stoi 
-
+	{
+		setTexture(Idle_t); 
+		//setTextureRect(sf::IntRect(0, 0, 32, 30));
+	}
+	
+	if (player_jump == fall) // gdy spada
 	{
 		setTextureRect(sf::IntRect(0, 0, 32, 32));
+		setTexture(Fall_t); 
 	}
-	if (kierunek == fall) // gdy spada
+	else if (player_jump == jump)
 	{
-		setTextureRect(sf::IntRect(140, 0, 32, 32));
+		setTextureRect(sf::IntRect(0, 0, 32, 32));
+		setTexture(Jump_t); 
 	}
+	if (player_jump == double_jump)
+	{
+		setTexture(DoubleJump_t); 
+		setTextureRect(klatki_animacji_doublejump[numer_klatki_animacji_doublejump]); 
+		std::cout << "double jump!!\n"; 
+	}
+	std::cout << v_gracz.y << std::endl;
 }
 
 void player::move_x(std::vector<platform*> *platformy)
@@ -167,8 +216,9 @@ void player::move_y(std::vector<platform*> *platformy , sf::Event event)
 	move(move_platform);
 	if (collision(platformy, false) == true)
 	{    setPosition(pozycja);
+	     v_gracz.y = 8.5; 
 		if (collision_clock.getElapsedTime().asSeconds() < 1 && event.key.code == sf::Keyboard::W)
-		{
+		{   
 			v_gracz.y -= 30;
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -177,11 +227,25 @@ void player::move_y(std::vector<platform*> *platformy , sf::Event event)
 		}
 		
 	}      
-	 else if (v_gracz.y > 0)
+	 if (v_gracz.y > 0 && v_gracz.y < 8.3)
 	{
-		kierunek = fall; // jezeli kolizja nie wystapila oraz predkosc gracza jest wieksza od zera to znaczy , ze gracz spada
+		player_jump = fall; // jezeli kolizja nie wystapila oraz predkosc gracza jest wieksza od zera to znaczy , ze gracz spada
 		collision_clock.restart();
 	}
+	 else if (v_gracz.y < 0 && v_gracz.y > -13.5)
+	{
+		player_jump = jump;
+	}
+	 else if (v_gracz.y < -13.5)
+	 {
+		 player_jump = double_jump;
+	 }
+	 else
+	{
+		player_jump = nothing; 
+		//std::cout << "nic\n"; 
+	}
+	
 }
 
 void player::add_score(std::vector<coin*> *monety)//dodawanie wyniku gracza przez zbieranie monet
