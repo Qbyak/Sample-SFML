@@ -66,13 +66,13 @@ sf::Vector2f player::sprawdz_klaw() // na podstawie inputu gracza rusza go w osi
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		predkosc.x = -3;
+		predkosc.x = -4;
 		kierunek = left;
 
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		predkosc.x = 3;
+		predkosc.x = 4;
 		kierunek = right; 
 	}
 	else
