@@ -5,10 +5,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
 #include "Background.h"
 #include <vector>
-#define MAX_NUMBER_OF_BUTTONS 3
 
 class MainMenu
 {
@@ -17,6 +15,13 @@ public:
 	void GameOver(player& gracz, sf::RenderWindow* window, std::vector<platform*>* platformy, std::vector<bomb*>* bomby, std::vector<coin*>* monety,
 		sf::RenderWindow* minimap); //tworzenie okna game over
 	void PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap, player& play);//pêtla menu pauzy
+	enum buttons
+	{
+		_GRAJ,
+		_OPCJE,
+		_WYJSCIE
+	};
+	buttons getState();
 	MainMenu();//konstruktor menu, wczytywanie tekstur t³a
 	~MainMenu();
 private:
@@ -34,7 +39,7 @@ private:
 	void LoadFonts();//wczytywanie czcionek
 private:
 	//deklaracje elementów sk³adaj¹cych siê na przycisk
-	enum buttons;
+	buttons _button=_OPCJE;
 	int selectedButtonIndex;//indeks przycisku
 	std::vector<sf::Text> buttontext;//wektor tekstu znajdujacego sie na przycisku
 	sf::Text title;//tytul danego menu

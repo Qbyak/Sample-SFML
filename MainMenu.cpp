@@ -1,6 +1,11 @@
 #include "MainMenu.h"
 
 
+MainMenu::buttons MainMenu::getState()
+{
+	return _button;
+}
+
 MainMenu::MainMenu()//konstruktor menu, wczytywanie tekstur t³a
 {
 	std::cout << "tworze menu" << std::endl;
@@ -247,21 +252,9 @@ void MainMenu::PlayOptions()//pêtla menu opcji
 	delete optionwindow;
 }
 
-
-
-enum MainMenu::buttons //ustawienie statusu przycisku w menu g³ownym
-{
-	_GRAJ,
-	_OPCJE,
-	_WYJSCIE
-
-};
-
-
-
 void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)//pêtla menu g³ownego
 {
-	MainMenu::buttons button = MainMenu::buttons::_OPCJE;//przypisanie przycisku domyœlnego do opcji
+	
 
 	MenuButtons(static_cast<float>(window->getSize().x), (static_cast<float>(window->getSize().y)));
 
@@ -279,24 +272,24 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
 					{
 						case sf::Keyboard::Up:
 							{
-							if(button==_OPCJE)
-								button=_GRAJ;
-							else if(button==_WYJSCIE)
-								button=_OPCJE;
+							if(_button==_OPCJE)
+								_button=_GRAJ;
+							else if(_button==_WYJSCIE)
+								_button=_OPCJE;
 							MoveUp();
 							break;
 							}
 						case sf::Keyboard::Down:
 							{
-							if(button == _OPCJE)
-								button=_WYJSCIE;
-							else if(button == _GRAJ)
-								button = _OPCJE;
+							if(_button == _OPCJE)
+								_button=_WYJSCIE;
+							else if(_button == _GRAJ)
+								_button = _OPCJE;
 							MoveDown();
 							break;
 							}
 						case sf::Keyboard::Return:
-							switch(button)
+							switch(_button)
 							{
 								case _GRAJ:
 									petla=false;//zakonczenie petli, przejscie do gry
@@ -308,7 +301,8 @@ void MainMenu::PlayMainMenu(sf::RenderWindow *window, sf::RenderWindow* minimap)
 									std::cout << "opcja OPCJE" << std::endl;
 									break;
 								case _WYJSCIE://wyjscie z gry
-									std::cout<<"papa" << std::endl;
+									petla=false;
+									std::cout<<"Wyjscie z gry" << std::endl;
 									window->close();
 									minimap->close();
 									break;
@@ -358,6 +352,8 @@ void MainMenu::PlayPauseMenu(sf::RenderWindow* window, sf::RenderWindow* minimap
 									std::cout << "Wznowiono gre!" << std::endl;
 									break;
 								case 1:
+									pauza=!pauza;
+									_button=_WYJSCIE;
 									window->close();
 									minimap->close();
 									break;

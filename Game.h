@@ -36,7 +36,7 @@ private:
     void move_all(sf::Vector2f ruch); // rusza wszystkie platformy 
 	void next_screen(player &player); // przygotowanie nastepnej klatki 
 	void pauza(sf::RenderWindow *window,player& gracz); // ekran pauzy 
-	void GameOver(player& play);// ekran game over
+
 	void close_window(sf::RenderWindow *window); 
 	void update_view(sf::RenderWindow *window , player player); 
 	//

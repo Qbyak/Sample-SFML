@@ -8,8 +8,11 @@ Game::Game()
 void Game::play()
 {
 	menu.PlayMainMenu(window,minimap); // wyswietla menu gry 
+	
 	while (window->isOpen()) // Glowna petla gry 
-	{ 		
+	{ 	
+		if(menu.getState() != MainMenu::_WYJSCIE)
+		{
 		close_window(window); // zamykanie okna 
 		pauza(window,gracz); // pauzuje gre 
 		window->clear(sf::Color::Black); // czyszcenie ekranu 
@@ -20,6 +23,7 @@ void Game::play()
 			death(gracz, window); //jezeli gracz jest 'dead' to funkcja konczy gre 
 		} 
 		window->display(); // wyswietlanie klatki gry
+	    }
 	}
 }
 
