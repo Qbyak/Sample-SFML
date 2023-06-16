@@ -41,7 +41,7 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 		{
 			int los = rand() % 6;
 			if (los == 1 || los ==2)
-			{ // platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(generate_rand_dist(), platformy->back()->getPosition().y - 200)));
+			{ 
 				platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(platformy->back()->getPosition().x + (70 + rand() % 50)*kierunek_ruchu, platformy->back()->getPosition().y - 200)));
 				if (los_monety == 3)
 					monety->emplace_back(new coin(sf::Vector2f(platformy->back()->getPosition().x + rand() % 100, platformy->back()->getPosition().y - 50))); 
@@ -125,7 +125,6 @@ void Game::next_screen(player &player) // zmiana map gry
 		monety->clear();
 		player.setPosition(sf::Vector2f(player.getPosition().x, -3300));
 		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x-50, -3200)));
-		//minimap->setPosition(sf::Vector2i(play.getPosition().x - 1000, minimap->getPosition().y));
 		viev_minimap.setCenter(player.getPosition().x , player.getPosition().y -1500);
 		minimap->setView(viev_minimap); 
 	}
@@ -248,7 +247,7 @@ void Game::draw_all(sf::RenderWindow*window , player &player , bool if_coin_coun
 
 }
 
-void Game::death(player& player, sf::RenderWindow*window) // ekran smierci 
+void Game::death(player& player, sf::RenderWindow*window) // funkcja wywo³ywana w momencie œmierci gracza
 {
 	
 	for (auto x : *bomby)
@@ -271,9 +270,9 @@ void Game::death(player& player, sf::RenderWindow*window) // ekran smierci
 		}
 		if(window->isOpen())
 		{ 
-		menu.GameOver(player, window,platformy,bomby,monety, minimap);
-		ready_game();
-		play();
+		menu.GameOver(player, window,platformy,bomby,monety, minimap);//wywo³anie ekranu GameOver
+		ready_game();//przygotowanie gry do ponownego zagrania
+		play();//ponowne uruchomienie gry
 		}
 	}
 }
@@ -282,7 +281,7 @@ void Game::pauza(sf::RenderWindow*window, player& gracz) // ekran pauzy
 {
 	if(window->isOpen())
 	{ 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // dodany element pauzy , gdy gracz jest w powietrzu 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) 
 	{
 	
 		menu.PlayPauseMenu(window,minimap,gracz); 
@@ -301,13 +300,13 @@ void Game::move_bombs() // rusza bomby
 }
 
 void Game::clear_all(sf::RenderWindow* window, sf::RenderWindow* minimap, std::vector<platform*>* platformy,
-	std::vector<bomb*>* bomby, std::vector<coin*>* monety, std::vector<heart*>* serca)
+	std::vector<bomb*>* bomby, std::vector<coin*>* monety, std::vector<heart*>* serca)//Czyszczenie/zwalnianie pamiêci
 {
 	platformy->clear();
 	bomby->clear();
 	monety->clear();
 	serca->clear();
-	std::cout << "czyszczenie pamieci" << std::endl;
+	
 }
 
 void Game::update_minimap(player player ) // aktualizuje minimape 
@@ -316,11 +315,10 @@ void Game::update_minimap(player player ) // aktualizuje minimape
 	background.draw_tlo(minimap); 
 	draw_all(minimap , player , false , true);
 	minimap->draw(player); 
-	//minimap->draw(*coin_count); 
 	minimap->display(); 
 }
 
-void Game::close_window(sf::RenderWindow *window)
+void Game::close_window(sf::RenderWindow *window) 
 {
 	while (window->pollEvent(event)) // zamkniecie okna 
 	{

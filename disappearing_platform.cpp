@@ -3,15 +3,14 @@ disappearing_platform::disappearing_platform(sf::Vector2f switch_speed2 , sf::Ve
 {
 	switch_speed = switch_speed2; 
 	pozycja = position; 
-	setFillColor(sf::Color( std::round(255 - abs(position.y) / 60),0, std::round(255 - abs(position.y) / 60), 255));
-	//std::cout << "Tworze platforme znikajaca" << std::endl; 
+	setFillColor(sf::Color( std::round(255 - abs(position.y) / 60),0, std::round(255 - abs(position.y) / 60), 255)); 
 	offset = rand() % 20 / 20; 
 	clock.restart(); 
 }
 
 disappearing_platform::~disappearing_platform()
 {
-	//std::cout << "Usuwam znikajaca platforme" << std::endl; 
+	
 }
 
 void disappearing_platform::update() // platforma znika w okreslonych interwalach , na okreslony czas , oraz z okreslonym przesunieciem pierwotnym

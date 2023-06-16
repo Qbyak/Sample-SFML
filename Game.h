@@ -28,7 +28,7 @@ private:
 
 	// funkcje przygotowywujace
 	void ready_game();
-	void ready_background_texture(); 
+	
 
 	// funkcje updatujace
 	void update_all(sf::RenderWindow* window, player& player); // updatuje kazda platforme 

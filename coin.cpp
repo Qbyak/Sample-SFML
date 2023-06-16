@@ -6,7 +6,7 @@ coin::coin(sf::Vector2f pozycja = sf::Vector2f(0,0))
 	{
 		std::cout << "Nie za³adowano grafiki monety" << std::endl;
 	}
-	//std::cout << "Tworze monete" << std::endl; 
+	 
 	setTexture(tekstura); 
 	setTextureRect(sf::IntRect(96, 0, 32, 20)); 
 	setPosition(pozycja); 
@@ -20,7 +20,7 @@ coin::coin(sf::Vector2f pozycja = sf::Vector2f(0,0))
 
 coin::~coin()
 {
-//	std::cout << "Usuwam monete" << std::endl; 
+ 
 }
 
 void coin::update() // funkcja update wywolujaca animacje 

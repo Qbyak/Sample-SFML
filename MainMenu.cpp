@@ -4,13 +4,13 @@
 
 MainMenu::MainMenu()//konstruktor menu, wczytywanie tekstur t³a
 {
-	std::cout << "tworze menu" << std::endl;
+	
 	background.ready_background_texture();
 	selectedButtonIndex = 0; 
 }
 MainMenu::~MainMenu()
 {
-	std::cout << "kasuje menu" << std::endl;
+	
 }
 void MainMenu::LoadFonts()//wczytywanie czcionek
 {
@@ -64,7 +64,7 @@ void MainMenu::PauseButtons(sf::RenderWindow* window) //przyciski menu pauzy
 {
 	LoadFonts();
 	sf::View view(window->getView());//uzyskanie widoku okna
-	std::cout << "obiekt pauzy" << std::endl;
+	
 	//ustawienie napisu PAUZA
 	title.setFont(font);
 	title.setFillColor(sf::Color::Black);

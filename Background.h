@@ -7,10 +7,10 @@
 class Background
 {
 public:
-	void ready_background_texture();
-	void draw_tlo(sf::RenderWindow *window);
-	void draw_menu_background(sf::RenderWindow* window);
-	void draw_pause_background(sf::RenderWindow* window, player& play);
+	void ready_background_texture();//Przygotowanie t³a
+	void draw_tlo(sf::RenderWindow *window);//rysowanie t³a w grze	
+	void draw_menu_background(sf::RenderWindow* window);//rysowanie t³a w menu, opcjach,autorach,tabeli wyników
+	void draw_pause_background(sf::RenderWindow* window, player& play);//rysowanie t³a w pauzie
 private:
 
 	sf::Texture tlo1;

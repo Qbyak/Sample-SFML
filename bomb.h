@@ -10,8 +10,8 @@ public:
 	bomb(sf::Vector2f pos); 
 	~bomb(); 
     //funkcje 
-	bool update(); 
-	void reset_clock(); 
+	bool update(); //wywo³anie wybuchu
+	void reset_clock();//reset zegara 
 private:
 	void animate_boom(sf::Clock clock); // animcja wybuchu 
 private:
