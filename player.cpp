@@ -1,5 +1,4 @@
 #include "player.h"
-#include "Game.h"
 
 player::player()
 {
@@ -121,7 +120,11 @@ void player::if_przegrana(std::vector<bomb*> *bomby , std::vector<platform*> *pl
 		{
 			zycia_gracza = zycia_gracza - 1; 
 			auto element = std::find(bomby->begin(), bomby->end(), x);
-			bomby->erase(element); 
+			if (element != bomby->end())
+			{
+				delete *element; 
+				bomby->erase(element);
+			}
 		}
 	}
 	if(zycia_gracza == 0)
@@ -271,6 +274,7 @@ void player::update_lives(std::vector<heart*> *serca) //aktualizacja stanu serc
 			auto x = std::find(serca->begin(), serca->end(), s);
 			if (x != serca->end())
 			{
+				delete *x; 
 				serca->erase(x);
 				zycia_gracza++;
 			}

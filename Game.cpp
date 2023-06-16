@@ -67,7 +67,7 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 		}
 		for (auto x : *platformy)
 		{
-			if (x->getPosition().y  > player.getPosition().y + 800 ) 
+			if (x->getPosition().y  > player.getPosition().y + 600 ) 
 			{
 				auto element = std::find(platformy->begin(), platformy->end(), x);
 
@@ -78,7 +78,7 @@ void Game::generate_platform(player player) // generowanie platform na podstawie
 		if(monety->size()>0)
 			for (auto m : *monety)
 			{
-				if (m->getPosition().y > player.getPosition().y + 400 && monety->size()>0)
+				if (m->getPosition().y > player.getPosition().y + 400)
 				{
 					auto element = std::find(monety->begin(), monety->end(), m);
 					if (element != monety->end())
@@ -121,6 +121,8 @@ void Game::next_screen(player &player) // zmiana map gry
 	{
 		map_number = 2; 
 		platformy->clear(); 
+		bomby->clear();
+		monety->clear();
 		player.setPosition(sf::Vector2f(player.getPosition().x, -3300));
 		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x-50, -3200)));
 		//minimap->setPosition(sf::Vector2i(play.getPosition().x - 1000, minimap->getPosition().y));
@@ -131,6 +133,9 @@ void Game::next_screen(player &player) // zmiana map gry
 	{
 		map_number = 3; 
 		platformy->clear();
+		bomby->clear();
+		monety->clear();
+		serca->clear(); 
 		player.setPosition(sf::Vector2f(player.getPosition().x, -7450));
 		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(player.getPosition().x - 50, -7350)));
 		viev_minimap.setCenter(player.getPosition().x, player.getPosition().y - 1350);
@@ -142,7 +147,8 @@ void Game::next_screen(player &player) // zmiana map gry
 	{
 		platformy->clear();
 		bomby->clear();
-		monety->clear(); 
+		monety->clear();
+		serca->clear();
 		platformy->emplace_back(new platform(sf::Vector2f(200, 50), sf::Vector2f(2000, 900)));
 		player.setPosition(2100,800);
 		viev_minimap.setCenter(player.getPosition().x, player.getPosition().y - 1350);
